@@ -1,70 +1,218 @@
-# Claude Code Agent Orchestration System v2
+<div align="center">
 
-A production-ready monorepo template for building AI-powered applications with Next.js, LangGraph, and Claude.
+# 🤖 Claude Code Agent Orchestration System
 
-## Tech Stack
+### Production-ready monorepo for AI-powered applications
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | Next.js 15, React 19, Tailwind CSS v4, shadcn/ui |
-| **Backend** | Python 3.12, FastAPI, LangGraph |
-| **Database** | Supabase (PostgreSQL + pgvector + Auth) |
-| **AI Models** | Claude (Opus/Sonnet/Haiku 4.5), Gemini, OpenRouter |
-| **MCPs** | Playwright, Exa, Ref.tools |
-| **Orchestrator** | Dual system (SKILL.md + Python/LangGraph) |
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
-## Quick Start
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+
+<p align="center">
+  <strong>Build intelligent applications with Claude, LangGraph, and modern web technologies</strong>
+</p>
+
+[Getting Started](#-getting-started) •
+[Features](#-features) •
+[Architecture](#-architecture) •
+[Documentation](#-documentation) •
+[Deployment](#-deployment)
+
+</div>
+
+---
+
+## ✨ Features
+
+<table>
+<tr>
+<td>
+
+### 🎨 Frontend
+- **Next.js 15** with App Router
+- **React 19** with Server Components
+- **Tailwind CSS v4** for styling
+- **shadcn/ui** component library
+- Full **TypeScript** support
+- Responsive & accessible design
+
+</td>
+<td>
+
+### ⚡ Backend
+- **FastAPI** for high-performance APIs
+- **LangGraph** agent orchestration
+- Multi-model AI support
+- Async-first architecture
+- Structured logging
+- Rate limiting & auth middleware
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🗄️ Database
+- **Supabase** (PostgreSQL)
+- **pgvector** for embeddings
+- Row Level Security (RLS)
+- Real-time subscriptions
+- Built-in authentication
+- Migration system
+
+</td>
+<td>
+
+### 🤖 AI Integration
+- **Claude 4.5** (Opus/Sonnet/Haiku)
+- **Gemini 2.0** Flash
+- **OpenRouter** multi-model
+- MCP tool integrations
+- SKILL.md orchestration
+- Verification-first approach
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 20+
-- pnpm 9+
-- Python 3.12+
-- uv (Python package manager)
-- Supabase CLI (optional, for local development)
+| Tool | Version | Installation |
+|------|---------|--------------|
+| Node.js | 20+ | [nodejs.org](https://nodejs.org/) |
+| pnpm | 9+ | `npm install -g pnpm` |
+| Python | 3.12+ | [python.org](https://python.org/) |
+| uv | Latest | `pip install uv` |
+| Supabase CLI | Latest | `npm install -g supabase` |
 
-### Installation
+### Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+# 1. Clone the repository
+git clone https://github.com/CleanExpo/NodeJS-Starter-V1.git
+cd NodeJS-Starter-V1
 
-# Run setup script
+# 2. Run the setup script
 chmod +x scripts/setup.sh
 ./scripts/setup.sh
 
-# Configure environment variables
+# 3. Configure your environment
 cp .env.example .env.local
 # Edit .env.local with your API keys
 
-# Start development
+# 4. Start development
 pnpm dev
 ```
 
-## Project Structure
-
-```
-project-root/
-├── .github/workflows/     # CI/CD pipelines
-├── .vscode/               # VS Code configuration
-├── apps/
-│   ├── web/               # Next.js frontend
-│   └── backend/           # Python/LangGraph backend
-├── packages/
-│   ├── shared/            # Shared TypeScript types
-│   └── config/            # Shared configs (ESLint, TypeScript)
-├── skills/                # SKILL.md orchestration files
-├── supabase/              # Database migrations
-└── scripts/               # Setup and utility scripts
-```
-
-## Development
-
-### Frontend (Next.js)
+<details>
+<summary>📦 Manual Installation</summary>
 
 ```bash
-# Start frontend only
+# Install frontend dependencies
+pnpm install
+
+# Install backend dependencies
+cd apps/backend
+uv sync
+cd ../..
+
+# Start Supabase (optional)
+supabase start
+
+# Start development servers
+pnpm dev
+```
+
+</details>
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         FRONTEND                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
+│  │  Next.js 15 │  │   React 19  │  │   Tailwind + shadcn/ui  │  │
+│  └──────┬──────┘  └──────┬──────┘  └────────────┬────────────┘  │
+│         └────────────────┼──────────────────────┘               │
+│                          │                                       │
+└──────────────────────────┼───────────────────────────────────────┘
+                           │ API Calls
+┌──────────────────────────┼───────────────────────────────────────┐
+│                          ▼                                       │
+│                       BACKEND                                    │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
+│  │   FastAPI   │──│  LangGraph  │──│   Agent Orchestrator    │  │
+│  └──────┬──────┘  └──────┬──────┘  └────────────┬────────────┘  │
+│         │                │                       │               │
+│  ┌──────▼──────┐  ┌──────▼──────┐  ┌────────────▼────────────┐  │
+│  │  AI Models  │  │  MCP Tools  │  │      SKILL.md Files     │  │
+│  │ Claude/Gemini│ │ Exa/Playwright│ │   (Agent Behaviors)    │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
+│                                                                  │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+┌──────────────────────────┼───────────────────────────────────────┐
+│                          ▼                                       │
+│                       DATABASE                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                      Supabase                                ││
+│  │  PostgreSQL  │  pgvector  │  Auth  │  Real-time  │  Storage ││
+│  └─────────────────────────────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Project Structure
+
+```
+📦 NodeJS-Starter-V1
+├── 📂 .github/workflows      # CI/CD pipelines
+├── 📂 .vscode                # VS Code configuration
+├── 📂 apps
+│   ├── 📂 web                # Next.js frontend
+│   │   ├── 📂 app            # App router pages
+│   │   ├── 📂 components     # React components
+│   │   ├── 📂 lib            # Utilities & clients
+│   │   └── 📂 hooks          # Custom React hooks
+│   └── 📂 backend            # Python backend
+│       ├── 📂 src
+│       │   ├── 📂 agents     # AI agent implementations
+│       │   ├── 📂 api        # FastAPI routes
+│       │   ├── 📂 graphs     # LangGraph workflows
+│       │   ├── 📂 models     # AI model clients
+│       │   └── 📂 skills     # SKILL.md parser
+│       └── 📂 tests          # Pytest tests
+├── 📂 packages
+│   ├── 📂 shared             # Shared TypeScript types
+│   └── 📂 config             # Shared configurations
+├── 📂 skills                 # SKILL.md orchestration files
+├── 📂 supabase               # Database migrations
+└── 📂 scripts                # Setup & utility scripts
+```
+
+---
+
+## 🔧 Development
+
+<table>
+<tr>
+<th>Frontend</th>
+<th>Backend</th>
+</tr>
+<tr>
+<td>
+
+```bash
+# Development
 pnpm dev --filter=web
 
 # Build
@@ -75,17 +223,21 @@ pnpm lint --filter=web
 
 # Type check
 pnpm type-check --filter=web
+
+# Test
+pnpm test --filter=web
 ```
 
-### Backend (Python)
+</td>
+<td>
 
 ```bash
 cd apps/backend
 
-# Start development server
+# Development
 uv run uvicorn src.api.main:app --reload
 
-# Run tests
+# Test
 uv run pytest
 
 # Type check
@@ -95,132 +247,198 @@ uv run mypy src/
 uv run ruff check src/
 ```
 
-### Full Stack
+</td>
+</tr>
+</table>
+
+### Full Stack Commands
 
 ```bash
 # Start all services
 ./scripts/dev.sh
 
-# Or use Turbo
-pnpm dev
-
 # Build everything
 pnpm build
 
-# Run all lints and type checks
-pnpm turbo run lint type-check
+# Run all checks
+pnpm turbo run lint type-check test
 ```
 
-### Database (Supabase)
+---
 
-```bash
-# Start local Supabase
-supabase start
+## 🤖 AI Models
 
-# Apply migrations
-supabase db push
+| Provider | Model | Identifier | Best For |
+|----------|-------|------------|----------|
+| Anthropic | Claude Opus 4.5 | `claude-opus-4-5-20251101` | Complex reasoning |
+| Anthropic | Claude Sonnet 4.5 | `claude-sonnet-4-5-20250929` | Balanced tasks |
+| Anthropic | Claude Haiku 4.5 | `claude-haiku-4-5-20251001` | Fast responses |
+| Google | Gemini 2.0 Flash | `gemini-2.0-flash-exp` | Speed & efficiency |
+| OpenRouter | Various | Multiple | Model flexibility |
 
-# Reset database
-supabase db reset
+---
 
-# Generate TypeScript types
-supabase gen types typescript --local > packages/shared/src/types/supabase.ts
+## 📖 SKILL.md Orchestration
+
+The `/skills` directory defines agent behaviors using markdown files:
+
+```
+skills/
+├── ORCHESTRATOR.md           # Master routing logic
+├── core/
+│   ├── VERIFICATION.md       # Verification-first approach
+│   ├── ERROR-HANDLING.md     # Error patterns
+│   └── CODING-STANDARDS.md   # Code quality rules
+├── frontend/
+│   ├── NEXTJS.md             # Next.js patterns
+│   ├── TAILWIND.md           # Tailwind CSS patterns
+│   └── COMPONENTS.md         # Component guidelines
+├── backend/
+│   ├── LANGGRAPH.md          # LangGraph workflows
+│   ├── FASTAPI.md            # FastAPI patterns
+│   └── AGENTS.md             # Agent building
+└── database/
+    ├── SUPABASE.md           # Supabase patterns
+    └── MIGRATIONS.md         # Migration guidelines
 ```
 
-## Environment Variables
+---
 
-Copy `.env.example` to `.env.local` and configure:
+## ⚙️ Environment Variables
+
+Create `.env.local` from `.env.example`:
 
 ```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+# 🔐 Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
-# AI Models
-ANTHROPIC_API_KEY=sk-ant-xxx
-GOOGLE_AI_API_KEY=xxx
-OPENROUTER_API_KEY=sk-or-xxx
+# 🤖 AI Models
+ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_AI_API_KEY=AI...
+OPENROUTER_API_KEY=sk-or-...
 
-# MCP Tools
-EXA_API_KEY=xxx
+# 🔧 MCP Tools
+EXA_API_KEY=...
 
-# Backend
+# 🔗 Backend
 BACKEND_URL=http://localhost:8000
-BACKEND_API_KEY=your-internal-api-key
+BACKEND_API_KEY=your-secret-key
 ```
 
-## AI Model Configuration
+---
 
-| Provider | Model | API String |
-|----------|-------|------------|
-| Anthropic | Claude Opus 4.5 | `claude-opus-4-5-20251101` |
-| Anthropic | Claude Sonnet 4.5 | `claude-sonnet-4-5-20250929` |
-| Anthropic | Claude Haiku 4.5 | `claude-haiku-4-5-20251001` |
-| Google | Gemini 2.0 Flash | `gemini-2.0-flash-exp` |
-| OpenRouter | Multi-model | Various |
+## 🚢 Deployment
 
-## SKILL.md Orchestration
+<table>
+<tr>
+<th width="33%">Frontend</th>
+<th width="33%">Backend</th>
+<th width="33%">Database</th>
+</tr>
+<tr>
+<td>
 
-The `/skills` directory contains markdown files that define agent behaviors:
+**Vercel**
 
-- `ORCHESTRATOR.md` - Master orchestrator routing
-- `core/VERIFICATION.md` - Verification-first development
-- `core/ERROR-HANDLING.md` - Error handling patterns
-- `frontend/NEXTJS.md` - Next.js patterns
-- `backend/LANGGRAPH.md` - LangGraph workflows
-- `database/SUPABASE.md` - Supabase patterns
+1. Import from GitHub
+2. Set root: `apps/web`
+3. Add environment variables
+4. Deploy
 
-## Deployment
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-### Frontend (Vercel)
+</td>
+<td>
 
-1. Connect your GitHub repo to Vercel
-2. Set root directory to `apps/web`
-3. Configure environment variables
-4. Deploy automatically on push to main
+**DigitalOcean**
 
-### Backend (DigitalOcean)
+1. Create App Platform app
+2. Connect GitHub repo
+3. Set Dockerfile path
+4. Configure secrets
 
-1. Create a DigitalOcean App Platform app
-2. Connect your GitHub repo
-3. Set Dockerfile path to `apps/backend/Dockerfile`
-4. Configure environment variables
-5. Deploy via GitHub Actions or manually
+[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps)
 
-### Database (Supabase)
+</td>
+<td>
 
-1. Create a Supabase project
-2. Get connection details from dashboard
+**Supabase**
+
+1. Create project
+2. Get connection string
 3. Run migrations:
-   ```bash
-   supabase db push --db-url "postgresql://..."
-   ```
+```bash
+supabase db push
+```
 
-## Testing
+</td>
+</tr>
+</table>
+
+---
+
+## 🧪 Testing
 
 ```bash
-# Frontend tests
-pnpm test --filter=web
-
-# Backend tests
-cd apps/backend && uv run pytest
-
-# All tests
+# Run all tests
 pnpm turbo run test
+
+# Frontend tests with coverage
+pnpm test --filter=web -- --coverage
+
+# Backend tests with coverage
+cd apps/backend && uv run pytest --cov
+
+# E2E tests (if configured)
+pnpm test:e2e
 ```
 
-## Contributing
+---
 
-1. Create a feature branch
-2. Make your changes
-3. Ensure all tests pass
-4. Submit a pull request
+## 📚 Documentation
 
-## License
+| Resource | Description |
+|----------|-------------|
+| [Next.js Docs](https://nextjs.org/docs) | Frontend framework |
+| [FastAPI Docs](https://fastapi.tiangolo.com/) | Backend framework |
+| [LangGraph Docs](https://langchain-ai.github.io/langgraph/) | Agent orchestration |
+| [Supabase Docs](https://supabase.com/docs) | Database & auth |
+| [shadcn/ui](https://ui.shadcn.com/) | UI components |
+| [Tailwind CSS](https://tailwindcss.com/docs) | Styling |
 
-MIT
+---
 
-## Support
+## 🤝 Contributing
 
-For issues and feature requests, please use the [GitHub Issues](https://github.com/your-username/your-repo/issues) page.
+We welcome contributions! Please follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to the branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
+
+Please ensure your code:
+- Passes all linting and type checks
+- Includes appropriate tests
+- Follows the existing code style
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+### Built with ❤️ using Claude Code
+
+[![Claude](https://img.shields.io/badge/Powered%20by-Claude-blueviolet?style=for-the-badge)](https://anthropic.com/)
+
+**[⬆ Back to Top](#-claude-code-agent-orchestration-system)**
+
+</div>
