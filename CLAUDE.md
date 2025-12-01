@@ -6,6 +6,63 @@
 
 This is a **Claude Code Agent Orchestration System** - a production-ready monorepo for building AI-powered applications. It uses a dual orchestration approach combining SKILL.md files with Python/LangGraph for maximum flexibility.
 
+## Foundation-First Architecture
+
+This project follows a **foundation-first architecture** - preventing problems before they exist through strict typing, layered architecture, and automated validation.
+
+### Architecture Layers
+
+```
+┌─────────────────────────────────────────────────┐
+│                  Components                      │
+│         (UI, loading, error, empty states)       │
+├─────────────────────────────────────────────────┤
+│                    Hooks                         │
+│            (Data fetching, state)                │
+├─────────────────────────────────────────────────┤
+│                 API Routes                       │
+│      (try/catch + validate + service call)       │
+├─────────────────────────────────────────────────┤
+│                  Services                        │
+│         (Business logic, calls repos)            │
+├─────────────────────────────────────────────────┤
+│                Repositories                      │
+│           (Data access only)                     │
+├─────────────────────────────────────────────────┤
+│                  Database                        │
+│              (Supabase/PostgreSQL)               │
+└─────────────────────────────────────────────────┘
+```
+
+### Layer Rules (CRITICAL)
+
+- **Components** cannot import from `server/`
+- **API routes** must use services, never repositories directly
+- **Repositories** cannot import from services
+- **All functions** must have explicit return types
+- **Never use `any`** - use `unknown` and validate
+
+### Claude Code Commands
+
+Run these commands to manage the foundation:
+
+| Command | Description |
+|---------|-------------|
+| `/bootstrap` | Full foundation setup (run ONCE on new project) |
+| `/new-feature <name>` | Scaffold complete feature with all files |
+| `/verify` | Check foundation is intact |
+| `/audit` | Full architecture audit |
+| `/fix-types` | Regenerate database types from Supabase |
+
+### Configuration
+
+Project settings are in `.claude/settings.json` with:
+- Strict TypeScript configuration
+- Layer architecture rules
+- Component state requirements
+- API route patterns
+- Git hooks for validation
+
 ## Tech Stack
 
 ### Frontend (`apps/web/`)
@@ -266,6 +323,56 @@ uv sync --reinstall
 **Type errors after pulling**
 ```bash
 pnpm turbo run type-check --force
+```
+
+## Foundation Patterns
+
+### API Route Pattern
+```typescript
+import { NextRequest, NextResponse } from 'next/server';
+import { handleApiError } from '@/server/errors';
+import { FeatureService } from '@/server/services';
+import { FeatureValidator } from '@/server/validators';
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  try {
+    const body: unknown = await request.json();
+    const validated = FeatureValidator.create.parse(body);
+    const result = await FeatureService.create(validated);
+    return NextResponse.json({ data: result }, { status: 201 });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+```
+
+### Service Pattern
+```typescript
+import { FeatureRepository } from '@/server/repositories';
+import { NotFoundError } from '@/server/errors';
+
+export class FeatureService {
+  static async getById(id: string): Promise<Feature> {
+    const result = await FeatureRepository.findById(id);
+    if (!result) {
+      throw new NotFoundError('Feature', id);
+    }
+    return result;
+  }
+}
+```
+
+### Component Pattern (All States Required)
+```typescript
+export function FeatureList(): JSX.Element {
+  const { data, isLoading, error } = useFeatures();
+
+  if (isLoading) return <FeatureSkeleton />;
+  if (error) return <FeatureError error={error} />;
+  if (!data?.length) return <FeatureEmpty />;
+
+  return <FeatureGrid items={data} />;
+}
 ```
 
 ## Contributing
