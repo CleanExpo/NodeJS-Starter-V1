@@ -1,22 +1,62 @@
 import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
-      className
-    )}
-    {...props}
-  />
-));
+/* ----------------------------------------
+   Card Variants
+   ---------------------------------------- */
+const cardVariants = cva(
+  "rounded-xl border bg-card text-card-foreground transition-all duration-normal",
+  {
+    variants: {
+      variant: {
+        default: "shadow-sm",
+        elevated:
+          "shadow-lg border-border/50 hover:shadow-xl",
+        interactive:
+          "shadow-md hover:shadow-lg hover:-translate-y-1 cursor-pointer active:scale-[0.99]",
+        featured:
+          "shadow-lg border-brand-primary/20 bg-gradient-to-br from-brand-primary-50/50 to-transparent dark:from-brand-primary-950/20",
+        gradient:
+          "relative overflow-hidden border-0 before:absolute before:inset-0 before:rounded-xl before:p-[1px] before:bg-gradient-brand before:-z-10 before:content-[''] shadow-md",
+        glass:
+          "glass border-white/20 dark:border-white/10 shadow-lg backdrop-blur-md",
+        outline:
+          "border-2 shadow-none hover:border-brand-primary/50",
+        ghost:
+          "border-transparent shadow-none hover:bg-muted/50",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+/* ----------------------------------------
+   Card Component
+   ---------------------------------------- */
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
+  asChild?: boolean;
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(cardVariants({ variant, className }))}
+      {...props}
+    />
+  )
+);
 Card.displayName = "Card";
 
+/* ----------------------------------------
+   Card Header Component
+   ---------------------------------------- */
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -29,30 +69,45 @@ const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = "CardHeader";
 
-const CardTitle = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("font-semibold leading-none tracking-tight", className)}
-    {...props}
-  />
-));
+/* ----------------------------------------
+   Card Title Component
+   ---------------------------------------- */
+interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}
+
+const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+  ({ className, as: Comp = "h3", ...props }, ref) => (
+    <Comp
+      ref={ref}
+      className={cn(
+        "text-xl font-semibold leading-none tracking-tight",
+        className
+      )}
+      {...props}
+    />
+  )
+);
 CardTitle.displayName = "CardTitle";
 
+/* ----------------------------------------
+   Card Description Component
+   ---------------------------------------- */
 const CardDescription = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <div
+  <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-muted-foreground leading-relaxed", className)}
     {...props}
   />
 ));
 CardDescription.displayName = "CardDescription";
 
+/* ----------------------------------------
+   Card Content Component
+   ---------------------------------------- */
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -61,6 +116,9 @@ const CardContent = React.forwardRef<
 ));
 CardContent.displayName = "CardContent";
 
+/* ----------------------------------------
+   Card Footer Component
+   ---------------------------------------- */
 const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -73,4 +131,77 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = "CardFooter";
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+/* ----------------------------------------
+   Card Image Component
+   ---------------------------------------- */
+interface CardImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  aspectRatio?: "video" | "square" | "wide";
+}
+
+const CardImage = React.forwardRef<HTMLImageElement, CardImageProps>(
+  ({ className, aspectRatio = "video", alt = "", ...props }, ref) => (
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-t-xl",
+        aspectRatio === "video" && "aspect-video",
+        aspectRatio === "square" && "aspect-square",
+        aspectRatio === "wide" && "aspect-[21/9]"
+      )}
+    >
+      <img
+        ref={ref}
+        alt={alt}
+        className={cn(
+          "h-full w-full object-cover transition-transform duration-slow hover:scale-105",
+          className
+        )}
+        {...props}
+      />
+    </div>
+  )
+);
+CardImage.displayName = "CardImage";
+
+/* ----------------------------------------
+   Card Badge Component (for featured/status)
+   ---------------------------------------- */
+interface CardBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  variant?: "default" | "success" | "warning" | "error" | "info";
+}
+
+const CardBadge = React.forwardRef<HTMLSpanElement, CardBadgeProps>(
+  ({ className, variant = "default", ...props }, ref) => {
+    const variantClasses = {
+      default: "bg-primary text-primary-foreground",
+      success: "bg-success text-success-foreground",
+      warning: "bg-warning text-warning-foreground",
+      error: "bg-error text-error-foreground",
+      info: "bg-info text-info-foreground",
+    };
+
+    return (
+      <span
+        ref={ref}
+        className={cn(
+          "absolute top-4 right-4 px-2.5 py-0.5 text-xs font-medium rounded-full",
+          variantClasses[variant],
+          className
+        )}
+        {...props}
+      />
+    );
+  }
+);
+CardBadge.displayName = "CardBadge";
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardImage,
+  CardBadge,
+  cardVariants,
+};
