@@ -1,692 +1,470 @@
-# Copywriting & Business Consistency Framework Implementation Plan
+# Implementation Plan: Design System Override Configuration
 
-**Generated:** 2025-12-03
-**Status:** PENDING APPROVAL
+## Overview
 
----
-
-## Executive Summary
-
-This plan implements two interconnected systems as permanent structures within the SaaS project:
-
-1. **Research-Driven Copywriting System** - Audience research, competitor analysis, and conversion-focused copy generation using real customer language
-2. **Business Consistency Framework** - NAP consistency, citation management, schema markup, and GEO optimization for AI search visibility
-
-Both systems follow established codebase patterns: compact skills (80-100 lines) + detailed scaffolds (YAML/templates).
+Transform the current default shadcn/ui setup into a comprehensive, brand-aligned design system with:
+- Customizable brand tokens (New/Generic base)
+- Full Gemini image generation integration
+- Hybrid Tailwind v4 approach (config + @theme)
+- Integration patterns for all primary UI libraries
 
 ---
 
-## Part 1: Copywriting Framework
+## Phase 1: Foundation - Design Token System
 
-### 1.1 Core Concept (From User Prompts)
+### 1.1 Update `globals.css` with Extended Design Tokens
 
-**Prompt 1 - Audience Research:**
-- Find exact customer words from message boards, reviews, forums
-- Capture: Pain points, Symptoms, Dream outcomes, Failed solutions, Buying decisions
-- Use actual quotes, not summaries
-- Highlight patterns that appear 3+ times = GOLD
+**File:** `apps/web/app/globals.css`
 
-**Prompt 2 - Competitor Analysis:**
-- Analyze top companies nationwide (not just local)
-- Document page-by-page: Homepage, About, Services, Contact
-- List sections and their order
-- Identify unique features to potentially add
+**Changes:**
+- Add brand color tokens (primary, secondary, accent with full scale)
+- Add semantic color tokens (success, warning, error, info)
+- Add surface tokens (elevated, recessed, overlay)
+- Add gradient tokens
+- Add shadow tokens (sm, md, lg, xl)
+- Add animation timing tokens
+- Add spacing scale extensions
 
-**Prompt 3 - Copy Generation:**
-- Follow conversion structures: Hero, Problem, Value Props, Proof, Process, FAQ, CTA
-- Weave customer quotes naturally (never as literal quotes)
-- Ultra-clear, conversational, human tone
-- No jargon, clichés, unverified claims
-- Output only final copy, no explanations
+**New Tokens Structure:**
+```css
+:root {
+  /* Brand Colors - Customizable */
+  --brand-primary: 221.2 83.2% 53.3%;
+  --brand-primary-50: 214 100% 97%;
+  --brand-primary-100: 214 95% 93%;
+  /* ... full scale 50-950 */
 
-### 1.2 Skill File: `skills/marketing/COPYWRITING.md`
+  /* Semantic Colors */
+  --success: 142 76% 36%;
+  --warning: 38 92% 50%;
+  --error: 0 84% 60%;
+  --info: 199 89% 48%;
 
-```markdown
----
-name: research-driven-copywriting
-version: "1.0"
-priority: 2
-triggers:
-  - copywriting
-  - website copy
-  - landing page
-  - conversion copy
-  - audience research
-  - customer research
-  - competitor analysis
-  - pain points
-  - value proposition
-  - hero section
-  - CTA
-  - voice of customer
-  - VOC
----
+  /* Surface Colors */
+  --surface-elevated: 0 0% 100%;
+  --surface-recessed: 0 0% 97%;
+  --surface-overlay: 0 0% 100% / 0.9;
 
-# Research-Driven Copywriting
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  /* ... extended shadows */
 
-Real customer words > Marketing speak. Write like a human, not a corporation.
-
-## The 3-Phase System
-
-| Phase | Focus | Output |
-|-------|-------|--------|
-| 1 | Audience Research | Exact customer quotes by category |
-| 2 | Competitor Analysis | Proven page structures |
-| 3 | Copy Generation | Conversion-focused pages |
-
-## Voice of Customer Categories
-
-| Category | What to Capture | Gold If |
-|----------|-----------------|---------|
-| Pain Points | Problems, frustrations | 3+ mentions |
-| Symptoms | Day-to-day manifestations | Vivid details |
-| Dream Outcomes | What they want most | Emotional |
-| Failed Solutions | What didn't work | Specific |
-| Buying Decisions | How they decide | Triggers |
-
-## Page Structure (Conversion Pattern)
-
-1. **Hero** - Dream outcome headline, pain point subhead
-2. **Problem** - Show you understand (use their words)
-3. **Value Props** - 3-5 benefits with "because"
-4. **Social Proof** - Video testimonials > Written
-5. **Process** - 3-5 simple steps (their experience)
-6. **FAQ** - Real objections from research
-7. **CTA** - Clear next action
-
-## Copy Rules
-
-**DO:**
-- Use customer's exact words
-- Write like talking to a friend
-- Short sentences, short paragraphs
-- Verified claims only
-
-**DON'T:**
-- Industry jargon
-- Corporate phrasing
-- Clichés (solutions, leverage, synergy)
-- Made-up stats
-- AI-sounding language
-
-## Research Sources
-
-| Source | Type | Value |
-|--------|------|-------|
-| Reddit subreddits | Forums | Raw frustrations |
-| Google Reviews | Reviews | Decision language |
-| Facebook Groups | Community | Casual complaints |
-| Industry Forums | Niche | Technical issues |
-
-## Pattern Detection
-
-- **3+ mentions** = Use in headlines
-- **5+ mentions** = Core messaging pillar
-- **Emotional adjectives** = Voice/tone guide
-
-See: `.copywriting/`, `research/`, `competitor/`, `copy/`
+  /* Animation */
+  --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+}
 ```
 
-### 1.3 Scaffold: `.copywriting/`
+### 1.2 Extend `tailwind.config.ts`
 
+**File:** `apps/web/tailwind.config.ts`
+
+**Changes:**
+- Add brand color mappings
+- Add semantic color utilities
+- Add custom animations (fade-in, slide-up, scale-in, etc.)
+- Add custom keyframes
+- Add extended spacing scale
+- Add custom font families placeholder
+
+---
+
+## Phase 2: Component Enhancement System
+
+### 2.1 Create Enhanced Button Variants
+
+**File:** `apps/web/components/ui/button.tsx`
+
+**Enhancements:**
+- Add `gradient` variant (brand gradient)
+- Add `glow` variant (with shadow glow effect)
+- Add loading state with spinner
+- Add pressed/active state
+- Add ring-offset for better focus visibility
+
+### 2.2 Create Enhanced Card Variants
+
+**File:** `apps/web/components/ui/card.tsx`
+
+**Enhancements:**
+- Add `elevated` variant (stronger shadow, subtle border)
+- Add `gradient` variant (gradient border effect)
+- Add `interactive` variant (hover lift effect)
+- Add `featured` variant (accent border, highlighted)
+- Add hover transitions
+
+### 2.3 Create Loading Component
+
+**New File:** `apps/web/components/ui/loading.tsx`
+
+**Features:**
+- Spinner component with size variants
+- Skeleton loader with animation
+- Loading overlay
+- Loading button state
+
+### 2.4 Create Animation Utilities
+
+**New File:** `apps/web/components/ui/motion.tsx`
+
+**Features:**
+- FadeIn wrapper component
+- SlideUp wrapper component
+- ScaleIn wrapper component
+- Stagger container for lists
+- Uses CSS animations (no Framer Motion dependency initially)
+
+---
+
+## Phase 3: Gemini Image Generation Pipeline
+
+### 3.1 Create Image Generation Service
+
+**New File:** `apps/web/lib/image-generation/gemini-client.ts`
+
+**Features:**
+```typescript
+interface ImageGenerationConfig {
+  prompt: string;
+  context: string;
+  brandColors: string[];
+  aspectRatio: '1:1' | '16:9' | '4:3' | '9:16';
+  resolution: '1K' | '2K' | '4K';
+  style: 'modern' | 'minimalist' | 'bold' | 'elegant';
+}
+
+export async function generateImage(config: ImageGenerationConfig): Promise<GeneratedImage>
+export async function generateIcon(config: IconConfig): Promise<GeneratedIcon>
 ```
-.copywriting/
-├── MASTER-INDEX.yaml
-├── README.md
-├── research/
-│   ├── audience-research.yaml      # VOC framework
-│   ├── data-sources.yaml           # Where to find quotes
-│   └── quote-collection.yaml       # How to capture
-├── competitor/
-│   ├── analysis-framework.yaml     # Page-by-page
-│   ├── page-sections.yaml          # What sections work
-│   └── unique-features.yaml        # Standout elements
-├── copy/
-│   ├── conversion-structures.yaml  # Proven layouts
-│   ├── section-formulas.yaml       # Hero, Problem, etc.
-│   ├── voice-tone.yaml             # Clear, conversational
-│   └── anti-patterns.yaml          # What to avoid
-├── pages/
-│   ├── homepage.yaml
-│   ├── services.yaml
-│   ├── about.yaml
-│   └── contact.yaml
-├── _templates/
-│   ├── audience-research.template.yaml
-│   ├── competitor-analysis.template.yaml
-│   └── page-copy.template.yaml
-└── validation/
-    └── copy-validator.ts
+
+### 3.2 Create Image Generation Types
+
+**New File:** `apps/web/lib/image-generation/types.ts`
+
+**Types:**
+- `ImageGenerationConfig`
+- `GeneratedImage`
+- `IconConfig`
+- `GeneratedIcon`
+- `BrandAsset`
+
+### 3.3 Create Asset Management Utilities
+
+**New File:** `apps/web/lib/image-generation/asset-manager.ts`
+
+**Features:**
+- Save generated images to `/public/images/`
+- Generate alt text from Gemini thinking output
+- Optimize images for web
+- Track generated assets
+
+### 3.4 Create API Route for Image Generation
+
+**New File:** `apps/web/app/api/generate-image/route.ts`
+
+**Features:**
+- POST endpoint for image generation
+- Rate limiting
+- Caching layer
+- Error handling
+
+### 3.5 Create React Hook for Image Generation
+
+**New File:** `apps/web/hooks/use-image-generation.ts`
+
+**Features:**
+```typescript
+export function useImageGeneration() {
+  return {
+    generateHeroImage,
+    generateFeatureIcon,
+    generateAvatar,
+    isGenerating,
+    error
+  }
+}
 ```
 
 ---
 
-## Part 2: Business Consistency Framework
+## Phase 4: UI Library Integration Patterns
 
-### 2.1 Core Concept (From User JSON)
+### 4.1 Create Library Registry
 
-**Why Consistency Matters:**
-- Businesses with consistent NAP are 40% more likely to appear in local pack
-- Google Business Profile = 32% of local pack ranking
-- AI systems (ChatGPT, Perplexity, Gemini) pull from multiple sources
-- One minor variation can split citation equity
+**New File:** `apps/web/lib/design-system/library-registry.ts`
 
-**Key Elements:**
-- Tier 1 Critical: Business name, address, phone (EXACTLY identical everywhere)
-- Tier 2 Essential: Website URL, email, hours, categories
-- Tier 3 Important: Description, service areas, payment methods, social links
-- Tier 4 Australia-Specific: ABN, ACN, license numbers
+**Features:**
+- Document available component libraries
+- Map component types to preferred libraries
+- Provide integration patterns
 
-### 2.2 Skill File: `skills/marketing/BUSINESS-CONSISTENCY.md`
+### 4.2 Create Motion Utilities (Motion Primitives Pattern)
 
-```markdown
+**New File:** `apps/web/components/motion/text-reveal.tsx`
+**New File:** `apps/web/components/motion/fade-in.tsx`
+**New File:** `apps/web/components/motion/stagger-children.tsx`
+
+**Features:**
+- CSS-based animations initially
+- Framer Motion upgrade path
+- Consistent API with Motion Primitives
+
+### 4.3 Create AI Interface Components (Prompt Kit Pattern)
+
+**New File:** `apps/web/components/ai/prompt-input.tsx`
+**New File:** `apps/web/components/ai/message-bubble.tsx`
+**New File:** `apps/web/components/ai/response-stream.tsx`
+
+**Features:**
+- Styled AI input components
+- Message threading UI
+- Streaming response display
+- File upload support
+
+### 4.4 Create Marketing Blocks (StyleUI/KokonutUI Pattern)
+
+**New File:** `apps/web/components/blocks/hero-section.tsx`
+**New File:** `apps/web/components/blocks/feature-grid.tsx`
+**New File:** `apps/web/components/blocks/testimonials.tsx`
+
+**Features:**
+- Pre-built section components
+- Bento grid layouts
+- Asymmetric hero options
+- Card variations
+
 ---
-name: business-consistency-framework
-version: "1.0"
-priority: 2
-triggers:
-  - NAP consistency
-  - business listings
-  - local SEO
-  - GEO optimization
-  - citation building
-  - Google Business Profile
-  - schema markup
-  - directory listings
-  - AI search optimization
-  - Bing Places
-  - Apple Maps
----
 
-# Business Consistency Framework
+## Phase 5: Design System Infrastructure
 
-Consistent NAP = 40% more likely to appear in local pack. One variation = split equity.
+### 5.1 Create Design System Config
 
-## Local Pack Ranking Factors
+**New File:** `apps/web/lib/design-system/config.ts`
 
-| Factor | Weight | Action |
-|--------|--------|--------|
-| GBP Signals | 32% | Optimize Google Business Profile |
-| On-Page | 19% | NAP on website matches GBP |
-| Reviews | 16% | Quantity, velocity, response |
-| Links | 11% | Local backlinks |
-| Citations | 8% | NAP consistency |
-
-## NAP Consistency Tiers
-
-| Tier | Elements | Rule |
-|------|----------|------|
-| 1 Critical | Name, Address, Phone | EXACTLY identical everywhere |
-| 2 Essential | URL, Email, Hours, Category | Consistent format |
-| 3 Important | Description, Service Areas, Social | Align messaging |
-| 4 Australia | ABN, ACN, Licenses | Include where required |
-
-## Platform Priority
-
-| Tier | Platforms | Priority |
-|------|-----------|----------|
-| 1 | GBP, Bing, Apple Maps, Facebook | MANDATORY |
-| 2 | Yellow Pages, True Local, Yelp | HIGH (Australia) |
-| 3 | LinkedIn, Instagram, YouTube | MEDIUM |
-| 4 | StartLocal, dLook, WOMO | BUILD OUT |
-| 5 | Oneflare, hipages (trades) | INDUSTRY |
-
-## Common Mistakes
-
-| Mistake | Impact | Fix |
-|---------|--------|-----|
-| Adding keywords to name | Suspension risk | Legal name only |
-| Different phone formats | Split citations | One format everywhere |
-| St vs Street | Different entities | Pick one, stick to it |
-| Missing Pty Ltd | Inconsistency | Include or exclude consistently |
-
-## Schema Markup (JSON-LD)
-
-Required: @type, name, address, telephone, url
-Recommended: geo, openingHours, sameAs, areaServed
-
-## GEO (AI Search) Notes
-
-- AI pulls from multiple sources - consistency critical
-- Schema helps AI understand your business
-- Entity consistency = better AI recognition
-- Voice assistants rely on citation data
-
-See: `.business-consistency/`, `nap/`, `platforms/`, `schema/`, `geo/`
+**Features:**
+```typescript
+export const designSystem = {
+  brand: {
+    name: 'PROJECT_NAME',
+    industry: 'INDUSTRY',
+    visualStyle: 'modern',
+    colorScheme: 'adaptive'
+  },
+  typography: {
+    headings: { /* scales */ },
+    body: { /* scales */ }
+  },
+  spacing: { /* scales */ },
+  components: { /* preferences */ }
+}
 ```
 
-### 2.3 Scaffold: `.business-consistency/`
+### 5.2 Create Forbidden Pattern Detector
+
+**New File:** `apps/web/lib/design-system/pattern-validator.ts`
+
+**Features:**
+- ESLint rule definitions for forbidden patterns
+- Runtime className validator
+- Component prop validator
+- Development-only warnings
+
+### 5.3 Create Pre-Generation Checklist Hook
+
+**New File:** `apps/web/hooks/use-design-compliance.ts`
+
+**Features:**
+- Check component against design system
+- Validate color token usage
+- Ensure accessibility requirements
+- Development-time warnings
+
+---
+
+## Phase 6: Quality Assurance System
+
+### 6.1 Create ESLint Plugin for Design Patterns
+
+**New File:** `apps/web/lib/eslint/design-rules.ts`
+
+**Rules:**
+- `no-generic-className` - Forbid patterns like `bg-white rounded-lg shadow p-4`
+- `require-design-tokens` - Require color tokens instead of raw Tailwind colors
+- `require-hover-states` - Ensure interactive elements have hover states
+
+### 6.2 Create Component Quality Scorer
+
+**New File:** `apps/web/lib/design-system/quality-scorer.ts`
+
+**Metrics:**
+- Visual distinctiveness
+- Brand alignment
+- Code quality
+- Accessibility score
+
+---
+
+## Phase 7: Documentation & Examples
+
+### 7.1 Create Design System Documentation
+
+**New File:** `apps/web/docs/design-system/README.md`
+
+**Contents:**
+- Color token reference
+- Typography scale
+- Component usage guidelines
+- Library integration examples
+
+### 7.2 Create Example Components
+
+**New File:** `apps/web/app/examples/page.tsx`
+
+**Contents:**
+- Component showcase
+- Before/after comparisons
+- Interactive demos
+
+---
+
+## File Structure After Implementation
 
 ```
-.business-consistency/
-├── MASTER-INDEX.yaml
-├── README.md
-├── nap/
-│   ├── consistency-rules.yaml      # Tier 1-4 elements
-│   ├── format-standards.yaml       # Exact formats (AU)
-│   └── common-mistakes.yaml        # Anti-patterns
-├── platforms/
-│   ├── tier-1-mandatory.yaml       # GBP, Bing, Apple, FB
-│   ├── tier-2-australia.yaml       # Yellow Pages, True Local
-│   ├── tier-3-social.yaml          # LinkedIn, Instagram, YouTube
-│   ├── tier-4-directories.yaml     # StartLocal, dLook, etc.
-│   └── tier-5-industry.yaml        # Oneflare, hipages
-├── schema/
-│   ├── localbusiness-schema.yaml   # Required + recommended
-│   ├── organization-schema.yaml    # Brand entity
+apps/web/
+├── app/
+│   ├── globals.css                    # Enhanced with design tokens
+│   ├── api/
+│   │   └── generate-image/
+│   │       └── route.ts               # Image generation API
 │   └── examples/
-│       ├── plumber.json
-│       ├── electrician.json
-│       └── general-trade.json
-├── geo/
-│   ├── ai-optimization.yaml        # ChatGPT, Perplexity, Gemini
-│   ├── entity-consistency.yaml     # AI entity recognition
-│   └── content-structure.yaml      # AI-parseable content
-├── audit/
-│   ├── checklist.yaml              # Phase 1-4 audit
-│   ├── monitoring-schedule.yaml    # Weekly/monthly/quarterly
-│   └── success-metrics.yaml        # What to measure
-├── master-document/
-│   └── consistency-template.yaml   # Single source of truth
-├── implementation/
-│   ├── week-1-foundation.yaml
-│   ├── week-2-expansion.yaml
-│   └── ongoing-maintenance.yaml
-└── _templates/
-    ├── business-profile.template.yaml
-    ├── platform-listing.template.yaml
-    └── audit-report.template.yaml
+│       └── page.tsx                   # Component showcase
+├── components/
+│   ├── ui/
+│   │   ├── button.tsx                 # Enhanced with variants
+│   │   ├── card.tsx                   # Enhanced with variants
+│   │   ├── loading.tsx                # New loading states
+│   │   └── motion.tsx                 # Animation wrappers
+│   ├── motion/
+│   │   ├── text-reveal.tsx            # Text animation
+│   │   ├── fade-in.tsx                # Fade animation
+│   │   └── stagger-children.tsx       # List animation
+│   ├── ai/
+│   │   ├── prompt-input.tsx           # AI input component
+│   │   ├── message-bubble.tsx         # Chat message
+│   │   └── response-stream.tsx        # Streaming response
+│   └── blocks/
+│       ├── hero-section.tsx           # Hero component
+│       ├── feature-grid.tsx           # Feature grid
+│       └── testimonials.tsx           # Testimonials
+├── lib/
+│   ├── design-system/
+│   │   ├── config.ts                  # Design system config
+│   │   ├── library-registry.ts        # UI library registry
+│   │   ├── pattern-validator.ts       # Forbidden patterns
+│   │   └── quality-scorer.ts          # Quality metrics
+│   ├── image-generation/
+│   │   ├── gemini-client.ts           # Gemini API client
+│   │   ├── types.ts                   # Type definitions
+│   │   └── asset-manager.ts           # Asset handling
+│   └── eslint/
+│       └── design-rules.ts            # Custom ESLint rules
+├── hooks/
+│   ├── use-image-generation.ts        # Image gen hook
+│   └── use-design-compliance.ts       # Compliance hook
+├── tailwind.config.ts                 # Extended configuration
+└── docs/
+    └── design-system/
+        └── README.md                  # Documentation
 ```
 
 ---
 
-## Part 3: Database Schema
+## Implementation Order
 
-### 3.1 New Migration: `00000000000005_copywriting_consistency.sql`
+### Batch 1: Foundation (Start Here)
+1. Update `globals.css` with extended design tokens
+2. Extend `tailwind.config.ts` with animations and colors
+3. Enhance `button.tsx` and `card.tsx` with new variants
 
-```sql
--- ============================================================================
--- Business Core Data (Single Source of Truth for NAP)
--- ============================================================================
+### Batch 2: Core Components
+4. Create `loading.tsx` and `motion.tsx`
+5. Create motion components (`text-reveal`, `fade-in`, `stagger-children`)
+6. Create design system config and library registry
 
-CREATE TABLE businesses (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+### Batch 3: Image Generation
+7. Create Gemini client and types
+8. Create asset manager
+9. Create API route and React hook
 
-  -- Tier 1 Critical (must be identical everywhere)
-  legal_name TEXT NOT NULL,
-  trading_name TEXT,
-  street_address TEXT NOT NULL,
-  suburb TEXT NOT NULL,
-  state TEXT NOT NULL,
-  postcode TEXT NOT NULL,
-  country TEXT DEFAULT 'Australia',
-  primary_phone TEXT NOT NULL,
-  phone_format TEXT,
+### Batch 4: AI & Marketing Blocks
+10. Create AI interface components
+11. Create marketing block components
 
-  -- Tier 2 Essential
-  website_url TEXT,
-  primary_email TEXT,
-  business_hours JSONB,
-  primary_category TEXT,
-  secondary_categories TEXT[],
+### Batch 5: Quality Assurance
+12. Create pattern validator
+13. Create ESLint rules (optional)
+14. Create quality scorer
 
-  -- Tier 3 Important
-  short_description TEXT,    -- 50 words
-  medium_description TEXT,   -- 100 words
-  long_description TEXT,     -- 250 words
-  service_areas TEXT[],
-  payment_methods TEXT[],
-
-  -- Australia Specific (Tier 4)
-  abn TEXT,
-  acn TEXT,
-  license_numbers JSONB,
-
-  -- Geo Coordinates
-  latitude DECIMAL(10, 8),
-  longitude DECIMAL(11, 8),
-
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Platform Listings
--- ============================================================================
-
-CREATE TABLE platform_listings (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-  platform_name TEXT NOT NULL,
-  platform_tier INTEGER NOT NULL,
-  listing_url TEXT,
-  listing_status TEXT CHECK (listing_status IN (
-    'not_started', 'pending', 'claimed', 'verified', 'needs_update'
-  )),
-  name_matches BOOLEAN,
-  address_matches BOOLEAN,
-  phone_matches BOOLEAN,
-  last_verified_at TIMESTAMPTZ,
-  issues JSONB,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Consistency Audits
--- ============================================================================
-
-CREATE TABLE consistency_audits (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-  audit_type TEXT CHECK (audit_type IN ('full', 'nap_only', 'schema_only', 'platform_check')),
-  overall_score INTEGER,
-  platforms_checked INTEGER,
-  platforms_consistent INTEGER,
-  issues JSONB,
-  recommendations JSONB,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Audience Research (Voice of Customer)
--- ============================================================================
-
-CREATE TABLE audience_research (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-  research_source TEXT NOT NULL,
-  source_url TEXT,
-  category TEXT CHECK (category IN (
-    'pain_point', 'symptom', 'dream_outcome', 'failed_solution', 'buying_decision'
-  )),
-  quote TEXT NOT NULL,
-  context TEXT,
-  frequency INTEGER DEFAULT 1,
-  tags TEXT[],
-  is_gold BOOLEAN DEFAULT FALSE,      -- 3+ mentions
-  is_critical BOOLEAN DEFAULT FALSE,  -- 5+ mentions
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Competitor Analysis
--- ============================================================================
-
-CREATE TABLE competitor_analyses (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-  competitor_name TEXT NOT NULL,
-  competitor_url TEXT NOT NULL,
-  page_type TEXT CHECK (page_type IN ('homepage', 'about', 'services', 'contact', 'other')),
-  sections JSONB,
-  unique_features JSONB,
-  notes TEXT,
-  analyzed_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Content Pieces (Generated Copy)
--- ============================================================================
-
-CREATE TABLE content_pieces (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-  content_type TEXT CHECK (content_type IN (
-    'homepage', 'about', 'services', 'contact',
-    'hero', 'problem', 'value_props', 'social_proof',
-    'process', 'faq', 'cta', 'custom'
-  )),
-  title TEXT,
-  content TEXT NOT NULL,
-  quotes_used TEXT[],
-  verified_claims JSONB,
-  status TEXT CHECK (status IN ('draft', 'review', 'approved', 'published')) DEFAULT 'draft',
-  version INTEGER DEFAULT 1,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Brand Guidelines
--- ============================================================================
-
-CREATE TABLE brand_guidelines (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
-  voice_tone TEXT,
-  tone_descriptors TEXT[],
-  words_to_use TEXT[],
-  words_to_avoid TEXT[],
-  value_propositions JSONB,
-  target_audience TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================================================
--- Row Level Security + Indexes
--- ============================================================================
-
-ALTER TABLE businesses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE platform_listings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE consistency_audits ENABLE ROW LEVEL SECURITY;
-ALTER TABLE audience_research ENABLE ROW LEVEL SECURITY;
-ALTER TABLE competitor_analyses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE content_pieces ENABLE ROW LEVEL SECURITY;
-ALTER TABLE brand_guidelines ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users access own businesses" ON businesses FOR ALL USING (auth.uid() = user_id);
--- ... policies for all tables
-
-CREATE INDEX idx_businesses_user ON businesses(user_id);
-CREATE INDEX idx_audience_research_category ON audience_research(category);
-CREATE INDEX idx_audience_research_frequency ON audience_research(frequency DESC);
-CREATE INDEX idx_content_pieces_type ON content_pieces(content_type);
-```
+### Batch 6: Documentation
+15. Create design system documentation
+16. Create example showcase page
 
 ---
 
-## Part 4: Backend Agents
+## Dependencies Required
 
-### 4.1 CopywritingAgent
-
-**File:** `apps/backend/src/agents/copywriting_agent.py`
-
-```python
-class CopywritingAgent(BaseAgent):
-    """Agent for copywriting research and generation."""
-
-    def __init__(self) -> None:
-        super().__init__(
-            name="copywriting",
-            capabilities=[
-                "copywriting", "audience research", "customer research",
-                "competitor analysis", "landing page", "website copy",
-                "conversion copy", "value proposition", "hero section",
-                "VOC", "pain points"
-            ],
-        )
+```json
+{
+  "dependencies": {
+    "@google/generative-ai": "^0.x.x"
+  },
+  "devDependencies": {
+    "framer-motion": "^11.x.x"
+  }
+}
 ```
 
-### 4.2 BusinessConsistencyAgent
-
-**File:** `apps/backend/src/agents/consistency_agent.py`
-
-```python
-class BusinessConsistencyAgent(BaseAgent):
-    """Agent for NAP consistency and citation management."""
-
-    def __init__(self) -> None:
-        super().__init__(
-            name="consistency",
-            capabilities=[
-                "NAP consistency", "business listings", "local SEO",
-                "GEO optimization", "citation", "Google Business Profile",
-                "schema markup", "directory listings", "Bing Places"
-            ],
-        )
-```
+**Note:** Framer Motion is optional - CSS animations work initially
 
 ---
 
-## Part 5: New Tools
+## Environment Variables Required
 
-### 5.1 Copywriting Tools
-
-| Tool | Purpose |
-|------|---------|
-| `copywriting.research_audience` | Research pain points from real sources |
-| `copywriting.analyze_competitor` | Page-by-page competitor analysis |
-| `copywriting.generate_copy` | Generate conversion copy from research |
-| `copywriting.validate_copy` | Check for jargon, clichés, unverified claims |
-
-### 5.2 Consistency Tools
-
-| Tool | Purpose |
-|------|---------|
-| `consistency.audit_nap` | Audit NAP across platforms |
-| `consistency.generate_schema` | Generate JSON-LD schema |
-| `consistency.check_platform` | Verify specific platform listing |
-| `consistency.export_master` | Export consistency master document |
-
----
-
-## Part 6: Frontend Pages
-
-### 6.1 Business Management
-
+```env
+# Gemini Image Generation
+GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
 ```
-apps/web/app/(dashboard)/business/
-├── page.tsx              # Business profile (single source of truth)
-├── listings/page.tsx     # Platform listings dashboard
-└── audit/page.tsx        # Consistency audit results
-```
-
-### 6.2 Copywriting Workflow
-
-```
-apps/web/app/(dashboard)/copywriting/
-├── page.tsx              # Dashboard
-├── research/page.tsx     # Audience research
-├── competitors/page.tsx  # Competitor analysis
-└── generate/page.tsx     # Copy generation
-```
-
----
-
-## Part 7: Integration Points
-
-### 7.1 Foundation-First Integration
-
-- Copy targets specific journey stages
-- Pain points align with persona frustrations
-- CTAs match journey next steps
-- Psychology principles (Cialdini) inform copy placement
-
-### 7.2 Visual Content Integration
-
-- Hero images support hero copy claims
-- Testimonial videos near social proof sections
-- Before/after photos with problem/solution copy
-- Real photos (Tier 1) support authenticity claims
-
-### 7.3 Cross-System Integration
-
-- Schema markup uses business consistency data
-- Copy claims verified against master business document
-- GEO optimization supports copy discoverability
-
----
-
-## Implementation Phases
-
-### Phase 1: Scaffolds & Skills (No code changes)
-
-| Step | Action |
-|------|--------|
-| 1 | Create `.copywriting/` scaffold (~15 files) |
-| 2 | Create `.business-consistency/` scaffold (~20 files) |
-| 3 | Create `skills/marketing/COPYWRITING.md` |
-| 4 | Create `skills/marketing/BUSINESS-CONSISTENCY.md` |
-
-### Phase 2: Database
-
-| Step | Action |
-|------|--------|
-| 5 | Create migration `00000000000005_copywriting_consistency.sql` |
-| 6 | Apply migration |
-
-### Phase 3: Backend
-
-| Step | Action |
-|------|--------|
-| 7 | Create `CopywritingAgent` |
-| 8 | Create `BusinessConsistencyAgent` |
-| 9 | Register agents in registry |
-| 10 | Create copywriting tools |
-| 11 | Create consistency tools |
-| 12 | Register tools |
-
-### Phase 4: Frontend
-
-| Step | Action |
-|------|--------|
-| 13 | Create business profile pages |
-| 14 | Create copywriting dashboard |
-| 15 | Create components |
-
-### Phase 5: Validation
-
-| Step | Action |
-|------|--------|
-| 16 | Create validation scripts |
-| 17 | Test workflows |
-| 18 | Integration testing |
-
----
-
-## Files to Create
-
-| Category | Count | Examples |
-|----------|-------|----------|
-| Skills | 2 | `COPYWRITING.md`, `BUSINESS-CONSISTENCY.md` |
-| Copywriting Scaffold | ~15 | YAML files, templates |
-| Consistency Scaffold | ~20 | YAML files, templates, examples |
-| Database | 1 | Migration SQL |
-| Backend Agents | 2 | Python agent classes |
-| Backend Tools | 2 | Python tool modules |
-| Frontend Pages | ~8 | TSX pages |
-| Frontend Components | ~10 | TSX components |
-
-**Total: ~60 new files**
 
 ---
 
 ## Success Criteria
 
-### Copywriting System
-- [ ] Can capture real customer quotes with categorization
-- [ ] Can analyze competitor pages systematically
-- [ ] Generates copy that uses customer language naturally
-- [ ] No jargon, clichés, or unverified claims in output
-- [ ] Copy follows proven conversion structures
-
-### Business Consistency System
-- [ ] Single source of truth for business data
-- [ ] Can track listings across 20+ platforms
-- [ ] Generates valid LocalBusiness schema
-- [ ] Audit identifies inconsistencies automatically
-- [ ] 40% improvement in local pack visibility
-
-### Integration
-- [ ] Copy aligns with journey stages
-- [ ] Visual content supports copy claims
-- [ ] Schema validates against consistency data
+- [ ] All color usage references design tokens (no raw Tailwind colors)
+- [ ] No forbidden patterns in generated code
+- [ ] All interactive components have hover/focus/active states
+- [ ] Loading states on all async components
+- [ ] Image generation pipeline functional
+- [ ] At least 3 enhanced component variants per base component
+- [ ] Motion components working with CSS animations
+- [ ] AI interface components styled and functional
+- [ ] Marketing blocks with bento/asymmetric layouts
+- [ ] Documentation complete with examples
 
 ---
 
-## Status: AWAITING APPROVAL
+## Risk Considerations
 
-Ready to implement upon user confirmation.
+1. **Gemini API Availability**: Image generation depends on Gemini API access
+   - Mitigation: Placeholder images and graceful fallbacks
+
+2. **Bundle Size**: Adding animation libraries increases bundle
+   - Mitigation: Start with CSS, lazy-load Framer Motion
+
+3. **Breaking Changes**: Modifying existing components may affect pages
+   - Mitigation: New variants are additive, defaults unchanged
+
+4. **Team Adoption**: New patterns require learning
+   - Mitigation: Comprehensive documentation and examples
