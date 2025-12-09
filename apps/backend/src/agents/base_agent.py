@@ -15,6 +15,7 @@ import uuid
 from pydantic import BaseModel, Field
 
 from src.utils import get_logger
+from src.skills import SkillLoader, SkillExecutor
 
 
 # ============================================================================
@@ -106,6 +107,10 @@ class BaseAgent(ABC):
         self._current_task_id: str | None = None
         self._current_outputs: list[dict[str, Any]] = []
         self._completion_criteria: list[dict[str, Any]] = []
+
+        # Skill integration
+        self._skill_executor = SkillExecutor()
+        self._loaded_skills: list[str] = []
 
     @abstractmethod
     async def execute(
@@ -257,6 +262,103 @@ class BaseAgent(ABC):
         """
         task_lower = task_description.lower()
         return any(cap.lower() in task_lower for cap in self.capabilities)
+
+    # =========================================================================
+    # SKILL INTEGRATION - Load and use skills during task execution
+    # =========================================================================
+
+    def load_relevant_skills(self, task_description: str) -> list[str]:
+        """Load skills relevant to the current task.
+
+        This method finds skills that match the agent's capabilities and
+        the task description, and loads them for use during execution.
+
+        Args:
+            task_description: Description of the task to execute
+
+        Returns:
+            List of loaded skill names
+        """
+        loaded = []
+
+        # Try to find skills matching agent capabilities
+        for capability in self.capabilities:
+            # Map capabilities to skill paths
+            skill_mapping = {
+                "frontend": ["frontend/NEXTJS.md", "frontend/COMPONENTS.md"],
+                "react": ["frontend/NEXTJS.md", "frontend/COMPONENTS.md"],
+                "nextjs": ["frontend/NEXTJS.md"],
+                "backend": ["backend/FASTAPI.md", "backend/AGENTS.md"],
+                "api": ["backend/FASTAPI.md"],
+                "fastapi": ["backend/FASTAPI.md"],
+                "database": ["database/SUPABASE.md", "database/MIGRATIONS.md"],
+                "supabase": ["database/SUPABASE.md"],
+                "devops": ["devops/DOCKER.md", "devops/DEPLOYMENT.md"],
+            }
+
+            skill_paths = skill_mapping.get(capability.lower(), [])
+            for skill_path in skill_paths:
+                if self._skill_executor.load_skill(skill_path):
+                    skill_name = skill_path.replace(".md", "").replace("/", "_")
+                    loaded.append(skill_name)
+                    self._loaded_skills.append(skill_name)
+
+        # Always load core skills
+        core_skills = [
+            "core/VERIFICATION.md",
+            "core/ERROR-HANDLING.md",
+            "core/CODING-STANDARDS.md",
+        ]
+        for skill_path in core_skills:
+            if self._skill_executor.load_skill(skill_path):
+                skill_name = skill_path.replace(".md", "").replace("/", "_")
+                if skill_name not in loaded:
+                    loaded.append(skill_name)
+                    self._loaded_skills.append(skill_name)
+
+        if loaded:
+            self.logger.info(
+                "Loaded skills for task",
+                task=task_description[:100],
+                skills=loaded,
+                agent=self.name,
+            )
+
+        return loaded
+
+    def get_skill_context(self) -> str:
+        """Get combined context from all loaded skills.
+
+        Returns:
+            Combined skill prompts as context for LLM
+        """
+        if not self._loaded_skills:
+            return ""
+
+        context_parts = ["# Loaded Skills and Guidelines\n"]
+
+        for skill_name in self._loaded_skills:
+            prompt = self._skill_executor.get_skill_prompt(skill_name)
+            if prompt:
+                context_parts.append(f"\n## {skill_name}\n")
+                context_parts.append(prompt)
+                context_parts.append("\n")
+
+        return "\n".join(context_parts)
+
+    def get_skill_verification_steps(self) -> list[str]:
+        """Get verification steps from all loaded skills.
+
+        Returns:
+            List of verification step descriptions
+        """
+        all_steps = []
+
+        for skill_name in self._loaded_skills:
+            steps = self._skill_executor.get_verification_steps(skill_name)
+            all_steps.extend(steps)
+
+        return all_steps
 
 
 # ============================================================================

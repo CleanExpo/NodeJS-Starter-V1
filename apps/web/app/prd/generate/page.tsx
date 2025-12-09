@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, CheckCircle2, Download, Eye } from "lucide-react";
-import { usePRDGenerationWithProgress } from "@/hooks/use-prd-generation";
+import { usePRDGenerationWithProgress, type PRDGenerationRequest } from "@/hooks/use-prd-generation";
 import Link from "next/link";
 
 export default function PRDGeneratePage() {
@@ -24,7 +24,7 @@ export default function PRDGeneratePage() {
     reset,
   } = usePRDGenerationWithProgress();
 
-  const handleGenerate = async (request: any) => {
+  const handleGenerate = async (request: PRDGenerationRequest) => {
     await generatePRD(request);
   };
 

@@ -50,6 +50,7 @@ from .features import (
     FeatureCategory,
     FeaturePriority,
     generate_features_from_spec,
+    load_features_from_prd_json,
 )
 from .initializer import (
     InitializerAgent,
@@ -85,6 +86,7 @@ __all__ = [
     "FeatureCategory",
     "FeaturePriority",
     "generate_features_from_spec",
+    "load_features_from_prd_json",
     # Initializer agent
     "InitializerAgent",
     "InitializerConfig",

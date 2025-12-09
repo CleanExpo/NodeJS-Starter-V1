@@ -42,6 +42,9 @@ coverage/
 htmlcov/
 .coverage
 .coverage.*
+test-results/
+playwright-report/
+playwright/.cache/
 
 # Logs
 logs/

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,21 +19,21 @@ export async function POST(request: NextRequest) {
 
     switch (event) {
       case "task.completed":
-        console.log("Task completed:", data);
+        logger.info("Task completed", { data });
         break;
       case "task.failed":
-        console.log("Task failed:", data);
+        logger.warn("Task failed", { data });
         break;
       case "agent.status":
-        console.log("Agent status update:", data);
+        logger.info("Agent status update", { data });
         break;
       default:
-        console.log("Unknown webhook event:", event);
+        logger.warn("Unknown webhook event", { event, data });
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    logger.error("Webhook error", error);
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }

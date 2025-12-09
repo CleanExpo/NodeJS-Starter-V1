@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger";
 /**
  * Health Check Cron Job
  *
- * Runs every 5 minutes (*/5 * * * *)
+ * Runs every 5 minutes
  * Pings the backend to ensure it's responsive
  * Can be extended to check database, external services, etc.
  */

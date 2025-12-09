@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field
 
 from ..base_agent import BaseAgent
 from .progress import ProgressTracker, create_init_script
-from .features import FeatureManager, generate_features_from_spec
+from .features import FeatureManager, generate_features_from_spec, load_features_from_prd_json
 
 
 class InitializerConfig(BaseModel):
@@ -229,92 +229,66 @@ class InitializerAgent(BaseAgent):
     ) -> list[dict[str, Any]]:
         """Generate feature list from specification.
 
-        In a full implementation, this would use Claude to analyze
-        the specification and generate comprehensive features.
+        Priority order:
+        1. Load from feature_list_path if provided (PRD-generated JSON)
+        2. Use provided features list if in context
+        3. Use custom feature_generator callback if provided
+        4. Generate from spec using PRD system (default)
         """
-        # Check if features are provided in context
+        # Option 1: Load from PRD-generated feature_list.json
+        if "feature_list_path" in context:
+            feature_list_path = context["feature_list_path"]
+            self.logger.info(
+                "Loading features from PRD JSON",
+                path=feature_list_path
+            )
+            try:
+                return load_features_from_prd_json(feature_list_path)
+            except Exception as e:
+                self.logger.error(
+                    "Failed to load PRD feature list, falling back to generation",
+                    path=feature_list_path,
+                    error=str(e),
+                )
+                # Fall through to generation
+
+        # Option 2: Features provided directly
         if "features" in context:
+            self.logger.info("Using features from context")
             return context["features"]
 
-        # Check if feature generator is provided
+        # Option 3: Custom feature generator callback
         feature_generator = context.get("feature_generator")
         if feature_generator:
+            self.logger.info("Using custom feature generator")
             return await feature_generator(specification)
 
-        # Use the basic generator
-        features = generate_features_from_spec(specification)
+        # Option 4: Generate from spec using PRD system (default)
+        self.logger.info("Generating features using PRD system")
 
-        # Add specification-based features
-        spec_lower = specification.lower()
+        # Prepare PRD context
+        prd_context = {
+            "target_users": context.get("target_users", "Users"),
+            "timeline": context.get("timeline", "3 months"),
+            "team_size": context.get("team_size", 2),
+        }
 
-        # Detect common patterns and add features
-        if "chat" in spec_lower or "conversation" in spec_lower:
-            features.extend([
-                {
-                    "id": "new-chat",
-                    "category": "functional",
-                    "priority": "critical",
-                    "description": "User can start a new chat",
-                    "steps": [
-                        "Click 'New Chat' button",
-                        "Verify new conversation is created",
-                        "Check that chat area shows welcome state",
-                    ],
-                },
-                {
-                    "id": "send-message",
-                    "category": "functional",
-                    "priority": "critical",
-                    "description": "User can send a message and receive a response",
-                    "steps": [
-                        "Type a message in the input field",
-                        "Press Enter or click Send",
-                        "Verify message appears in chat",
-                        "Wait for AI response",
-                        "Verify response appears below user message",
-                    ],
-                },
-            ])
+        # Add any additional context keys that PRD system might use
+        for key in ["existing_stack", "technology_constraints", "budget", "compliance"]:
+            if key in context:
+                prd_context[key] = context[key]
 
-        if "auth" in spec_lower or "login" in spec_lower:
-            features.extend([
-                {
-                    "id": "user-login",
-                    "category": "functional",
-                    "priority": "critical",
-                    "description": "User can log in with credentials",
-                    "steps": [
-                        "Navigate to login page",
-                        "Enter email and password",
-                        "Click Login button",
-                        "Verify successful login redirect",
-                    ],
-                },
-                {
-                    "id": "user-logout",
-                    "category": "functional",
-                    "priority": "high",
-                    "description": "User can log out",
-                    "steps": [
-                        "Click user menu",
-                        "Click Logout",
-                        "Verify redirect to login page",
-                    ],
-                },
-            ])
+        # Generate features using PRD system
+        features = await generate_features_from_spec(
+            spec=specification,
+            context=prd_context,
+            output_dir=context.get("prd_output_dir"),  # Optional: save PRD docs
+        )
 
-        if "theme" in spec_lower or "dark mode" in spec_lower:
-            features.append({
-                "id": "theme-toggle",
-                "category": "ui",
-                "priority": "medium",
-                "description": "User can toggle between light and dark themes",
-                "steps": [
-                    "Click theme toggle",
-                    "Verify theme changes",
-                    "Verify preference is saved",
-                ],
-            })
+        self.logger.info(
+            "Generated features from PRD",
+            feature_count=len(features),
+        )
 
         return features
 
