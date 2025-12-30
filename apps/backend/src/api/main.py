@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.config import get_settings
 from src.utils import setup_logging, get_logger
 
-from .routes import agents, chat, health, webhooks, prd, workflows, rag, analytics, agent_dashboard
+from .routes import agents, chat, health, webhooks, prd, workflows, rag, analytics, agent_dashboard, task_queue
 from .middleware.auth import AuthMiddleware
 from .middleware.rate_limit import RateLimitMiddleware
 
@@ -56,6 +56,7 @@ app.include_router(workflows.router, prefix="/api", tags=["Workflows"])
 app.include_router(rag.router, prefix="/api", tags=["RAG Pipeline"])
 app.include_router(analytics.router, prefix="/api", tags=["Analytics"])
 app.include_router(agent_dashboard.router, tags=["Agent Dashboard"])
+app.include_router(task_queue.router, tags=["Task Queue"])
 
 
 @app.get("/")
