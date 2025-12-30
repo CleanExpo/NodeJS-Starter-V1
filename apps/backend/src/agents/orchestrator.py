@@ -52,6 +52,12 @@ from src.agents.long_running import (
     SessionRunner,
     check_if_initialized,
 )
+from src.agents.subagent_manager import (
+    SubagentManager,
+    SubagentConfig,
+    SubTask,
+    SubagentResult,
+)
 from src.utils import get_logger
 
 logger = get_logger(__name__)
@@ -170,8 +176,11 @@ class OrchestratorAgent(BaseAgent):
         self.tool_searcher = ToolSearcher(self.tool_registry)
         self.programmatic_caller = ProgrammaticToolCaller(self.tool_registry)
 
+        # Initialize subagent manager (Phase 2.1)
+        self.subagent_manager = SubagentManager(self.registry)
+
         logger.info(
-            "Orchestrator initialized with advanced tool use",
+            "Orchestrator initialized with advanced tool use and subagent coordination",
             tool_stats=self.tool_registry.get_context_stats(),
         )
 
@@ -387,6 +396,249 @@ class OrchestratorAgent(BaseAgent):
         """
         runner = SessionRunner(project_path)
         return runner.get_progress()
+
+    # =========================================================================
+    # Subagent Coordination Methods (Phase 2.1)
+    # =========================================================================
+
+    async def spawn_subagent(
+        self,
+        agent_type: str,
+        subtask: SubTask,
+        context_partition: dict[str, Any] | None = None
+    ) -> BaseAgent:
+        """Spawn a specialized subagent for a subtask.
+
+        Args:
+            agent_type: Type of agent to spawn (frontend, backend, database, etc.)
+            subtask: The subtask to execute
+            context_partition: Partitioned context (only relevant data)
+
+        Returns:
+            Spawned agent instance
+        """
+        config = SubagentConfig(
+            agent_type=agent_type,
+            task=subtask,
+            context_partition=context_partition or {}
+        )
+
+        agents = await self.subagent_manager.launch([config])
+
+        if not agents:
+            raise RuntimeError(f"Failed to spawn {agent_type} subagent")
+
+        logger.info(
+            "Subagent spawned",
+            agent_type=agent_type,
+            subtask_id=subtask.subtask_id,
+            agent_id=agents[0].get_agent_id()
+        )
+
+        return agents[0]
+
+    async def coordinate_parallel(
+        self,
+        subtasks: list[SubTask]
+    ) -> list[SubagentResult]:
+        """Execute multiple subtasks in parallel with dependency resolution.
+
+        Args:
+            subtasks: List of subtasks to execute
+
+        Returns:
+            List of subagent results
+        """
+        logger.info(
+            "Coordinating parallel execution",
+            subtask_count=len(subtasks)
+        )
+
+        # Create configs for all subtasks
+        configs = [
+            SubagentConfig(
+                agent_type=subtask.agent_type,
+                task=subtask,
+                context_partition=self._partition_context_for_subagent(subtask)
+            )
+            for subtask in subtasks
+        ]
+
+        # Execute in parallel with dependency resolution
+        results = await self.subagent_manager.execute_parallel(configs)
+
+        # Handle failures
+        failed_results = [r for r in results if r.status == "failed"]
+        if failed_results:
+            failure_analysis = await self.subagent_manager.handle_failures(failed_results)
+            logger.warning(
+                "Some subagents failed",
+                failed_count=len(failed_results),
+                analysis=failure_analysis
+            )
+
+        logger.info(
+            "Parallel coordination complete",
+            total=len(results),
+            successful=sum(1 for r in results if r.status == "completed")
+        )
+
+        return results
+
+    async def merge_results(
+        self,
+        results: list[SubagentResult]
+    ) -> dict[str, Any]:
+        """Merge results from multiple subagents.
+
+        Args:
+            results: Results from subagents
+
+        Returns:
+            Merged result combining all subagent outputs
+        """
+        merged = {
+            "subtask_results": [],
+            "combined_outputs": [],
+            "all_completion_criteria": [],
+            "total_duration": 0.0,
+            "all_successful": True
+        }
+
+        for result in results:
+            merged["subtask_results"].append({
+                "subtask_id": result.subtask_id,
+                "agent_type": result.agent_type,
+                "status": result.status,
+                "duration": result.duration_seconds
+            })
+
+            if result.status != "completed":
+                merged["all_successful"] = False
+
+            if result.task_output:
+                merged["combined_outputs"].extend(result.task_output.outputs)
+                merged["all_completion_criteria"].extend(
+                    result.task_output.completion_criteria
+                )
+
+            if result.duration_seconds:
+                merged["total_duration"] += result.duration_seconds
+
+        logger.info(
+            "Results merged",
+            subtasks=len(results),
+            total_outputs=len(merged["combined_outputs"]),
+            all_successful=merged["all_successful"]
+        )
+
+        return merged
+
+    async def resolve_conflicts(
+        self,
+        conflicting_results: list[SubagentResult]
+    ) -> dict[str, Any]:
+        """Resolve conflicts between subagent results.
+
+        For example, if multiple agents modified the same file.
+
+        Args:
+            conflicting_results: Results that conflict
+
+        Returns:
+            Resolution with chosen approach
+        """
+        resolution = {
+            "conflicts_detected": len(conflicting_results),
+            "resolved_by": "priority",  # Could be: priority, merge, manual, etc.
+            "chosen_result": None,
+            "reasoning": []
+        }
+
+        if not conflicting_results:
+            return resolution
+
+        # Simple resolution: Choose by priority
+        # (Could be enhanced with more sophisticated strategies)
+        sorted_by_priority = sorted(
+            conflicting_results,
+            key=lambda r: r.status == "completed",  # Successful first
+            reverse=True
+        )
+
+        resolution["chosen_result"] = sorted_by_priority[0]
+        resolution["reasoning"].append(
+            "Chose successful result over failed results"
+        )
+
+        logger.info(
+            "Conflicts resolved",
+            conflicts=len(conflicting_results),
+            chosen=sorted_by_priority[0].subtask_id
+        )
+
+        return resolution
+
+    def _partition_context_for_subagent(
+        self,
+        subtask: SubTask
+    ) -> dict[str, Any]:
+        """Partition context to give subagent only relevant data.
+
+        This prevents context window bloat by loading only what each agent needs.
+
+        Args:
+            subtask: The subtask to partition context for
+
+        Returns:
+            Partitioned context dict
+        """
+        # Simple partitioning by agent type
+        partitions = {
+            "frontend": {
+                "relevant_paths": ["apps/web/**/*.tsx", "apps/web/**/*.ts"],
+                "skills": ["NEXTJS.md", "COMPONENTS.md", "TAILWIND.md"],
+                "memory_domain": "frontend"
+            },
+            "backend": {
+                "relevant_paths": ["apps/backend/src/**/*.py"],
+                "skills": ["FASTAPI.md", "LANGGRAPH.md", "AGENTS.md"],
+                "memory_domain": "backend"
+            },
+            "database": {
+                "relevant_paths": ["supabase/migrations/**/*.sql"],
+                "skills": ["SUPABASE.md", "MIGRATIONS.md"],
+                "memory_domain": "database"
+            },
+            "test": {
+                "relevant_paths": ["tests/**/*.py", "**/*.test.ts"],
+                "skills": ["TESTING.md"],
+                "memory_domain": "testing"
+            },
+            "review": {
+                "relevant_paths": ["**/*"],  # Review needs broader view
+                "skills": ["CODE_REVIEW.md"],
+                "memory_domain": "knowledge"
+            }
+        }
+
+        partition = partitions.get(subtask.agent_type, {})
+
+        context = {
+            "subtask": subtask.model_dump(),
+            "relevant_paths": partition.get("relevant_paths", []),
+            "skills_to_load": partition.get("skills", []),
+            "memory_domain": partition.get("memory_domain"),
+            **subtask.context  # Include subtask-specific context
+        }
+
+        logger.debug(
+            "Context partitioned for subagent",
+            agent_type=subtask.agent_type,
+            context_keys=list(context.keys())
+        )
+
+        return context
 
     async def execute(
         self,

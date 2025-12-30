@@ -5,6 +5,7 @@ memory types, implementing semantic search via pgvector and efficient CRUD opera
 """
 
 import json
+from datetime import datetime
 from typing import Any, Optional
 from uuid import UUID
 
@@ -479,3 +480,239 @@ class MemoryStore:
                     text_parts.append(f"{k}: {', '.join(v)}")
 
         return " | ".join(text_parts)
+
+    # =========================================================================
+    # Session Management & Learning (Phase 1.3)
+    # =========================================================================
+
+    async def capture_session_learnings(
+        self,
+        session_id: str,
+        task_outcomes: list[dict[str, Any]],
+        user_id: Optional[str] = None
+    ) -> list[MemoryEntry]:
+        """Capture learnings from a session of tasks.
+
+        Args:
+            session_id: Unique session identifier
+            task_outcomes: List of task results with outcomes
+            user_id: Optional user ID
+
+        Returns:
+            List of created memory entries
+        """
+        learnings = []
+
+        # Extract patterns from successful tasks
+        successful_tasks = [t for t in task_outcomes if t.get("success")]
+        for task in successful_tasks:
+            # Store successful pattern
+            entry = await self.store_pattern(
+                pattern_type=task.get("type", "general"),
+                pattern_data={
+                    "approach": task.get("approach"),
+                    "tools_used": task.get("tools_used", []),
+                    "duration": task.get("duration"),
+                    "success_factors": task.get("success_factors", [])
+                },
+                session_id=session_id,
+                user_id=user_id
+            )
+            learnings.append(entry)
+
+        # Store failure patterns to avoid repeating
+        failed_tasks = [t for t in task_outcomes if not t.get("success")]
+        for task in failed_tasks:
+            entry = await self.store_failure(
+                failure_type=task.get("failure_type", "unknown"),
+                context={
+                    "task_type": task.get("type"),
+                    "error": task.get("error"),
+                    "attempted_approach": task.get("approach"),
+                    "why_failed": task.get("failure_reason")
+                },
+                session_id=session_id,
+                user_id=user_id
+            )
+            learnings.append(entry)
+
+        logger.info(
+            "Session learnings captured",
+            session_id=session_id,
+            learnings_count=len(learnings),
+            successful=len(successful_tasks),
+            failed=len(failed_tasks)
+        )
+
+        return learnings
+
+    async def store_pattern(
+        self,
+        pattern_type: str,
+        pattern_data: dict[str, Any],
+        session_id: Optional[str] = None,
+        user_id: Optional[str] = None
+    ) -> MemoryEntry:
+        """Store a successful pattern for future reuse.
+
+        Args:
+            pattern_type: Type of pattern (e.g., "authentication", "api_design")
+            pattern_data: The pattern details
+            session_id: Optional session ID where discovered
+            user_id: Optional user ID
+
+        Returns:
+            Created memory entry
+        """
+        return await self.create(
+            domain=MemoryDomain.KNOWLEDGE,
+            category="patterns",
+            key=f"pattern_{pattern_type}_{hash(str(pattern_data)) % 10000}",
+            value={
+                "pattern_type": pattern_type,
+                **pattern_data,
+                "discovered_in_session": session_id
+            },
+            user_id=user_id,
+            source="session_learning",
+            tags=["pattern", pattern_type],
+            generate_embedding=True
+        )
+
+    async def store_failure(
+        self,
+        failure_type: str,
+        context: dict[str, Any],
+        session_id: Optional[str] = None,
+        user_id: Optional[str] = None
+    ) -> MemoryEntry:
+        """Store a failure pattern to avoid repeating.
+
+        Args:
+            failure_type: Type of failure
+            context: Context of what failed and why
+            session_id: Optional session ID
+            user_id: Optional user ID
+
+        Returns:
+            Created memory entry
+        """
+        return await self.create(
+            domain=MemoryDomain.TESTING,
+            category="failure_patterns",
+            key=f"failure_{failure_type}_{hash(str(context)) % 10000}",
+            value={
+                "failure_type": failure_type,
+                **context,
+                "session_id": session_id,
+                "timestamp": datetime.now().isoformat()
+            },
+            user_id=user_id,
+            source="failure_analysis",
+            tags=["failure", failure_type],
+            generate_embedding=True
+        )
+
+    async def retrieve_relevant_context(
+        self,
+        task_description: str,
+        domain: Optional[MemoryDomain] = None,
+        user_id: Optional[str] = None,
+        limit: int = 5
+    ) -> list[dict[str, Any]]:
+        """Retrieve relevant past work for a new task.
+
+        Args:
+            task_description: Description of current task
+            domain: Optional domain filter
+            user_id: Optional user filter
+            limit: Max results
+
+        Returns:
+            List of relevant memory entries with similarity scores
+        """
+        # Use vector search to find similar past work
+        similar = await self.find_similar(
+            query_text=task_description,
+            domain=domain,
+            user_id=user_id,
+            similarity_threshold=0.7,
+            limit=limit
+        )
+
+        logger.debug(
+            "Retrieved relevant context",
+            task=task_description[:100],
+            found=len(similar),
+            domain=domain
+        )
+
+        return similar
+
+    async def get_failure_patterns(
+        self,
+        failure_type: Optional[str] = None,
+        user_id: Optional[str] = None,
+        limit: int = 10
+    ) -> list[MemoryEntry]:
+        """Get known failure patterns to avoid.
+
+        Args:
+            failure_type: Optional filter by failure type
+            user_id: Optional user filter
+            limit: Max results
+
+        Returns:
+            List of failure pattern memories
+        """
+        query = MemoryQuery(
+            domain=MemoryDomain.TESTING,
+            category="failure_patterns",
+            user_id=user_id,
+            limit=limit
+        )
+
+        result = await self.query(query)
+
+        # Filter by failure type if specified
+        if failure_type:
+            result.entries = [
+                e for e in result.entries
+                if e.value.get("failure_type") == failure_type
+            ]
+
+        return result.entries
+
+    async def get_successful_patterns(
+        self,
+        pattern_type: Optional[str] = None,
+        user_id: Optional[str] = None,
+        limit: int = 10
+    ) -> list[MemoryEntry]:
+        """Get successful patterns to reuse.
+
+        Args:
+            pattern_type: Optional filter by pattern type
+            user_id: Optional user filter
+            limit: Max results
+
+        Returns:
+            List of successful pattern memories
+        """
+        query = MemoryQuery(
+            domain=MemoryDomain.KNOWLEDGE,
+            category="patterns",
+            user_id=user_id,
+            limit=limit
+        )
+
+        result = await self.query(query)
+
+        # Filter by pattern type if specified
+        if pattern_type:
+            result.entries = [
+                e for e in result.entries
+                if e.value.get("pattern_type") == pattern_type
+            ]
+
+        return result.entries

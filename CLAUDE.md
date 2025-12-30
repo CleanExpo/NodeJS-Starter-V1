@@ -1,5 +1,11 @@
 # CLAUDE.md
 
+> **⚡ NEW: This project now uses Claude's modular memory system!**
+> 
+> **Main project memory**: `.claude/CLAUDE.md`
+> **Path-specific rules**: `.claude/rules/` (auto-load based on files you're working on)
+> **Documentation**: `docs/claude-memory-system.md`
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview

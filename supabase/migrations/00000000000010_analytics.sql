@@ -202,7 +202,6 @@ CREATE POLICY "Public read access to analytics metrics"
 
 CREATE POLICY "Service role can write analytics"
     ON public.analytics_metrics_hourly FOR INSERT
-    USING (auth.jwt() ->> 'role' = 'service_role')
     WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
 
 -- API usage (user-specific via agent_runs join)
@@ -218,7 +217,6 @@ CREATE POLICY "Users can view their own API usage"
 
 CREATE POLICY "Service role can write API usage"
     ON public.api_usage FOR INSERT
-    USING (auth.jwt() ->> 'role' = 'service_role')
     WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
 
 -- Tool usage (service role only)

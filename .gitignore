@@ -28,6 +28,9 @@ ENV/
 .env.*.local
 !.env.example
 
+# Claude Memory (personal settings)
+CLAUDE.local.md
+
 # IDE
 .idea/
 *.swp
