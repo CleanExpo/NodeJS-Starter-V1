@@ -1,6 +1,7 @@
 """Tests for agent dashboard API routes."""
 
 import pytest
+from unittest.mock import patch, AsyncMock
 from fastapi.testclient import TestClient
 from src.api.main import app
 
@@ -10,8 +11,22 @@ client = TestClient(app)
 class TestAgentDashboardAPI:
     """Tests for agent dashboard endpoints."""
 
-    def test_get_agent_stats(self):
+    @patch('src.api.routes.agent_dashboard.AgentMetrics')
+    def test_get_agent_stats(self, mock_metrics_class):
         """Test GET /api/agents/stats endpoint."""
+        # Mock the get_overall_statistics method
+        mock_instance = mock_metrics_class.return_value
+        mock_instance.get_overall_statistics = AsyncMock(return_value={
+            "total_tasks": 100,
+            "successful_tasks": 85,
+            "failed_tasks": 15,
+            "success_rate": 0.85,
+            "by_agent_type": {
+                "frontend": {"total": 40, "successful": 35},
+                "backend": {"total": 60, "successful": 50}
+            }
+        })
+
         response = client.get("/api/agents/stats")
 
         assert response.status_code == 200
@@ -24,13 +39,23 @@ class TestAgentDashboardAPI:
         assert "success_rate" in data
         assert "avg_iterations" in data
 
-        # Verify types
-        assert isinstance(data["total_agents"], int)
-        assert isinstance(data["success_rate"], float)
-        assert 0 <= data["success_rate"] <= 1
+        # Verify values
+        assert data["total_agents"] == 2  # frontend + backend
+        assert data["total_tasks"] == 100
+        assert data["success_rate"] == 0.85
 
-    def test_get_agent_stats_with_time_range(self):
+    @patch('src.api.routes.agent_dashboard.AgentMetrics')
+    def test_get_agent_stats_with_time_range(self, mock_metrics_class):
         """Test stats endpoint with custom time range."""
+        mock_instance = mock_metrics_class.return_value
+        mock_instance.get_overall_statistics = AsyncMock(return_value={
+            "total_tasks": 50,
+            "successful_tasks": 45,
+            "failed_tasks": 5,
+            "success_rate": 0.90,
+            "by_agent_type": {}
+        })
+
         response = client.get("/api/agents/stats?time_range=30")
 
         assert response.status_code == 200
@@ -39,21 +64,22 @@ class TestAgentDashboardAPI:
 
     def test_list_agents(self):
         """Test GET /api/agents/list endpoint."""
+        # This endpoint returns hardcoded data, no mocking needed
         response = client.get("/api/agents/list")
 
         assert response.status_code == 200
         agents = response.json()
 
         assert isinstance(agents, list)
+        assert len(agents) == 3  # Hardcoded 3 agents
 
-        # Verify agent structure if any agents exist
-        if agents:
-            agent = agents[0]
-            assert "agent_id" in agent
-            assert "agent_type" in agent
-            assert "status" in agent
-            assert "task_count" in agent
-            assert "success_rate" in agent
+        # Verify agent structure
+        agent = agents[0]
+        assert "agent_id" in agent
+        assert "agent_type" in agent
+        assert "status" in agent
+        assert "task_count" in agent
+        assert "success_rate" in agent
 
     def test_list_agents_filtered_by_type(self):
         """Test listing agents with type filter."""
@@ -68,6 +94,7 @@ class TestAgentDashboardAPI:
 
     def test_get_recent_tasks(self):
         """Test GET /api/agents/tasks/recent endpoint."""
+        # This endpoint returns hardcoded data, no mocking needed
         response = client.get("/api/agents/tasks/recent?limit=5")
 
         assert response.status_code == 200
@@ -76,7 +103,7 @@ class TestAgentDashboardAPI:
         assert isinstance(tasks, list)
         assert len(tasks) <= 5
 
-        # Verify task structure if any tasks exist
+        # Verify task structure
         if tasks:
             task = tasks[0]
             assert "task_id" in task
@@ -101,6 +128,7 @@ class TestAgentDashboardAPI:
 
     def test_get_performance_trends(self):
         """Test GET /api/agents/performance/trends endpoint."""
+        # This endpoint returns hardcoded data, no mocking needed
         response = client.get("/api/agents/performance/trends?days=7")
 
         assert response.status_code == 200
