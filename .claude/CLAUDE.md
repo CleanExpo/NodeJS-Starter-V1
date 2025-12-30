@@ -1,46 +1,46 @@
 # Project Memory
 
-> **Monorepo**: Next.js 15 frontend + FastAPI/LangGraph backend + Supabase database with AI agent orchestration
+> **Monorepo**: Next.js 15 + FastAPI/LangGraph + Supabase with AI agent orchestration
 
-## Quick Commands
+## Quick Start
 
 ```bash
-# Development (choose one)
+# Development
 pnpm dev                          # All services
-pnpm dev --filter=web             # Frontend only  
+pnpm dev --filter=web             # Frontend only
 cd apps/backend && uv run uvicorn src.api.main:app --reload  # Backend only
 
 # Database
-supabase start && supabase db push   # Start and apply migrations
+supabase start && supabase db push
 
-# Testing & Quality
-pnpm turbo run type-check lint test  # All checks
-.\scripts\health-check.ps1            # System health check
+# Quality
+pnpm turbo run type-check lint test
+.\scripts\health-check.ps1
 
-# Pre-PR Check
-pnmp turbo run type-check lint test && echo "✅ Ready for PR"
+# Pre-PR
+pnpm turbo run type-check lint test && echo "✅ Ready"
 ```
 
-## Architecture Overview
+## Stack
 
-| Layer | Path | Stack |
-|-------|------|-------|
-| Frontend | `apps/web/` | Next.js 15, React 19, Tailwind v4, shadcn/ui |
+| Layer | Path | Tech |
+|-------|------|------|
+| Frontend | `apps/web/` | Next.js 15, React 19, Tailwind v4 |
 | Backend | `apps/backend/src/` | FastAPI, LangGraph, Pydantic |
 | Database | `supabase/` | PostgreSQL, pgvector, RLS |
 
 ## Key Systems
 
-- **Orchestrator** (`apps/backend/src/agents/orchestrator.py`): Routes tasks, enforces independent verification
-- **Advanced Tools** (`apps/backend/src/tools/`): Tool Search, Programmatic Calling, defer_loading
-- **Long-Running** (`apps/backend/src/agents/long_running/`): Multi-session agents via progress files
-- **Verification** (`apps/backend/src/verification/`): Independent verification, no self-attestation
-- **Domain Memory** (`apps/backend/src/memory/`): Vector-based persistent memory with embeddings
-- **Health Checks** (`scripts/health-check.ps1`): 6-phase comprehensive validation
+- **Orchestrator** - Task routing, verification enforcement
+- **Tools** - Advanced tool search & programmatic calling
+- **Long-Running** - Multi-session agents via progress files
+- **Verification** - Independent verification, no self-attestation
+- **Memory** - Vector-based persistent memory
+- **Health Checks** - 6-phase validation system
 
-## Environment Setup
+## Environment
 
-Required `.env` variables:
+Required in `.env`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
@@ -50,32 +50,31 @@ OPENAI_API_KEY=
 BACKEND_URL=http://localhost:8000
 ```
 
-## Rules Structure
+## Rules
 
-Path-specific rules automatically load based on files being worked on:
+**Path-specific rules auto-load** based on files being worked on:
+- `apps/web/**/*.{ts,tsx}` → Frontend rules
+- `apps/backend/src/**/*.py` → Backend rules
+- `supabase/**/*.sql` → Database rules
+- `skills/**/*.md` → Skills rules
 
-- **Frontend Rules**: Load when working in `apps/web/**/*.{ts,tsx}`
-- **Backend Rules**: Load when working in `apps/backend/src/**/*.py`  
-- **Database Rules**: Load when working in `supabase/**/*.sql`
-- **Skills Rules**: Load when working in `skills/**/*.md`
-- **Development Rules**: General workflow and conventions
+## Standards
+
+- **Verification First**: Always run actual tests before marking complete
+- **No Self-Attestation**: Agents can't verify own work
+- **Type Safety**: Explicit types, no `any`, strict mode
+- **Layer Separation**: No cross-layer imports
+- **Frontend**: Components → Hooks → API Routes → Services
+- **Backend**: Type hints, Pydantic, async/await, PEP 8
 
 ## Memory Hierarchy
 
-1. **Enterprise Policy**: Organization-wide (if exists)
-2. **Project Memory**: This file (`.claude/CLAUDE.md`)
-3. **Project Rules**: Path-specific rules (`.claude/rules/*.md`)
-4. **User Memory**: Personal preferences (`~/.claude/CLAUDE.md`)
-5. **Project Local**: Personal project settings (`./CLAUDE.local.md`)
-
-## Important Notes
-
-- **Verification First**: Always verify before marking complete - run actual tests
-- **No Self-Attestation**: Agents cannot verify their own work
-- **Type Safety**: Explicit return types, no `any`, strict mode
-- **Layer Separation**: No cross-layer imports in architecture
-- **Path-Specific Loading**: Rules only load when relevant to reduce context bloat
+1. Enterprise Policy (org-wide)
+2. Project Memory (this file)
+3. Path-Specific Rules (`.claude/rules/*.md`)
+4. User Memory (`~/.claude/CLAUDE.md`)
+5. Project Local (`./CLAUDE.local.md`)
 
 ---
 
-For detailed patterns and examples, see the path-specific rules that load automatically based on your current work context.
+**Detailed patterns**: See `.claude/rules/` (auto-loads based on context)

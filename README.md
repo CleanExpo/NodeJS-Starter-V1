@@ -100,15 +100,17 @@
 git clone https://github.com/CleanExpo/NodeJS-Starter-V1.git
 cd NodeJS-Starter-V1
 
-# 2. Run the setup script
-chmod +x scripts/setup.sh
-./scripts/setup.sh
+# 2. Install dependencies
+pnpm install
 
 # 3. Configure your environment
-cp .env.example .env.local
-# Edit .env.local with your API keys
+cp .env.example .env
+# Edit .env with your API keys (see Environment Variables section below)
 
-# 4. Start development
+# 4. Start Supabase (optional - for local development)
+supabase start
+
+# 5. Start development servers
 pnpm dev
 ```
 
@@ -116,20 +118,37 @@ pnpm dev
 <summary>📦 Manual Installation</summary>
 
 ```bash
-# Install frontend dependencies
+# 1. Install frontend dependencies
 pnpm install
 
-# Install backend dependencies
+# 2. Install backend dependencies
 cd apps/backend
 uv sync
 cd ../..
 
-# Start Supabase (optional)
-supabase start
+# 3. Setup environment variables
+cp .env.example .env
+# Edit .env with your API keys:
+#   - ANTHROPIC_API_KEY (required)
+#   - OPENAI_API_KEY (required)
+#   - Supabase credentials (required)
 
-# Start development servers
+# 4. Start Supabase (optional - for local development)
+supabase start
+supabase db push
+
+# 5. Verify setup (optional but recommended)
+.\scripts\health-check.ps1 -Quick   # Windows
+./scripts/health-check.sh            # Linux/Mac
+
+# 6. Start development servers
 pnpm dev
 ```
+
+**Services will start on:**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- Supabase Studio: http://localhost:54323
 
 </details>
 
@@ -254,14 +273,23 @@ uv run ruff check src/
 ### Full Stack Commands
 
 ```bash
-# Start all services
-./scripts/dev.sh
+# Start all services (frontend + backend + database)
+pnpm dev
+
+# Start services individually
+pnpm dev --filter=web                                           # Frontend only
+cd apps/backend && uv run uvicorn src.api.main:app --reload    # Backend only
+supabase start                                                  # Database only
 
 # Build everything
 pnpm build
 
 # Run all checks
 pnpm turbo run lint type-check test
+
+# Health check (comprehensive system validation)
+.\scripts\health-check.ps1        # Full check (Windows)
+.\scripts\health-check.ps1 -Quick # Quick check (Windows)
 ```
 
 ---
@@ -306,26 +334,58 @@ skills/
 
 ## ⚙️ Environment Variables
 
-Create `.env.local` from `.env.example`:
+### Setup Instructions
+
+1. Copy `.env.example` to `.env` in the root directory:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Add your API keys to the `.env` file (required keys marked with ⚠️)
+
+### Required Environment Variables
 
 ```env
 # 🔐 Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
+DATABASE_URL=postgresql://postgres:password@host:5432/postgres
 
-# 🤖 AI Models
-ANTHROPIC_API_KEY=sk-ant-...
-GOOGLE_AI_API_KEY=AI...
-OPENROUTER_API_KEY=sk-or-...
-
-# 🔧 MCP Tools
-EXA_API_KEY=...
+# 🤖 AI Models (REQUIRED) ⚠️
+ANTHROPIC_API_KEY=sk-ant-api03-...      # Get from: https://console.anthropic.com/
+OPENAI_API_KEY=sk-proj-...              # Get from: https://platform.openai.com/api-keys
 
 # 🔗 Backend
 BACKEND_URL=http://localhost:8000
-BACKEND_API_KEY=your-secret-key
 ```
+
+### Optional Environment Variables
+
+```env
+# 🤖 Additional AI Models
+GOOGLE_AI_API_KEY=AI...                 # Google Gemini
+OPENROUTER_API_KEY=sk-or-...            # OpenRouter multi-model
+
+# 🔧 MCP Tools
+EXA_API_KEY=...                         # Exa web search
+REF_TOOLS_API_KEY=...                   # Ref.tools documentation
+BRAVE_API_KEY=...                       # Brave search
+GITHUB_TOKEN=...                        # GitHub integration
+
+# 📱 Slack Integration
+SLACK_BOT_TOKEN=...
+SLACK_TEAM_ID=...
+```
+
+### Environment File Locations
+
+The project uses multiple environment files:
+- **Root**: `.env` - Main configuration (Supabase, AI keys)
+- **Frontend**: `apps/web/.env.local` - Frontend-specific variables
+- **Backend**: `apps/backend/.env` - Backend-specific variables (automatically inherits from root)
+
+> **Note**: The root `.env` file is the primary configuration. Workspace-specific files inherit these values and can override them if needed.
 
 ---
 
@@ -391,8 +451,81 @@ pnpm test --filter=web -- --coverage
 # Backend tests with coverage
 cd apps/backend && uv run pytest --cov
 
-# E2E tests (if configured)
-pnpm test:e2e
+# E2E tests
+pnpm test:e2e --filter=web
+
+# Health check (comprehensive system validation)
+.\scripts\health-check.ps1          # Full validation
+.\scripts\health-check.ps1 -Quick   # Quick validation (skip build/E2E)
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### `.env` file errors
+
+**Problem**: Getting errors about missing environment variables
+
+**Solution**:
+```bash
+# 1. Ensure .env file exists in root directory
+ls -la .env  # Should show the file
+
+# 2. Verify required variables are set
+cat .env | grep -E "ANTHROPIC_API_KEY|OPENAI_API_KEY|SUPABASE_URL"
+
+# 3. Check backend .env file
+cat apps/backend/.env | grep -E "ANTHROPIC_API_KEY|OPENAI_API_KEY"
+```
+
+### Supabase connection issues
+
+**Problem**: Cannot connect to Supabase
+
+**Solution**:
+```bash
+# Check if Supabase is running
+supabase status
+
+# Restart Supabase
+supabase stop
+supabase start
+
+# Reset database (CAUTION: destructive)
+supabase db reset
+```
+
+### Backend startup issues
+
+**Problem**: Backend fails to start
+
+**Solution**:
+```bash
+# Verify Python environment
+cd apps/backend
+uv sync
+
+# Test imports
+uv run python -c "from src.api.main import app; print('OK')"
+
+# Check API keys are loaded
+uv run python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('Anthropic:', 'OK' if os.getenv('ANTHROPIC_API_KEY') else 'MISSING')"
+```
+
+### Frontend build errors
+
+**Problem**: TypeScript errors during build
+
+**Solution**:
+```bash
+# Run type check to see errors
+pnpm type-check --filter=web
+
+# Clear cache and reinstall
+pnpm clean
+rm -rf node_modules
+pnpm install
 ```
 
 ---
