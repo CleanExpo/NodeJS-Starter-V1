@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+import { OAuthProviders } from "./oauth-providers";
 
 const formSchema = z
   .object({
@@ -129,6 +130,9 @@ export function RegisterForm() {
           {isLoading ? "Creating account..." : "Create account"}
         </Button>
       </form>
+
+      {/* OAuth Providers */}
+      <OAuthProviders redirectTo="/dashboard" />
     </Form>
   );
 }

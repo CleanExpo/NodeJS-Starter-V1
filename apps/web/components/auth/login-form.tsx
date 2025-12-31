@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+import { OAuthProviders } from "./oauth-providers";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -92,6 +93,9 @@ export function LoginForm() {
           {isLoading ? "Signing in..." : "Sign in"}
         </Button>
       </form>
+
+      {/* OAuth Providers */}
+      <OAuthProviders redirectTo="/dashboard" />
     </Form>
   );
 }
