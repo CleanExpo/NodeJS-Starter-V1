@@ -1,10 +1,12 @@
-# CLAUDE.md - NodeJS-Starter-V1 Architecture
+# CLAUDE.md - AI Project Scaffolding Architecture
 
-> **Self-Contained AI Starter Template**: Next.js 15 + FastAPI/LangGraph + PostgreSQL
+> **Professional Scaffolding Module**: Next.js + FastAPI/LangGraph + PostgreSQL Patterns
 
 ## 🎯 Quick Overview
 
-This is a **self-contained AI application template** designed to work completely offline without API keys or cloud dependencies. Everything runs locally in Docker.
+This is a **professional scaffolding module** providing senior-level architecture patterns for AI-powered applications. It's designed to be integrated into your projects as an add-on to enhance overall code quality and architecture.
+
+**Important**: When starting a new project, always use `create-next-app@latest` with stable versions first, then integrate these scaffolding patterns.
 
 ## 📋 Quick Commands
 
@@ -104,7 +106,7 @@ pnpm deps:clean             # Clean install dependencies
 ## 📂 Project Structure
 
 ```
-NodeJS-Starter-V1/
+ai-project-scaffolding/
 ├── apps/
 │   ├── web/                    # Next.js Frontend
 │   │   ├── app/                # App Router
@@ -138,9 +140,15 @@ NodeJS-Starter-V1/
 ### 1. Initial Setup
 
 ```bash
-# Clone and setup
-git clone https://github.com/CleanExpo/NodeJS-Starter-V1.git
-cd NodeJS-Starter-V1
+# Option A: Fresh project with stable Next.js
+npx create-next-app@latest my-project --typescript --tailwind --eslint --app
+cd my-project
+
+# Copy scaffolding patterns
+cp -r /path/to/scaffolding/apps/backend ./apps/
+cp -r /path/to/scaffolding/scripts ./
+
+# Run setup
 pnpm run setup
 
 # Start development
@@ -543,4 +551,4 @@ POSTHOG_API_KEY=xxx
 
 ---
 
-**Built for developers who want to build AI apps without barriers** ❤️
+**Professional scaffolding for senior-level AI application development**
