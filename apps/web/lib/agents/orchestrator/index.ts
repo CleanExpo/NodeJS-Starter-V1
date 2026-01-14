@@ -1,21 +1,24 @@
 /**
  * Orchestrator
  *
- * Autonomous codebase management system that operates like a professional A+ grade engineer.
+ * Autonomous codebase management system that operates like a Senior Executive Engineer.
  *
- * Features:
- * - Repository takeover with full health analysis
- * - Automatic issue detection and fixing
- * - Safe branch workflow (never touches main)
- * - Pre-commit validation pipeline
- * - Continuous quality monitoring
+ * ## Modes
  *
- * Quick Start:
+ * - **demo**: AI simulated, no external calls, safe for testing
+ * - **dev**: Local development with optional real APIs
+ * - **staging**: Pre-production validation
+ * - **prod**: Full production with all security enabled
+ *
+ * ## Quick Start
+ *
  * ```typescript
- * import { createCLI } from '@/lib/agents/orchestrator';
+ * import { createCLI, setMode } from '@/lib/agents/orchestrator';
+ *
+ * // Start in demo mode (default) - no API keys needed
+ * const cli = createCLI();
  *
  * // Take over a GitHub repo
- * const cli = createCLI();
  * await cli.run('takeover', { url: 'https://github.com/user/repo' });
  *
  * // Start working on a feature
@@ -23,16 +26,33 @@
  *
  * // Commit with validation
  * await cli.run('commit', { message: 'feat: add login form' });
+ *
+ * // When ready for production
+ * setMode('prod');
+ * await cli.run('prod:ready'); // Check readiness
+ * await cli.run('prod:activate'); // Activate production mode
  * ```
  *
- * CLI Usage:
+ * ## CLI Usage
+ *
  * ```bash
- * orchestrator takeover --url=https://github.com/user/repo
+ * orchestrator takeover https://github.com/user/repo
  * orchestrator work "add authentication"
  * orchestrator commit "feat: add login"
- * orchestrator status
- * orchestrator health
+ * orchestrator review:staged
+ * orchestrator release:create
+ * orchestrator prod:ready
  * ```
+ *
+ * ## Features
+ *
+ * - Repository takeover with full health analysis
+ * - AI Demo mode (works without API keys)
+ * - Self-healing and auto-recovery
+ * - Automated code review
+ * - Release management with semantic versioning
+ * - Standards enforcement
+ * - Production readiness validation
  */
 
 // Types
@@ -59,6 +79,23 @@ export type {
 } from "./types";
 
 export { CODE, ok, err, warn, skip, RepoInputSchema, OnboardOptsSchema } from "./types";
+
+// Modes
+export type { Mode, ModeConfig, SecretStatus } from "./modes";
+export {
+  getMode,
+  getModeConfig,
+  setMode,
+  isDemo,
+  isProd,
+  isFeatureEnabled,
+  checkSecrets,
+  validateMode,
+  transitionTo,
+  getMock,
+  MOCK_RESPONSES,
+  ModeSchema,
+} from "./modes";
 
 // Context
 export { createContext, saveState, setPhase, logAction, getCurrentBranch, isProtectedBranch, ensureSafeBranch } from "./context";
@@ -129,6 +166,55 @@ export {
   reaudit,
   report,
 } from "./orchestrator";
+
+// Self-Healing
+export {
+  healingCmds,
+  healDetect,
+  healAuto,
+  healOne,
+  healDeepClean,
+  healRecover,
+} from "./healing";
+
+// Code Review
+export {
+  reviewCmds,
+  reviewStaged,
+  reviewFile,
+  reviewBranch,
+  reviewReport,
+} from "./review";
+
+// Release Management
+export {
+  releaseCmds,
+  releaseVersion,
+  releaseNext,
+  releaseBump,
+  releaseChangelog,
+  releaseWriteChangelog,
+  releaseCreate,
+  releaseList,
+  releaseNotes,
+} from "./release";
+
+// Standards Enforcement
+export {
+  standardsCmds,
+  standardsCheck,
+  standardsFix,
+  standardsReport,
+} from "./standards";
+
+// Production Readiness
+export {
+  productionCmds,
+  prodReady,
+  prodActivate,
+  prodReport,
+  prodChecklist,
+} from "./production";
 
 // CLI
 export { createCLI, parseArgs, main } from "./cli";

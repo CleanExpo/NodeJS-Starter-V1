@@ -2,20 +2,21 @@
  * Orchestrator CLI
  *
  * Command-line interface for the orchestrator system.
+ * Starts in DEMO mode by default (no API keys required).
  *
  * Usage:
- *   orchestrator takeover --url=https://github.com/user/repo
- *   orchestrator takeover --path=/local/repo
+ *   orchestrator takeover https://github.com/user/repo
  *   orchestrator work "add user authentication"
  *   orchestrator commit "feat: add login form"
- *   orchestrator status
- *   orchestrator health
- *   orchestrator report
+ *   orchestrator review:staged
+ *   orchestrator release:create
+ *   orchestrator prod:ready
  */
 
 import { createContext } from "./context";
 import type { Cmd, OrchestratorCtx, Res } from "./types";
 import { CODE } from "./types";
+import { getMode, setMode } from "./modes";
 
 // Import all commands
 import { onboardCmds } from "./onboard";
@@ -23,6 +24,11 @@ import { auditCmds } from "./audit";
 import { cleanupCmds } from "./cleanup";
 import { branchCmds } from "./branch";
 import { orchestratorCmds } from "./orchestrator";
+import { healingCmds } from "./healing";
+import { reviewCmds } from "./review";
+import { releaseCmds } from "./release";
+import { standardsCmds } from "./standards";
+import { productionCmds } from "./production";
 
 // ============================================================================
 // Command Registry
@@ -36,6 +42,11 @@ const allCmds: AnyCmd[] = [
   ...cleanupCmds,
   ...branchCmds,
   ...orchestratorCmds,
+  ...healingCmds,
+  ...reviewCmds,
+  ...releaseCmds,
+  ...standardsCmds,
+  ...productionCmds,
 ];
 
 const registry = new Map<string, AnyCmd>();
@@ -55,11 +66,6 @@ interface ParsedArgs {
 
 /**
  * Parse CLI arguments
- *
- * Examples:
- *   takeover --url=https://github.com/user/repo
- *   work "add authentication"
- *   commit "feat: add login" --skipChecks
  */
 export function parseArgs(args: string[]): ParsedArgs {
   const command = args[0] || "help";
@@ -83,7 +89,6 @@ export function parseArgs(args: string[]): ParsedArgs {
         options[key] = value;
       }
     } else if (arg.startsWith("-")) {
-      // Short flag
       options[arg.slice(1)] = true;
     } else {
       positional.push(arg);
@@ -100,6 +105,7 @@ export function parseArgs(args: string[]): ParsedArgs {
 export interface CLIOptions {
   cwd?: string;
   silent?: boolean;
+  mode?: "demo" | "dev" | "staging" | "prod";
 }
 
 /**
@@ -108,6 +114,11 @@ export interface CLIOptions {
 export function createCLI(opts: CLIOptions = {}) {
   const cwd = opts.cwd || process.cwd();
   const ctx = createContext(cwd);
+
+  // Set initial mode
+  if (opts.mode) {
+    setMode(opts.mode);
+  }
 
   return {
     ctx,
@@ -143,22 +154,28 @@ export function createCLI(opts: CLIOptions = {}) {
     async runArgs(args: string[]): Promise<Res<unknown>> {
       const { command, positional, options } = parseArgs(args);
 
+      // Handle mode switch
+      if (options.mode) {
+        setMode(options.mode as "demo" | "dev" | "staging" | "prod");
+        delete options.mode;
+      }
+
       // Handle help
       if (command === "help" || command === "--help" || command === "-h") {
-        return {
-          code: CODE.OK,
-          data: this.getHelp(),
-          ts: Date.now(),
-        };
+        return { code: CODE.OK, data: this.getHelp(), ts: Date.now() };
       }
 
       // Handle list
       if (command === "list" || command === "commands") {
-        return {
-          code: CODE.OK,
-          data: this.listCommands(),
-          ts: Date.now(),
-        };
+        return { code: CODE.OK, data: this.listCommands(), ts: Date.now() };
+      }
+
+      // Handle mode
+      if (command === "mode") {
+        if (positional[0]) {
+          setMode(positional[0] as "demo" | "dev" | "staging" | "prod");
+        }
+        return { code: CODE.OK, data: { mode: getMode() }, ts: Date.now() };
       }
 
       // Build input from positional and options
@@ -175,6 +192,10 @@ export function createCLI(opts: CLIOptions = {}) {
         } else if (positional[0]) {
           input.path = positional[0];
         }
+      } else if (command === "review:file" && positional[0]) {
+        input.path = positional[0];
+      } else if (command === "release:bump" && positional[0]) {
+        input.type = positional[0];
       }
 
       return this.run(command, input);
@@ -194,55 +215,77 @@ export function createCLI(opts: CLIOptions = {}) {
      * Get help text
      */
     getHelp(): string {
+      const mode = getMode();
       return `
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                        ORCHESTRATOR CLI                           ║
+║                    Mode: ${mode.toUpperCase().padEnd(41)}║
 ╠═══════════════════════════════════════════════════════════════════╣
 ║                                                                   ║
-║  QUICK START                                                      ║
-║  -----------                                                      ║
-║  orchestrator takeover --url=https://github.com/user/repo         ║
-║  orchestrator takeover /path/to/local/repo                        ║
-║                                                                   ║
-║  WORKFLOW                                                         ║
-║  --------                                                         ║
+║  QUICK START (Demo mode - no API keys needed)                     ║
+║  --------------------------------------------                     ║
+║  orchestrator takeover https://github.com/user/repo               ║
 ║  orchestrator work "add user authentication"                      ║
 ║  orchestrator commit "feat: add login form"                       ║
-║  orchestrator status                                              ║
-║  orchestrator health                                              ║
-║  orchestrator report                                              ║
 ║                                                                   ║
-║  COMMANDS                                                         ║
-║  --------                                                         ║
-║  takeover      Full repository takeover and cleanup               ║
-║  work          Start new task on safe branch                      ║
-║  commit        Commit with validation                             ║
+║  MODE CONTROL                                                     ║
+║  ------------                                                     ║
+║  orchestrator mode demo      Switch to demo mode                  ║
+║  orchestrator mode dev       Switch to dev mode                   ║
+║  orchestrator mode prod      Switch to production mode            ║
+║                                                                   ║
+║  CORE WORKFLOW                                                    ║
+║  -------------                                                    ║
+║  takeover      Full repository takeover                           ║
+║  work          Start new task (creates safe branch)               ║
+║  commit        Commit with pre-commit validation                  ║
 ║  status        Current orchestrator status                        ║
 ║  health        Quick health check                                 ║
-║  reaudit       Run fresh audit                                    ║
 ║  report        Generate summary report                            ║
 ║                                                                   ║
-║  AUDIT                                                            ║
-║  -----                                                            ║
-║  audit:full       Complete audit                                  ║
-║  audit:security   Security checks                                 ║
-║  audit:quality    Code quality                                    ║
-║  audit:deps       Dependencies                                    ║
+║  CODE REVIEW                                                      ║
+║  -----------                                                      ║
+║  review:staged    Review staged changes                           ║
+║  review:branch    Review branch vs main                           ║
+║  review:file      Review specific file                            ║
+║  review:report    Generate review report                          ║
 ║                                                                   ║
-║  BRANCH                                                           ║
-║  ------                                                           ║
-║  branch:create --type=feature --description="..."                 ║
-║  branch:switch --name=feature/xyz                                 ║
-║  branch:list                                                      ║
-║  branch:push                                                      ║
-║  branch:sync                                                      ║
+║  RELEASE MANAGEMENT                                               ║
+║  ------------------                                               ║
+║  release:version     Get current version                          ║
+║  release:next        Calculate next version                       ║
+║  release:bump        Bump version (major/minor/patch)             ║
+║  release:changelog   Generate changelog                           ║
+║  release:create      Create release with tag                      ║
 ║                                                                   ║
-║  CLEANUP                                                          ║
-║  -------                                                          ║
-║  cleanup:auto     Auto-fix all issues                             ║
-║  fix:gitignore    Fix .gitignore                                  ║
-║  fix:tsconfig     Enable strict TS                                ║
-║  fix:prettier     Add Prettier config                             ║
+║  SELF-HEALING                                                     ║
+║  ------------                                                     ║
+║  heal:detect      Detect healable issues                          ║
+║  heal:auto        Auto-fix all issues                             ║
+║  heal:recover     Full recovery attempt                           ║
+║  heal:deep-clean  Aggressive cache cleanup                        ║
+║                                                                   ║
+║  STANDARDS & QUALITY                                              ║
+║  -------------------                                              ║
+║  standards:check    Check all standards                           ║
+║  standards:fix      Fix fixable violations                        ║
+║  standards:report   Generate compliance report                    ║
+║  audit:full         Complete audit                                ║
+║                                                                   ║
+║  PRODUCTION                                                       ║
+║  ----------                                                       ║
+║  prod:ready       Production readiness check                      ║
+║  prod:activate    Activate production mode                        ║
+║  prod:report      Production readiness report                     ║
+║  prod:checklist   Pre-deployment checklist                        ║
+║                                                                   ║
+║  BRANCH OPERATIONS                                                ║
+║  -----------------                                                ║
+║  branch:create    Create new branch                               ║
+║  branch:switch    Switch to branch                                ║
+║  branch:list      List branches                                   ║
+║  branch:push      Push to remote                                  ║
+║  branch:sync      Sync with remote                                ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 `;
