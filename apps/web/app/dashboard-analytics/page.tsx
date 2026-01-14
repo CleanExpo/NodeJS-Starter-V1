@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, CheckCircle, DollarSign, Loader2 } from "lucide-react";
 
@@ -17,29 +17,53 @@ interface MetricsOverview {
   time_range: string;
 }
 
+/** Polling interval (30 seconds) */
+const POLLING_INTERVAL_MS = 30000;
+
 export default function AnalyticsDashboardPage() {
   const [metrics, setMetrics] = useState<MetricsOverview | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchMetrics();
-    const interval = setInterval(fetchMetrics, 30000); // Refresh every 30s
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async (signal?: AbortSignal) => {
     try {
-      const response = await fetch("/api/analytics/metrics/overview?time_range=7d");
+      const response = await fetch("/api/analytics/metrics/overview?time_range=7d", {
+        signal,
+      });
       if (response.ok) {
         const data = await response.json();
         setMetrics(data);
       }
     } catch (error) {
-      console.error("Failed to fetch metrics:", error);
+      // Don't log abort errors - they're expected on unmount
+      if (error instanceof Error && error.name !== "AbortError") {
+        console.error("Failed to fetch metrics:", error);
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Create AbortController for cleanup on unmount
+    const controller = new AbortController();
+
+    // Initial fetch
+    fetchMetrics(controller.signal);
+
+    // Set up polling with proper cleanup
+    const interval = setInterval(() => {
+      // Don't fetch if already aborted
+      if (!controller.signal.aborted) {
+        fetchMetrics(controller.signal);
+      }
+    }, POLLING_INTERVAL_MS);
+
+    // Cleanup function - abort in-flight requests and clear interval
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+    };
+  }, [fetchMetrics]);
 
   if (loading) {
     return (

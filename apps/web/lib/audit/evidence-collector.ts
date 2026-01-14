@@ -421,38 +421,26 @@ export class EvidenceCollector {
 
   /**
    * Query evidence from memory
+   * Optimized: Single filter pass with compound conditions instead of chained filters
    */
   private queryMemory(query: EvidenceQuery): Evidence[] {
-    let results = Array.from(this.evidence.values());
+    const allEvidence = Array.from(this.evidence.values());
 
-    if (query.type) {
-      results = results.filter((e) => e.type === query.type);
-    }
-    if (query.source) {
-      results = results.filter((e) => e.source === query.source);
-    }
-    if (query.category) {
-      results = results.filter((e) => e.category === query.category);
-    }
-    if (query.task_id) {
-      results = results.filter((e) => e.metadata.task_id === query.task_id);
-    }
-    if (query.journey_id) {
-      results = results.filter(
-        (e) => e.metadata.journey_id === query.journey_id
-      );
-    }
-    if (query.from_date) {
-      results = results.filter((e) => e.created_at >= query.from_date!);
-    }
-    if (query.to_date) {
-      results = results.filter((e) => e.created_at <= query.to_date!);
-    }
-    if (query.tags && query.tags.length > 0) {
-      results = results.filter((e) =>
-        query.tags!.some((tag) => e.metadata.tags.includes(tag))
-      );
-    }
+    // Single filter pass with compound conditions - avoids creating multiple array copies
+    const results = allEvidence.filter((e) => {
+      // Check all conditions in one pass
+      if (query.type && e.type !== query.type) return false;
+      if (query.source && e.source !== query.source) return false;
+      if (query.category && e.category !== query.category) return false;
+      if (query.task_id && e.metadata.task_id !== query.task_id) return false;
+      if (query.journey_id && e.metadata.journey_id !== query.journey_id) return false;
+      if (query.from_date && e.created_at < query.from_date) return false;
+      if (query.to_date && e.created_at > query.to_date) return false;
+      if (query.tags && query.tags.length > 0) {
+        if (!query.tags.some((tag) => e.metadata.tags.includes(tag))) return false;
+      }
+      return true;
+    });
 
     // Sort by created_at descending
     results.sort(

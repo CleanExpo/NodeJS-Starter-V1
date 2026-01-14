@@ -128,14 +128,16 @@ export const ContractorAvailability = React.forwardRef<
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {nextWeek.map((date, index) => {
+          {nextWeek.map((date) => {
             const slots = getSlotsForDate(date);
             const hasAvailability = slots.some((s) => s.status === "available");
             const isToday = date.toDateString() === new Date().toDateString();
+            // Use ISO date string as unique key instead of array index
+            const dateKey = date.toISOString().split("T")[0];
 
             return (
               <button
-                key={index}
+                key={dateKey}
                 onClick={() => setSelectedDate(date)}
                 className={cn(
                   // Bento card
@@ -185,9 +187,9 @@ export const ContractorAvailability = React.forwardRef<
           </h3>
 
           <div className="space-y-3">
-            {getSlotsForDate(selectedDate).map((slot, index) => (
+            {getSlotsForDate(selectedDate).map((slot) => (
               <div
-                key={index}
+                key={`${slot.date.toISOString()}-${slot.startTime}-${slot.location}`}
                 className={cn(
                   "p-4 rounded-lg border",
                   "flex justify-between items-center",

@@ -44,6 +44,10 @@ export async function PerformanceTrends({ days = 7 }: PerformanceTrendsProps) {
   const dataPoints = trends.data_points.slice(0, days).reverse()
   const maxTasks = Math.max(...dataPoints.map((d: any) => d.tasks_completed), 1)
 
+  // Helper function to get success rate color
+  const getSuccessRateColor = (rate: number) =>
+    rate > 0.85 ? 'bg-green-500' : rate > 0.7 ? 'bg-yellow-500' : 'bg-red-500'
+
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <div className="mb-6">
@@ -53,17 +57,12 @@ export async function PerformanceTrends({ days = 7 }: PerformanceTrendsProps) {
 
       {/* Simple bar chart */}
       <div className="space-y-3">
-        {dataPoints.map((point: any, idx: number) => {
+        {dataPoints.map((point: any) => {
           const barWidth = (point.tasks_completed / maxTasks) * 100
-          const successRateColor =
-            point.success_rate > 0.85
-              ? 'bg-green-500'
-              : point.success_rate > 0.7
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
+          const successRateColor = getSuccessRateColor(point.success_rate)
 
           return (
-            <div key={idx} className="flex items-center space-x-3">
+            <div key={point.date} className="flex items-center space-x-3">
               <div className="text-xs text-gray-500 w-20">
                 {new Date(point.date).toLocaleDateString('en-US', {
                   month: 'short',

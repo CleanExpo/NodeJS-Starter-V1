@@ -37,18 +37,22 @@ function getAuthToken(): string | null {
   return tokenCookie.split("=")[1];
 }
 
+/** Default timeout for API requests (30 seconds) */
+const DEFAULT_TIMEOUT_MS = 30000;
+
 /**
- * Make an authenticated API request
+ * Make an authenticated API request with timeout and abort support
  */
 async function fetchApi<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit & { timeout?: number } = {}
 ): Promise<T> {
   const token = getAuthToken();
+  const { timeout = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
-    ...options.headers,
+    ...fetchOptions.headers,
   };
 
   if (token) {
@@ -59,11 +63,31 @@ async function fetchApi<T>(
     ? endpoint
     : `${BACKEND_URL}${endpoint}`;
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-    credentials: "include", // Include cookies
-  });
+  // Create AbortController for timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...fetchOptions,
+      headers,
+      credentials: "include", // Include cookies
+      signal: controller.signal,
+    });
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new ApiClientError(
+        `Request timeout after ${timeout}ms`,
+        408,
+        "TIMEOUT"
+      );
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   if (!response.ok) {
     const error: ApiError = await response.json().catch(() => ({

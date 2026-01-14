@@ -4,6 +4,8 @@
  * Displays key metrics about agent performance in card format.
  */
 
+import { useMemo } from 'react'
+
 interface AgentStatsProps {
   stats: {
     total_agents: number
@@ -18,7 +20,8 @@ interface AgentStatsProps {
 }
 
 export function AgentStats({ stats }: AgentStatsProps) {
-  const cards = [
+  // Memoize cards array to prevent recreation on every render
+  const cards = useMemo(() => [
     {
       label: 'Active Agents',
       value: stats.active_agents,
@@ -44,7 +47,7 @@ export function AgentStats({ stats }: AgentStatsProps) {
       subtitle: 'Self-corrections',
       color: stats.avg_iterations < 2 ? 'green' : 'orange',
     },
-  ]
+  ], [stats])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

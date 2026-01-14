@@ -452,14 +452,46 @@ async def search_by_location(
             contractor_data = record["contractors"]
             contractors_map[contractor_id] = contractor_data
 
-    # Get full contractor details with availability
+    # Batch fetch contractors with availability - avoid N+1 query
+    contractor_ids_list = list(contractor_ids)[offset:offset + page_size]
     contractors = []
-    for contractor_id in list(contractor_ids)[offset:offset + page_size]:
-        try:
-            contractor = await get_contractor(contractor_id)
+
+    if contractor_ids_list:
+        # Single query for all contractors with their availability slots
+        batch_response = supabase.table("contractors").select(
+            "*, availability_slots(*)"
+        ).in_("id", contractor_ids_list).execute()
+
+        for record in batch_response.data or []:
+            # Parse availability slots
+            slots = []
+            for slot_record in record.get("availability_slots", []):
+                slots.append(AvailabilitySlot(
+                    id=slot_record["id"],
+                    date=slot_record["date"],
+                    start_time=slot_record["start_time"],
+                    end_time=slot_record["end_time"],
+                    location=Location(
+                        suburb=slot_record["suburb"],
+                        state=slot_record["state"],
+                        postcode=slot_record.get("postcode")
+                    ),
+                    status=slot_record["status"],
+                    notes=slot_record.get("notes")
+                ))
+
+            contractor = Contractor(
+                id=record["id"],
+                name=record["name"],
+                mobile=record["mobile"],
+                abn=record.get("abn"),
+                email=record.get("email"),
+                specialisation=record.get("specialisation"),
+                created_at=record["created_at"],
+                updated_at=record["updated_at"],
+                availability_slots=slots
+            )
             contractors.append(contractor)
-        except HTTPException:
-            continue
 
     return ContractorList(
         contractors=contractors,

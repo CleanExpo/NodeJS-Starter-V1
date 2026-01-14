@@ -116,6 +116,10 @@ CREATE INDEX IF NOT EXISTS idx_availability_date ON availability_slots(date);
 CREATE INDEX IF NOT EXISTS idx_availability_location ON availability_slots(suburb, state);
 CREATE INDEX IF NOT EXISTS idx_availability_status ON availability_slots(status);
 
+-- Composite indexes for common query patterns (performance optimization)
+CREATE INDEX IF NOT EXISTS idx_availability_status_date ON availability_slots(status, date, state);
+CREATE INDEX IF NOT EXISTS idx_availability_contractor_status ON availability_slots(contractor_id, status, date);
+
 -- =============================================================================
 -- SECTION 4: AI/Embeddings Support (pgvector)
 -- =============================================================================
@@ -136,6 +140,9 @@ CREATE TABLE IF NOT EXISTS documents (
 CREATE INDEX IF NOT EXISTS idx_documents_embedding ON documents USING ivfflat (embedding vector_cosine_ops);
 CREATE INDEX IF NOT EXISTS idx_documents_user_id ON documents(user_id);
 CREATE INDEX IF NOT EXISTS idx_documents_metadata ON documents USING GIN (metadata);
+
+-- Composite index for user document queries with sorting (performance optimization)
+CREATE INDEX IF NOT EXISTS idx_documents_user_created ON documents(user_id, created_at DESC);
 
 -- Trigger for documents
 CREATE TRIGGER documents_updated_at

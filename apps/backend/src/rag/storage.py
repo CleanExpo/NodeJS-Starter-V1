@@ -125,16 +125,29 @@ class RAGStore:
         chunks: list[dict[str, Any]],
     ) -> list[DocumentChunk]:
         """Batch create chunks for efficiency."""
-        # Generate embeddings
-        if self.embedding_provider:
-            for chunk in chunks:
-                if chunk.get("generate_embedding", True):
-                    embedding = await self.embedding_provider.get_embedding(
-                        chunk["content"]
-                    )
-                    chunk["embedding"] = embedding
+        import asyncio
 
-        # Remove generate_embedding flag before insert
+        # Generate embeddings in parallel for performance
+        if self.embedding_provider:
+            # Identify chunks needing embeddings with their indices
+            chunks_needing_embedding = [
+                (i, chunk) for i, chunk in enumerate(chunks)
+                if chunk.get("generate_embedding", True)
+            ]
+
+            if chunks_needing_embedding:
+                # Generate all embeddings in parallel instead of sequentially
+                embedding_tasks = [
+                    self.embedding_provider.get_embedding(chunk["content"])
+                    for _, chunk in chunks_needing_embedding
+                ]
+                embeddings = await asyncio.gather(*embedding_tasks)
+
+                # Assign embeddings back to chunks
+                for (i, chunk), embedding in zip(chunks_needing_embedding, embeddings):
+                    chunks[i]["embedding"] = embedding
+
+        # Remove generate_embedding flag before insert (single pass)
         for chunk in chunks:
             chunk.pop("generate_embedding", None)
 
