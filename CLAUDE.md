@@ -40,34 +40,34 @@ pnpm turbo run type-check   # Type checking
 
 ## Architecture Routing
 
-| What | Where |
-|------|-------|
-| Frontend (Next.js 15, React 19, Tailwind v4) | `apps/web/` |
-| Backend (FastAPI, LangGraph, SQLAlchemy 2.0) | `apps/backend/` |
-| API client (fetch wrapper) | `apps/web/lib/api/client.ts` |
-| Auth API | `apps/web/lib/api/auth.ts` |
-| JWT middleware | `apps/web/middleware.ts` |
-| AI agents | `apps/backend/src/agents/` |
-| FastAPI routes | `apps/backend/src/api/` |
-| JWT auth | `apps/backend/src/auth/jwt.py` |
-| Database config | `apps/backend/src/config/database.py` |
-| SQLAlchemy models | `apps/backend/src/db/` |
-| AI provider abstraction | `apps/backend/src/models/` |
-| State store (NullStateStore) | `apps/backend/src/state/` |
-| Database schema | `scripts/init-db.sql` |
-| Design tokens | `apps/web/lib/design-tokens.ts` |
-| Playwright config | `apps/web/playwright.config.ts` |
+| What                                         | Where                                 |
+| -------------------------------------------- | ------------------------------------- |
+| Frontend (Next.js 15, React 19, Tailwind v4) | `apps/web/`                           |
+| Backend (FastAPI, LangGraph, SQLAlchemy 2.0) | `apps/backend/`                       |
+| API client (fetch wrapper)                   | `apps/web/lib/api/client.ts`          |
+| Auth API                                     | `apps/web/lib/api/auth.ts`            |
+| JWT middleware                               | `apps/web/middleware.ts`              |
+| AI agents                                    | `apps/backend/src/agents/`            |
+| FastAPI routes                               | `apps/backend/src/api/`               |
+| JWT auth                                     | `apps/backend/src/auth/jwt.py`        |
+| Database config                              | `apps/backend/src/config/database.py` |
+| SQLAlchemy models                            | `apps/backend/src/db/`                |
+| AI provider abstraction                      | `apps/backend/src/models/`            |
+| State store (NullStateStore)                 | `apps/backend/src/state/`             |
+| Database schema                              | `scripts/init-db.sql`                 |
+| Design tokens                                | `apps/web/lib/design-tokens.ts`       |
+| Playwright config                            | `apps/web/playwright.config.ts`       |
 
 ## Knowledge Retrieval
 
 Query knowledge sources before loading docs into context. See `.claude/rules/retrieval-first.md`.
 
-| Source | Use For | Access |
-|--------|---------|--------|
-| **NotebookLM** | Architecture, debugging, security, onboarding | `nlm notebook query <id>` |
-| **Context7 MCP** | Library docs (Next.js, FastAPI, Playwright, etc.) | `resolve-library-id` → `get-library-docs` |
-| **Skills** (59 installed) | Pattern libraries | `.skills/custom/*/SKILL.md` |
-| **Jina Reader** | Web content extraction | `https://r.jina.ai/{url}` |
+| Source                    | Use For                                           | Access                                    |
+| ------------------------- | ------------------------------------------------- | ----------------------------------------- |
+| **NotebookLM**            | Architecture, debugging, security, onboarding     | `nlm notebook query <id>`                 |
+| **Context7 MCP**          | Library docs (Next.js, FastAPI, Playwright, etc.) | `resolve-library-id` → `get-library-docs` |
+| **Skills** (59 installed) | Pattern libraries                                 | `.skills/custom/*/SKILL.md`               |
+| **Jina Reader**           | Web content extraction                            | `https://r.jina.ai/{url}`                 |
 
 NotebookLM config: `.claude/notebooklm/notebooks.json`
 Full skill registry: `.skills/AGENTS.md`
@@ -116,25 +116,25 @@ Optional env vars: see `.env.example`
 
 Supabase removed. Backend uses **NullStateStore** for graceful degradation.
 
-| File | Purpose |
-|------|---------|
-| `src/state/null_store.py` | NullStateStore + `_NullTableClient` chain |
-| `src/state/supabase.py` | Re-export shim (`NullStateStore as SupabaseStateStore`) |
-| `src/state/__init__.py` | `get_state_store()` factory |
-| `src/utils/supabase_client.py` | Safe `_NullClient` shim |
+| File                           | Purpose                                                 |
+| ------------------------------ | ------------------------------------------------------- |
+| `src/state/null_store.py`      | NullStateStore + `_NullTableClient` chain               |
+| `src/state/supabase.py`        | Re-export shim (`NullStateStore as SupabaseStateStore`) |
+| `src/state/__init__.py`        | `get_state_store()` factory                             |
+| `src/utils/supabase_client.py` | Safe `_NullClient` shim                                 |
 
 Degraded: `/api/analytics/*` (empty), `/api/contractors/*` (503)
 
 ## Design System — Scientific Luxury
 
-| Element | Implementation |
-|---------|---------------|
-| Background | OLED Black (`#050505`) |
-| Borders | `border-[0.5px] border-white/[0.06]` |
-| Corners | Sharp only (`rounded-sm`) |
+| Element    | Implementation                           |
+| ---------- | ---------------------------------------- |
+| Background | OLED Black (`#050505`)                   |
+| Borders    | `border-[0.5px] border-white/[0.06]`     |
+| Corners    | Sharp only (`rounded-sm`)                |
 | Typography | JetBrains Mono (data), Editorial (names) |
-| Animations | Framer Motion only |
-| Layout | Timeline/orbital |
+| Animations | Framer Motion only                       |
+| Layout     | Timeline/orbital                         |
 
 **Spectral colours**: Cyan `#00F5FF` (active), Emerald `#00FF88` (success), Amber `#FFB800` (warning), Red `#FF4444` (error), Magenta `#FF00FF` (escalation)
 
@@ -152,12 +152,12 @@ Full system + banned elements: `docs/DESIGN_SYSTEM.md` | Skill: `.skills/custom/
 Context drift occurs when project rules are lost during automatic context compaction.
 This project has a 4-pillar defence built in:
 
-| Pillar | Mechanism | File |
-|--------|-----------|------|
-| Immutable rules | CONSTITUTION.md on disk | `.claude/memory/CONSTITUTION.md` |
-| Session injection | SessionStart hook | `session-start-context.ps1` |
-| Per-message compass | UserPromptSubmit hook | `user-prompt-compass.ps1` |
-| Pre-compaction save | PreCompact hook | `pre-compact-save.py` |
+| Pillar              | Mechanism               | File                             |
+| ------------------- | ----------------------- | -------------------------------- |
+| Immutable rules     | CONSTITUTION.md on disk | `.claude/memory/CONSTITUTION.md` |
+| Session injection   | SessionStart hook       | `session-start-context.ps1`      |
+| Per-message compass | UserPromptSubmit hook   | `user-prompt-compass.ps1`        |
+| Pre-compaction save | PreCompact hook         | `pre-compact-save.py`            |
 
 If you notice drift (wrong patterns, ignored rules), run:
 
@@ -168,22 +168,67 @@ cat .claude/memory/current-state.md  # Check saved state
 
 Full documentation: `.claude/rules/context-drift.md`
 
+## Human Goal Translation
+
+The system assumes users may speak in **outcome language** rather than engineering language.
+When this occurs, the system automatically translates the phrase into a full engineering plan.
+
+| Outcome Phrase               | Interpreted As                                          |
+| ---------------------------- | ------------------------------------------------------- |
+| "Finished" / "Done"          | All production readiness gates passed, with proof       |
+| "Ready" / "Production ready" | All gates passed + monitoring + rollback path           |
+| "Launch it" / "Ship it"      | Production deployed + DNS confirmed + health check      |
+| "Make it work"               | Root cause identified + fix applied + regression check  |
+| "Ready for clients"          | User journey verified + legal pages + support reachable |
+
+**Translation produces**:
+
+1. **Definition of Done** — measurable criteria, not feelings
+2. **Gap Analysis** — Proven / Unknown / Missing for each criterion
+3. **Gated Execution Plan** — phases with verification gates and rollback paths
+4. **Proof Required** — specific artifacts before completion can be claimed
+
+Never claim completion without proof. `Unknown` items must be resolved, not ignored.
+
+Rule: `.claude/rules/human-outcome-translation.md`
+Skill: `.skills/custom/outcome-translator/SKILL.md`
+Docs: `docs/OUTCOME_LANGUAGE_AND_DONE_GATES.md`
+
+## Blueprint First
+
+Before writing any code for UI, dashboards, landing pages, architecture, or database schemas,
+the system generates an **ASCII wireframe or architecture diagram** first.
+
+```
+Step 1: GENERATE → ASCII blueprint (no code)
+Step 2: ITERATE  → Revise until approved
+Step 3: CONVERT  → Blueprint → implementation spec
+Step 4: BUILD    → Code from the spec
+```
+
+This eliminates dead code and layout disagreements before they reach code review.
+
+Skill: `.skills/custom/blueprint-first/SKILL.md`
+Docs: `docs/BLUEPRINT_FIRST_PROTOCOL.md`
+
 ## Agents & Skills
 
 - **23 subagents**: `.claude/agents/*/agent.md`
-- **59 skills**: `.skills/AGENTS.md` (full registry)
+- **61 skills**: `.skills/AGENTS.md` (full registry)
 - **10 commands**: `.claude/commands/*.md`
 - **Orchestrator**: `.claude/agents/orchestrator/agent.md`
 
 ## Documentation
 
-| Document | Purpose |
-|----------|---------|
-| [`PROGRESS.md`](PROGRESS.md) | Project status |
-| [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md) | Setup guide |
-| [`docs/AI_PROVIDERS.md`](docs/AI_PROVIDERS.md) | Ollama vs Claude |
-| [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) | Design system |
-| [`docs/BEADS.md`](docs/BEADS.md) | AI agent memory |
-| [`docs/SPEC_GENERATION.md`](docs/SPEC_GENERATION.md) | Spec workflows |
-| [`docs/OPTIONAL_SERVICES.md`](docs/OPTIONAL_SERVICES.md) | Cloud upgrades |
-| [`docs/MULTI_AGENT_ARCHITECTURE.md`](docs/MULTI_AGENT_ARCHITECTURE.md) | Agent workflow |
+| Document                                                                             | Purpose                                 |
+| ------------------------------------------------------------------------------------ | --------------------------------------- |
+| [`PROGRESS.md`](PROGRESS.md)                                                         | Project status                          |
+| [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md)                                         | Setup guide                             |
+| [`docs/AI_PROVIDERS.md`](docs/AI_PROVIDERS.md)                                       | Ollama vs Claude                        |
+| [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)                                     | Design system                           |
+| [`docs/BEADS.md`](docs/BEADS.md)                                                     | AI agent memory                         |
+| [`docs/SPEC_GENERATION.md`](docs/SPEC_GENERATION.md)                                 | Spec workflows                          |
+| [`docs/OPTIONAL_SERVICES.md`](docs/OPTIONAL_SERVICES.md)                             | Cloud upgrades                          |
+| [`docs/MULTI_AGENT_ARCHITECTURE.md`](docs/MULTI_AGENT_ARCHITECTURE.md)               | Agent workflow                          |
+| [`docs/OUTCOME_LANGUAGE_AND_DONE_GATES.md`](docs/OUTCOME_LANGUAGE_AND_DONE_GATES.md) | Human language → engineering completion |
+| [`docs/BLUEPRINT_FIRST_PROTOCOL.md`](docs/BLUEPRINT_FIRST_PROTOCOL.md)               | ASCII diagram planning before code      |
