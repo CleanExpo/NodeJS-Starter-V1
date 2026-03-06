@@ -1,16 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProxyAuth } from '@/lib/api/proxy-auth';
+import { cookies } from 'next/headers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await getProxyAuth();
-    if (!auth) {
-      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
+    // Read JWT from httpOnly cookie
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth_token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Verify token by calling backend /api/auth/me
+    const meResponse = await fetch(`${BACKEND_URL}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+
+    if (!meResponse.ok) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const user = await meResponse.json();
     const body = await request.json();
+
+    // Streaming path — proxies SSE directly from FastAPI to the client
+    if (body.stream) {
+      const { messages, system } = body;
+      const upstream = await fetch(`${BACKEND_URL}/api/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ messages, system }),
+      });
+
+      if (!upstream.ok) {
+        const errorData = await upstream.json().catch(() => ({}));
+        return NextResponse.json(
+          { error: errorData.detail || 'Backend streaming error' },
+          { status: upstream.status }
+        );
+      }
+
+      return new Response(upstream.body, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      });
+    }
+
+    // Non-streaming path
     const { message, conversationId } = body;
 
     if (!message) {
@@ -20,11 +65,14 @@ export async function POST(request: NextRequest) {
     // Forward to LangGraph backend
     const response = await fetch(`${BACKEND_URL}/api/chat`, {
       method: 'POST',
-      headers: auth.headers,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         message,
-        conversationId,
-        userId: auth.userId,
+        conversation_id: conversationId,
+        user_id: user.id,
       }),
     });
 
