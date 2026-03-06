@@ -59,6 +59,14 @@ git clone https://github.com/CleanExpo/NodeJS-Starter-V1.git && cd NodeJS-Starte
 
 <sub>No API keys | No accounts | No configuration | Just works</sub>
 
+### Upgrade an Existing Project
+
+```bash
+git remote add upstream https://github.com/CleanExpo/NodeJS-Starter-V1.git 2>/dev/null; git fetch upstream && git merge upstream/main --no-edit --allow-unrelated-histories && pnpm install && cd apps/backend && uv sync
+```
+
+<sub>Pulls the latest framework, agents, skills, and Anthropic integrations into your project</sub>
+
 </div>
 
 ---
@@ -81,12 +89,14 @@ flowchart TB
         LG["LangGraph"]
         Agents["AI Agents"]
         Auth["JWT Auth"]
+        SSE["SSE Stream"]
     end
 
     subgraph Data["Data Layer"]
         direction LR
         PG[("PostgreSQL 15\n+ pgvector")]
         Redis[("Redis 7\nCache")]
+        Supabase[("Supabase\nState (opt)")]
     end
 
     subgraph AI["AI Provider Layer"]
@@ -96,6 +106,7 @@ flowchart TB
     end
 
     Frontend -->|"REST + JWT"| Backend
+    Frontend <-->|"SSE tokens"| SSE
     Backend -->|"SQLAlchemy"| Data
     Backend -->|"Provider Selector"| AI
 
@@ -115,15 +126,27 @@ sequenceDiagram
     participant B as Backend
     participant A as AI Agent
     participant DB as PostgreSQL
+    participant SB as Supabase
 
     U->>F: Request
     F->>B: API Call (JWT)
     B->>DB: Query Data
     DB-->>B: Results
     B->>A: Process with AI
-    A-->>B: AI Response
-    B-->>F: JSON Response
-    F-->>U: Rendered UI
+
+    alt Streaming Mode
+        A-->>F: SSE text_delta events
+        F-->>U: Real-time tokens
+    else Standard Mode
+        A-->>B: AI Response
+        B-->>F: JSON Response
+        F-->>U: Rendered UI
+    end
+
+    opt Supabase configured
+        B->>SB: Persist agent run
+        SB-->>B: Confirmed
+    end
 ```
 
 </details>
@@ -219,11 +242,12 @@ pnpm run verify
 
 ### Backend
 
-- **FastAPI** async Python
+- **FastAPI** async Python + ASGI middleware
 - **LangGraph** agent orchestration
 - **SQLAlchemy 2.0** ORM
-- **JWT** cookie-based auth (no Supabase)
-- **Redis** caching layer
+- **JWT** ASGI auth middleware (HS256)
+- **Supabase** optional state backend
+- **SSE Streaming** real-time token delivery
 - **Pytest** 343+ tests passing
 
 </td>
@@ -244,11 +268,15 @@ pnpm run verify
 
 ### AI Integration
 
-- **Ollama** (local, free)
-- **Claude** (cloud, optional)
+- **Ollama** (local, free — no API key)
+- **Claude API** (cloud, optional)
 - Provider abstraction layer
+- **Adaptive Thinking** (Opus/Sonnet 4.6)
+- **Web Search v2** (GA Feb 2026)
+- **Token Counting** pre-flight cost estimation
+- **Agent Skills** Excel/Word/PDF (beta)
+- **MCP Connector** remote servers (beta)
 - RAG with vector search
-- Streaming responses
 
 </td>
 </tr>
@@ -291,15 +319,20 @@ NodeJS-Starter-V1/
 │   │   └── lib/api/            # API client
 │   └── backend/                # FastAPI backend
 │       └── src/
-│           ├── agents/         # AI agents
-│           ├── api/            # REST endpoints
+│           ├── agents/         # AI agents (LangGraph)
+│           ├── api/            # REST endpoints + SSE
 │           ├── auth/           # JWT authentication
-│           └── models/         # AI providers
+│           ├── models/         # AI providers (Anthropic, Ollama)
+│           └── state/          # State store (NullStore / Supabase)
 ├── .beads/                     # AI agent memory (Beads)
 ├── .claude/                    # Claude Code config & hooks
 │   ├── hooks/scripts/          # Automation scripts
 │   └── rules/                  # Agent rules
-├── .skills/                    # Agent skills (Vercel format)
+├── .skills/                    # Agent skills (61 installed)
+│   └── custom/
+│       ├── anthropic-features/ # Anthropic API capability reference
+│       ├── anthropic-streaming/# SSE streaming patterns
+│       └── anthropic-web-search/ # Web Search v2 integration
 ├── docs/                       # Documentation
 │   ├── MULTI_AGENT_ARCHITECTURE.md
 │   ├── DESIGN_SYSTEM.md
@@ -395,19 +428,78 @@ OLLAMA_MODEL=llama3.1:8b
 </details>
 
 <details>
-<summary><strong>Cloud AI (Optional - Paid)</strong></summary>
+<summary><strong>Cloud AI — Claude API (Optional)</strong></summary>
 
 ```bash
-# Upgrade to Claude
 AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=sk-ant-xxx
 ```
 
-| Model             | Input    | Output   |
-| ----------------- | -------- | -------- |
-| Claude Opus 4.5   | $15/1M   | $75/1M   |
-| Claude Sonnet 4.5 | $3/1M    | $15/1M   |
-| Claude Haiku 4.5  | $0.25/1M | $1.25/1M |
+| Model             | Input | Output | Capabilities                           |
+| ----------------- | ----- | ------ | -------------------------------------- |
+| Claude Opus 4.6   | $5/1M | $25/1M | Adaptive thinking, Fast Mode, 128K out |
+| Claude Sonnet 4.6 | $3/1M | $15/1M | Adaptive thinking, web search, 64K out |
+| Claude Haiku 4.5  | $1/1M | $5/1M  | Fastest — high-throughput tasks        |
+
+> All models support: SSE streaming, token counting, prompt caching, structured outputs, code execution.
+
+</details>
+
+<details>
+<summary><strong>Anthropic Feature Flags (Optional)</strong></summary>
+
+Add to `apps/backend/.env.local` to enable advanced Anthropic API capabilities:
+
+```bash
+# Streaming (default: on)
+STREAMING_ENABLED=true
+
+# Adaptive Thinking — Opus 4.6 / Sonnet 4.6 only
+THINKING_ENABLED=false
+THINKING_BUDGET_TOKENS=10000
+
+# Fast Mode — Opus 4.6 only, 2.5× faster output (research preview)
+FAST_MODE_ENABLED=false
+
+# Web Search Tool v2 — GA Feb 2026
+WEB_SEARCH_ENABLED=false
+WEB_SEARCH_MAX_USES=5
+
+# Token safety guard
+TOKEN_COUNT_WARNING_THRESHOLD=50000
+
+# Agent Skills beta — Anthropic-managed Excel/Word/PDF processing
+AGENT_SKILLS_ENABLED=false
+
+# MCP Connector beta — connect remote MCP servers in the messages API
+MCP_CONNECTOR_ENABLED=false
+
+# VOICE_MODE: NOT available via Anthropic API.
+# Voice is only in Claude.ai consumer app and Claude Code CLI.
+```
+
+> See `.skills/custom/anthropic-features/SKILL.md` for the full capability matrix.
+
+</details>
+
+<details>
+<summary><strong>Supabase State Backend (Optional)</strong></summary>
+
+Without Supabase, the app uses `NullStateStore` — all functionality works, state is ephemeral.
+Add these vars to get persistent `conversations`, `tasks`, and `agent_runs` tables:
+
+```bash
+SUPABASE_URL=https://<project-id>.supabase.co
+SUPABASE_ANON_KEY=<anon-key>
+# SUPABASE_SERVICE_ROLE_KEY=<service-role-key>  # Only needed for admin ops
+
+# Share the Supabase JWT secret so Supabase-issued user JWTs pass auth:
+JWT_SECRET_KEY=<supabase-jwt-secret>
+```
+
+Get these from your [Supabase dashboard → Settings → API](https://supabase.com/dashboard/project/_/settings/api).
+
+The app automatically detects the credentials at startup and switches to `SupabaseStateStore`. If credentials are absent or the connection fails, it falls back to `NullStateStore` silently.
 
 </details>
 
@@ -427,9 +519,17 @@ ANTHROPIC_API_KEY=sk-ant-xxx
 | [CI/CD Guide](docs/guides/CI_CD_GUIDE.md)                     | Pipeline configuration       |
 | [Production Deployment](docs/guides/PRODUCTION-DEPLOYMENT.md) | Deployment options           |
 
+### Anthropic API Skills
+
+| Skill                                                        | Description                                   |
+| ------------------------------------------------------------ | --------------------------------------------- |
+| [anthropic-features](.skills/custom/anthropic-features/)     | Full capability matrix — models, flags, betas |
+| [anthropic-streaming](.skills/custom/anthropic-streaming/)   | SSE streaming patterns for this project       |
+| [anthropic-web-search](.skills/custom/anthropic-web-search/) | Web Search v2 integration guide               |
+
 ### Framework Documentation
 
-- [Next.js](https://nextjs.org/docs) | [FastAPI](https://fastapi.tiangolo.com/) | [LangGraph](https://langchain-ai.github.io/langgraph/) | [Ollama](https://ollama.com/) | [shadcn/ui](https://ui.shadcn.com/)
+- [Next.js](https://nextjs.org/docs) | [FastAPI](https://fastapi.tiangolo.com/) | [LangGraph](https://langchain-ai.github.io/langgraph/) | [Ollama](https://ollama.com/) | [shadcn/ui](https://ui.shadcn.com/) | [Anthropic API](https://platform.claude.com/docs/en/home)
 
 ---
 
@@ -482,6 +582,22 @@ pnpm install
 
 </details>
 
+<details>
+<summary><strong>401 errors in backend tests</strong></summary>
+
+All backend tests use real HS256 JWTs — the `AuthMiddleware` is ASGI-layer and cannot be overridden by FastAPI `dependency_overrides`. Tests generate tokens via:
+
+```python
+from src.auth.jwt import create_access_token
+from datetime import timedelta
+
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {create_access_token({'sub': 'test@example.com'}, timedelta(hours=24))}"
+}
+```
+
+</details>
+
 ---
 
 ## Contributing
@@ -516,6 +632,6 @@ MIT Licence — Use freely for any purpose.
 
 <sub>Built with care for developers who want to build AI apps without barriers</sub>
 
-<sub>Last Updated: 15/02/2026</sub>
+<sub>Last Updated: 06/03/2026</sub>
 
 </div>
