@@ -12,15 +12,15 @@ from src.config import get_settings
 from src.utils import get_logger, setup_logging
 
 from .middleware.auth import AuthMiddleware
-from .middleware.csrf import CSRFMiddleware
 from .middleware.rate_limit import RateLimitMiddleware
 from .middleware.request_id import RequestIdMiddleware
 from .middleware.security_headers import SecurityHeadersMiddleware
 from .routes import (
     agent_dashboard,
     agents,
-    auth,
+    analytics,
     chat,
+    contractors,
     discovery,
     documents,
     health,
@@ -32,9 +32,6 @@ from .routes import (
     workflow_builder,
     workflows,
 )
-
-# analytics + contractors are template implementations in routes/_templates/.
-# Back them with PostgreSQL/SQLAlchemy before registering in a forked product.
 
 settings = get_settings()
 logger = get_logger(__name__)
@@ -49,11 +46,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Shutting down application")
 
 
+_is_production = settings.environment == "production"
+
 app = FastAPI(
     title=settings.project_name,
     description="LangGraph Agent Orchestration Backend",
     version="0.1.0",
     lifespan=lifespan,
+    docs_url=None if _is_production else "/docs",
+    redoc_url=None if _is_production else "/redoc",
+    openapi_url=None if _is_production else "/openapi.json",
 )
 
 # CORS middleware — explicit methods and headers
@@ -62,13 +64,12 @@ app.add_middleware(
     allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "X-User-Id", "X-Request-ID", "X-CSRF-Token"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
 )
 
 # Custom middleware (executed bottom-to-top: RequestId runs first)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware)
-app.add_middleware(CSRFMiddleware)
 app.add_middleware(AuthMiddleware)
 app.add_middleware(RequestIdMiddleware)
 
@@ -95,7 +96,6 @@ async def _global_exception_handler(request: Request, exc: Exception) -> JSONRes
 
 
 # Include routers
-app.include_router(auth.router)
 app.include_router(health.router, tags=["Health"])
 app.include_router(agents.router, prefix="/api", tags=["Agents"])
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
@@ -103,13 +103,14 @@ app.include_router(webhooks.router, prefix="/api", tags=["Webhooks"])
 app.include_router(prd.router, tags=["PRD Generation"])
 app.include_router(workflows.router, prefix="/api", tags=["Workflows"])
 app.include_router(rag.router, prefix="/api", tags=["RAG Pipeline"])
+app.include_router(analytics.router, prefix="/api", tags=["Analytics"])
 app.include_router(agent_dashboard.router, tags=["Agent Dashboard"])
 app.include_router(task_queue.router, tags=["Task Queue"])
+app.include_router(contractors.router, prefix="/api", tags=["Contractors"])
 app.include_router(search.router, tags=["Search"])
 app.include_router(documents.router, tags=["Documents"])
 app.include_router(workflow_builder.router, prefix="/api", tags=["Workflow Builder"])
 app.include_router(discovery.router, prefix="/api", tags=["Discovery"])
-
 
 
 @app.get("/")
