@@ -2,11 +2,10 @@
 
 from typing import Any
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from src.agents.orchestrator import OrchestratorAgent
-from src.api.error_handling import create_error_response
 from src.utils import get_logger
 
 router = APIRouter()
@@ -68,13 +67,8 @@ async def chat(
         )
 
     except Exception as e:
-        logger.error("Chat processing error", error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Chat processing failed",
-            error_code="CHAT_ERROR",
-        )
+        logger.error("Chat processing error", error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Chat processing failed")
 
 
 def _generate_response(result: dict[str, Any]) -> str:

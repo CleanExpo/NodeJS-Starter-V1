@@ -9,7 +9,6 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from src.agents.prd import PRDOrchestrator
-from src.api.error_handling import create_error_response
 from src.state.events import AgentEventPublisher
 from src.utils import get_logger
 
@@ -140,13 +139,8 @@ async def generate_prd(
         )
 
     except Exception as e:
-        logger.error("Failed to start PRD generation", error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to start PRD generation",
-            error_code="PRD_GENERATION_ERROR",
-        )
+        logger.error("Failed to start PRD generation", error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to start PRD generation")
 
 
 @router.get("/status/{run_id}", response_model=PRDStatusResponse)
@@ -188,13 +182,8 @@ async def get_prd_status(request: Request, run_id: str) -> PRDStatusResponse:
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("Failed to get PRD status", run_id=run_id, error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to get PRD status",
-            error_code="GET_PRD_STATUS_FAILED",
-        )
+        logger.error("Failed to get PRD status", run_id=run_id, error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to get PRD status")
 
 
 @router.get("/result/{prd_id}")
@@ -240,13 +229,8 @@ async def get_prd_result(request: Request, prd_id: str) -> dict[str, Any]:
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("Failed to get PRD result", prd_id=prd_id, error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to get PRD result",
-            error_code="GET_PRD_RESULT_FAILED",
-        )
+        logger.error("Failed to get PRD result", prd_id=prd_id, error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to get PRD result")
 
 
 @router.get("/documents/{prd_id}")
@@ -267,13 +251,8 @@ async def list_prd_documents(request: Request, prd_id: str) -> dict[str, Any]:
         }
 
     except Exception as e:
-        logger.error("Failed to list PRD documents", prd_id=prd_id, error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to list PRD documents",
-            error_code="LIST_PRD_DOCUMENTS_FAILED",
-        )
+        logger.error("Failed to list PRD documents", prd_id=prd_id, error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to list PRD documents")
 
 
 # Background task function
