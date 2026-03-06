@@ -1,24 +1,29 @@
 # Current State
 
-> Updated by PreCompact hook. Session: 7e86c7b3
+> Updated: 06/03/2026 AEST
 
 ## Active Task
 
-Compaction triggered — context was saved at 06/03/2026 19:32 AEST.
-Re-read CONSTITUTION.md if rules feel unclear after compaction.
+Anthropic Platform Integration — NodeJS-Starter-V1. All 7 phases complete.
 
-## Recent Architectural Choices
+## Completed This Session
 
-See architectural-decisions.md for logged decisions.
+- Phase 1: Fixed stale model IDs (claude-opus-4-6, claude-sonnet-4-6) in anthropic.py, settings.py, llm-config.tsx
+- Phase 2: Wired LLM bridge — added ModelSelector + \_call_llm() to BaseAgent; all 5 agents now call LLM; chat.py returns real responses
+- Phase 3: SSE streaming pipeline — FastAPI /api/chat/stream endpoint; Next.js SSE proxy; React streaming UI with isStreaming cursor
+- Phase 4-5: Added create_message(), count_tokens(), get_web_search_tool(), get_code_execution_tool(), get_agent_skill(), get_mcp_server_tool(), Fast Mode, thinking, structured outputs to AnthropicClient
+- Phase 6: Added 9 new settings fields + .env.example feature flag docs (incl. Voice Mode not-available note)
+- Phase 7: Created 3 skills — anthropic-features, anthropic-streaming, anthropic-web-search
 
-## In-Progress Work
+## Branch
 
-Check recent git status: `git status` and `git log --oneline -5`
+feat/outcome-translation-blueprint-first (4 new commits)
 
 ## Next Steps
 
-Re-read .claude/memory/CONSTITUTION.md to restore rule context.
+Run verification: `pnpm turbo run type-check` and backend tests
+Consider PR to main when ready
 
 ## Last Updated
 
-06/03/2026 19:32 AEST (PreCompact hook)
+06/03/2026 AEST
