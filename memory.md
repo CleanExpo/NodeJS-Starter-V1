@@ -32,6 +32,53 @@ When a founder/user speaks in outcome language, translate it before acting.
 
 ## 2. Definition of Finished
 
+> **IMPORTANT**: The definition of "Finished" depends on repository type. Run `audit-mode-classifier` to determine mode before applying any checklist. See `.claude/rules/audit-mode-classifier.md`.
+
+### 2.0 — Framework Mode "Finished" (for framework / starter / adoption engine repos)
+
+A Framework Mode repo is "Finished" when it can scaffold, audit, adopt, and guide downstream projects. All of the following must be PROVEN:
+
+- [ ] Repository classification is implemented before scoring (audit-mode-classifier operational)
+- [ ] Governance framework loaded and operational (CONSTITUTION, hooks, memory)
+- [ ] Agent hierarchy complete and documented (all agents defined, bounded, tested)
+- [ ] Skill library covers all lifecycle phases (plan, build, test, deploy, audit)
+- [ ] Audit engine generates truthful, mode-aware reports
+- [ ] Project adoption engine works for downstream projects (adopt-project.mjs tested)
+- [ ] Documentation sufficient to onboard downstream projects
+- [ ] Proof-gated completion logic enforced (no false completion claims)
+- [ ] Model registry supports multi-provider AI
+- [ ] Visual pipeline / design system enforced
+- [ ] Downstream project requirements generated correctly (not scored as framework defects)
+- [ ] Scaffold/template quality sufficient for downstream use
+
+**Items explicitly NOT defects in Framework Mode** (downstream project responsibilities):
+
+- Live production deployment | SSL/TLS certificates | Database backups | Legal pages
+- Payment processing | Customer analytics | Support infrastructure | Error monitoring config
+
+### 2.1 — Hybrid Mode "Finished" (for repos containing BOTH framework and application layers)
+
+Two separate scores — never merged:
+
+**Framework Readiness (%)** — scored against Section 2.0 criteria above.
+
+**Template Readiness (%)** — scored against:
+
+- [ ] Auth flows work (register, login, logout, protected routes)
+- [ ] Database schema correct with constraints and migrations
+- [ ] API routes with proper validation and error handling
+- [ ] Frontend components follow design system
+- [ ] CI/CD pipeline configured and passing
+- [ ] Testing infrastructure set up (unit, integration, E2E)
+- [ ] Environment configuration documented and safe defaults
+- [ ] Docker Compose or equivalent local dev setup works
+- [ ] Design system documented and enforced
+- [ ] Core patterns demonstrated (auth, CRUD, AI integration)
+
+**Template Readiness ≠ Application Readiness.** 75% template readiness = solid foundation for downstream projects, not incomplete or broken.
+
+### 2.2 — Application Mode "Finished" (for deployable SaaS applications)
+
 Default meaning: **production-ready SaaS** with ALL of the following verified:
 
 ### Frontend
