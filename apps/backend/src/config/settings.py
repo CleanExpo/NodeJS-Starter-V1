@@ -117,9 +117,33 @@ class Settings(BaseSettings):
     ref_tools_api_key: str = Field(default="")
 
     # Model defaults
-    default_model: str = Field(default="claude-sonnet-4-5-20250929")
+    default_model: str = Field(default="claude-sonnet-4-6")
     max_tokens: int = Field(default=4096)
     temperature: float = Field(default=0.7)
+
+    # Streaming
+    streaming_enabled: bool = Field(default=True, description="Enable SSE streaming")
+
+    # Adaptive Thinking (Opus 4.6 / Sonnet 4.6 only)
+    thinking_enabled: bool = Field(default=False, description="Adaptive thinking")
+    thinking_budget_tokens: int = Field(default=10000, description="Max tokens for thinking blocks")
+
+    # Fast Mode — Opus 4.6 only, research preview
+    fast_mode_enabled: bool = Field(default=False, description="2.5× faster Opus 4.6 output")
+
+    # Web Search Tool v2
+    web_search_enabled: bool = Field(default=False, description="Web search tool v2 (Opus/Sonnet 4.6 only)")
+    web_search_max_uses: int = Field(default=5, description="Max web search calls per request")
+
+    # Token Safety
+    token_count_warning_threshold: int = Field(
+        default=50000,
+        description="Warn when input token count exceeds this value"
+    )
+
+    # Beta Features
+    agent_skills_enabled: bool = Field(default=False, description="Anthropic Agent Skills beta")
+    mcp_connector_enabled: bool = Field(default=False, description="MCP Connector beta")
 
 
 @lru_cache
