@@ -9,9 +9,21 @@ export interface ModelFinding {
   status: 'CURRENT' | 'OUTDATED' | 'UNAPPROVED';
 }
 
-const MODEL_PATTERNS: RegExp[] = [/gemini-[\w.-]+/g, /imagen-[\w.-]+/g, /claude-[\w.-]+/g];
+// Patterns require a digit in the version segment to avoid matching variable names
+// (e.g. gemini-client, claude-progress.txt, claude-md are excluded)
+const MODEL_PATTERNS: RegExp[] = [
+  /\bgemini-\d[\w.-]*/g,
+  /\bimagen-\d[\w.-]*/g,
+  /\bclaude-(?:[a-z]+-)*\d[\w.-]*/g,
+];
 
-const APPROVED_IDS = new Set<string>(Object.values(GEMINI_APPROVED_MODELS).map((m) => m.id));
+// Approved Anthropic models (claude-sonnet-4-6 is the approved orchestration model per memory.md)
+const ANTHROPIC_APPROVED_IDS = new Set<string>(['claude-sonnet-4-6']);
+
+const APPROVED_IDS = new Set<string>([
+  ...Object.values(GEMINI_APPROVED_MODELS).map((m) => m.id),
+  ...ANTHROPIC_APPROVED_IDS,
+]);
 
 const SCAN_EXTENSIONS = new Set<string>(['.ts', '.js', '.py', '.json', '.env', '.yaml', '.yml']);
 
@@ -22,6 +34,9 @@ const SKIP_DIRS = new Set<string>([
   '.turbo',
   '.next',
   '__pycache__',
+  '.mypy_cache',
+  '.venv',
+  '.pytest_cache',
 ]);
 
 function walkDir(dir: string): string[] {
