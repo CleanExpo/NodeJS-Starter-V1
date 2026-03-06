@@ -29,9 +29,10 @@
     "deps:sync": "pnpm install && pnpm verify:deps",
     "deps:clean": "pnpm prune && pnpm install",
     "prepare": "husky",
-    "starter:adopt": "node scripts/adopt-project.mjs",
-    "starter:audit": "node scripts/full-audit.mjs",
-    "starter:sync-linear": "node scripts/sync-linear.mjs"
+    "starter:build": "cd src && npx tsc",
+    "starter:adopt": "npm run starter:build && node scripts/adopt-project.mjs",
+    "starter:audit": "npm run starter:build && node scripts/full-audit.mjs",
+    "starter:sync-linear": "npm run starter:build && node scripts/sync-linear.mjs"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",

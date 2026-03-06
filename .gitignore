@@ -81,6 +81,9 @@ nul
 ai-review/results/
 ai-review/screenshots/
 
+# Adoption engine generated reports
+reports/
+
 # NotebookLM generated artifacts
 .claude/notebooklm/repo-pack.txt
 .claude/data/minion-state.json
