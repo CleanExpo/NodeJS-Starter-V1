@@ -88,8 +88,11 @@ export function ToolNodeConfig({ config, onChange }: NodeConfigProps) {
           setToolOptions(fetched);
         }
       })
-      .catch(() => {
-        // Keep fallback list
+      .catch((error) => {
+        console.warn(
+          'Failed to fetch tool types, using fallback:',
+          error instanceof Error ? error.message : String(error)
+        );
       })
       .finally(() => {
         if (!cancelled) setToolsLoading(false);

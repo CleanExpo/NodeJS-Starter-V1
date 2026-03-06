@@ -19,13 +19,19 @@ interface User {
  * Verify JWT token with backend
  */
 async function verifyToken(token: string): Promise<User | null> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   try {
     const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
       cache: 'no-store',
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       return null;
@@ -33,6 +39,7 @@ async function verifyToken(token: string): Promise<User | null> {
 
     return response.json();
   } catch {
+    clearTimeout(timeoutId);
     return null;
   }
 }
@@ -60,7 +67,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Protected routes
-  const protectedPaths = ['/dashboard', '/nutrition'];
+  const protectedPaths = ['/dashboard'];
   const isProtectedPath = protectedPaths.some((path) => request.nextUrl.pathname.startsWith(path));
 
   if (isProtectedPath && !user) {

@@ -21,9 +21,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getUser = async () => {
-      const currentUser = await authApi.getCurrentUser();
-      setUser(currentUser);
-      setLoading(false);
+      try {
+        const currentUser = await authApi.getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.error('Failed to fetch current user:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getUser();

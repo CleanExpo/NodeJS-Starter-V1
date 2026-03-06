@@ -61,7 +61,7 @@ export function LoginForm() {
         return;
       }
 
-      // Server-side login succeeded, cookies are set - redirect to dashboard
+      // Server-side login succeeded, cookies are set - navigate to dashboard
       router.push('/dashboard');
     } catch (_err) {
       setError('Failed to connect to server');
