@@ -4,26 +4,26 @@
 
 ## Active Task
 
-Anthropic Platform Integration — NodeJS-Starter-V1. All 7 phases complete.
+All tasks from Anthropic Platform Integration plan complete. Branch: `feat/outcome-translation-blueprint-first`.
 
 ## Completed This Session
 
-- Phase 1: Fixed stale model IDs (claude-opus-4-6, claude-sonnet-4-6) in anthropic.py, settings.py, llm-config.tsx
-- Phase 2: Wired LLM bridge — added ModelSelector + \_call_llm() to BaseAgent; all 5 agents now call LLM; chat.py returns real responses
-- Phase 3: SSE streaming pipeline — FastAPI /api/chat/stream endpoint; Next.js SSE proxy; React streaming UI with isStreaming cursor
-- Phase 4-5: Added create_message(), count_tokens(), get_web_search_tool(), get_code_execution_tool(), get_agent_skill(), get_mcp_server_tool(), Fast Mode, thinking, structured outputs to AnthropicClient
-- Phase 6: Added 9 new settings fields + .env.example feature flag docs (incl. Voice Mode not-available note)
-- Phase 7: Created 3 skills — anthropic-features, anthropic-streaming, anthropic-web-search
+- Fixed all 343 backend tests (replaced stale X-User-Id auth with real JWTs)
+- Integrated Supabase state backend (SupabaseStateStore with NullStateStore fallback)
+- Updated README.md: model IDs, pricing, Supabase section, Anthropic feature flags, upgrade one-liner
+- Committed: `docs(readme): update to reflect Anthropic integrations and Supabase backend`
 
-## Branch
+## Branch Status
 
-feat/outcome-translation-blueprint-first (4 new commits)
+- 26 commits ahead of origin — not yet pushed
+- All tests passing: 343/343
+- No uncommitted code changes
 
 ## Next Steps
 
-Run verification: `pnpm turbo run type-check` and backend tests
-Consider PR to main when ready
+- Push branch and create PR: `git push && gh pr create`
+- Or continue with remaining items: update anthropic.py API patterns, streamline CLAUDE.md
 
 ## Last Updated
 
-06/03/2026 AEST
+06/03/2026 AEST (session end)
