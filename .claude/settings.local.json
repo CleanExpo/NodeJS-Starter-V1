@@ -21,9 +21,12 @@
       "Bash(uv run python:*)",
       "Bash(uv run pytest:*)",
       "Bash(pnpm turbo run lint:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "mcp__Desktop_Commander__read_file"
     ]
   },
-  "enabledMcpjsonServers": ["linear"],
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "linear"
+  ]
 }
