@@ -1,22 +1,18 @@
 # Current State
-> Updated by PreCompact hook and agents after key decisions.
+> Updated by PreCompact hook. Session: 868da3df
 
 ## Active Task
-<!-- Agent: update this field when starting a task -->
-None
+Compaction triggered — context was saved at 09/03/2026 18:46 AEST.
+Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
 ## Recent Architectural Choices
-<!-- Agent: append brief notes on significant decisions made this session -->
-None
+See architectural-decisions.md for logged decisions.
 
 ## In-Progress Work
-<!-- Agent: list files being modified and why -->
-None
+Check recent git status: `git status` and `git log --oneline -5`
 
 ## Next Steps
-<!-- Agent: list what remains after this session -->
-None
+Re-read .claude/memory/CONSTITUTION.md to restore rule context.
 
 ## Last Updated
-<!-- Hook: auto-updated timestamp -->
-Never (template)
+09/03/2026 18:46 AEST (PreCompact hook)

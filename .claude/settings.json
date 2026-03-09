@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \".claude/hooks/scripts/pre-compact-save.py\"",
+            "command": "powershell -ExecutionPolicy Bypass -Command \"$root = git rev-parse --show-toplevel; Set-Location $root; python '.claude/hooks/scripts/pre-compact-save.py'\"",
             "timeout": 30
           }
         ]
@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \".claude/hooks/scripts/pre-bash-validate.py\"",
+            "command": "powershell -ExecutionPolicy Bypass -Command \"$root = git rev-parse --show-toplevel; Set-Location $root; python '.claude/hooks/scripts/pre-bash-validate.py'\"",
             "timeout": 10
           }
         ]
@@ -78,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \".claude/hooks/scripts/iteration-counter.py\"",
+            "command": "powershell -ExecutionPolicy Bypass -Command \"$root = git rev-parse --show-toplevel; Set-Location $root; python '.claude/hooks/scripts/iteration-counter.py'\"",
             "timeout": 5
           }
         ]
@@ -101,7 +101,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \".claude/hooks/scripts/stop-verify-todos.py\"",
+            "command": "powershell -ExecutionPolicy Bypass -Command \"$root = git rev-parse --show-toplevel; Set-Location $root; python '.claude/hooks/scripts/stop-verify-todos.py'\"",
             "timeout": 15
           }
         ]
