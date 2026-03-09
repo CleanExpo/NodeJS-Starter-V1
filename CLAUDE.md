@@ -74,11 +74,26 @@ Full skill registry: `.skills/AGENTS.md`
 
 ## Authentication Flow
 
-1. **Login**: `POST /api/auth/login` → bcrypt verify → JWT token → cookie
-2. **Protected Routes**: Frontend middleware checks cookie; backend validates JWT
+1. **Login**: `POST /api/auth/login` → bcrypt verify → account lockout check → JWT cookie
+2. **Protected Routes**: Frontend middleware checks cookie; backend `AuthMiddleware` validates JWT
 3. **Logout**: `POST /api/auth/logout` → clear cookie
 
-Files: `apps/backend/src/auth/jwt.py`, `apps/web/lib/api/auth.ts`, `apps/web/middleware.ts`
+### Auth Endpoints (`/api/auth/*`)
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| POST | `/api/auth/register` | Create account |
+| POST | `/api/auth/login` | Authenticate + set JWT cookie |
+| POST | `/api/auth/logout` | Clear cookie (stateless) |
+| GET | `/api/auth/me` | Current user profile |
+| PATCH | `/api/auth/me` | Update display name |
+| POST | `/api/auth/change-password` | Change password (current required) |
+| POST | `/api/auth/forgot-password` | Request reset token |
+| POST | `/api/auth/reset-password` | Consume token + set new password |
+
+**Security**: 5 failed logins → 15-min lockout. Reset tokens are SHA-256 hashed, single-use, 60-min TTL.
+
+Files: `apps/backend/src/api/routes/auth.py`, `apps/backend/src/auth/jwt.py`, `apps/web/middleware.ts`
 Default credentials: `admin@local.dev` / `admin123`
 
 ## AI Provider System
@@ -108,13 +123,29 @@ OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=llama3.1:8b
 BACKEND_URL=http://localhost:8000
 NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+CORS_ORIGINS=["http://localhost:3000"]
+ENVIRONMENT=development
 ```
 
-Optional env vars: see `.env.example`
+Full list with production notes: `.env.example` | Deployment guide: `docs/production-deployment.md`
+
+## Database Migrations
+
+Alembic manages schema changes. Run migrations after `docker:up`:
+
+```bash
+cd apps/backend
+uv run alembic upgrade head      # Apply all pending migrations
+uv run alembic revision --autogenerate -m "description"  # Generate new migration
+uv run alembic downgrade -1      # Roll back one step
+```
+
+Migration files: `apps/backend/alembic/versions/`
 
 ## State Store
 
-Supabase removed. Backend uses **NullStateStore** for graceful degradation.
+Supabase removed. Backend uses **NullStateStore** — no external dependency required.
 
 | File | Purpose |
 |------|---------|
@@ -122,8 +153,6 @@ Supabase removed. Backend uses **NullStateStore** for graceful degradation.
 | `src/state/supabase.py` | Re-export shim (`NullStateStore as SupabaseStateStore`) |
 | `src/state/__init__.py` | `get_state_store()` factory |
 | `src/utils/supabase_client.py` | Safe `_NullClient` shim |
-
-Degraded: `/api/analytics/*` (empty), `/api/contractors/*` (503)
 
 ## Design System — Scientific Luxury
 
