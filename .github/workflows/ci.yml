@@ -104,12 +104,10 @@ jobs:
       - name: Type check with mypy
         working-directory: apps/backend
         run: uv run mypy src/
-        continue-on-error: true
 
       - name: Run tests with coverage
         working-directory: apps/backend
         run: uv run pytest --cov=src --cov-report=xml --cov-report=html --cov-report=term-missing -v
-        continue-on-error: true
         env:
           DATABASE_URL: postgresql://starter_user:local_dev_password@localhost:5432/starter_db
 
@@ -267,7 +265,6 @@ jobs:
       - name: Run E2E tests
         working-directory: apps/web
         run: pnpm test:e2e
-        continue-on-error: true
         env:
           CI: true
           DATABASE_URL: postgresql://starter_user:local_dev_password@localhost:5432/starter_db
@@ -328,7 +325,6 @@ jobs:
       - name: Run accessibility tests
         working-directory: apps/web
         run: pnpm exec playwright test tests/accessibility/
-        continue-on-error: true
         env:
           CI: true
 

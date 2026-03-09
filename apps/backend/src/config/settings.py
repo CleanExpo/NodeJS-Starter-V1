@@ -9,8 +9,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 _UNSAFE_JWT_DEFAULTS = {
     "your-secret-key-change-in-production",
     "your-secret-key-change-in-production-use-long-random-string",
+    "CHANGE_ME_GENERATE_WITH_COMMAND_ABOVE",
+    "CHANGE_ME",
     "changeme",
     "secret",
+}
+
+_UNSAFE_WEBHOOK_DEFAULTS = {
+    "CHANGE_ME",
+    "changeme",
+    "secret",
+    "webhook-secret",
 }
 
 
@@ -55,16 +64,21 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _reject_unsafe_defaults_in_production(self) -> "Settings":
-        """Reject insecure default secrets when running in production."""
-        if self.environment == "production":
+        """Reject insecure default secrets when running in production or staging."""
+        if self.environment in ("production", "staging"):
             if self.jwt_secret_key in _UNSAFE_JWT_DEFAULTS:
                 raise ValueError(
-                    "JWT_SECRET_KEY must be changed from the default value "
-                    "before running in production."
+                    "JWT_SECRET_KEY must be changed from the default placeholder. "
+                    "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(48))\""
                 )
             if len(self.jwt_secret_key) < 32:
                 raise ValueError(
                     "JWT_SECRET_KEY must be at least 32 characters in production."
+                )
+            if self.webhook_secret in _UNSAFE_WEBHOOK_DEFAULTS or not self.webhook_secret:
+                raise ValueError(
+                    "WEBHOOK_SECRET must be set to a secure random value in production. "
+                    "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(32))\""
                 )
         return self
 

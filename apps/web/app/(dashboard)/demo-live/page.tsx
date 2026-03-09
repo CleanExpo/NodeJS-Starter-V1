@@ -47,6 +47,20 @@ export default function LiveDemoPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
+        {/* Template notice */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <p className="text-amber-800 font-medium text-sm">
+            ⚠ Template feature — Contractor API not yet configured
+          </p>
+          <p className="text-amber-700 text-xs mt-1">
+            Implement{" "}
+            <code className="bg-amber-100 px-1 rounded">
+              apps/backend/src/api/routes/_templates/contractors.py
+            </code>{" "}
+            and register it in <code className="bg-amber-100 px-1 rounded">main.py</code> to activate this demo.
+          </p>
+        </div>
+
         {/* Header */}
         <div className="bg-white/70 backdrop-blur-md rounded-lg p-6 border border-white/20 shadow-[0_10px_15px_rgba(13,148,136,0.1)]">
           <h1 className="font-heading text-4xl font-bold text-gray-900 mb-2">

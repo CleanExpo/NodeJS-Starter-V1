@@ -146,20 +146,11 @@ CREATE TRIGGER documents_updated_at
     EXECUTE FUNCTION update_updated_at_column();
 
 -- =============================================================================
--- SECTION 5: Seed Data (Default Admin User)
+-- SECTION 5: Seed Data
+-- NOTE: Dev seed data has been moved to scripts/seed-dev.sql
+-- Run seed-dev.sql ONLY in local development — NEVER in production.
+-- Production: create your first admin via the /api/auth/register endpoint.
 -- =============================================================================
-
--- Insert default admin user
--- Password: "admin123" (bcrypt hash)
--- IMPORTANT: Change this password immediately in production!
-INSERT INTO users (email, password_hash, full_name, is_admin)
-VALUES (
-    'admin@local.dev',
-    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5Y7R.PZCjJxWe',  -- "admin123"
-    'System Administrator',
-    TRUE
-)
-ON CONFLICT (email) DO NOTHING;
 
 -- =============================================================================
 -- SECTION 6: Utility Views

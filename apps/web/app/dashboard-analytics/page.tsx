@@ -1,176 +1,71 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, CheckCircle, DollarSign, Loader2 } from "lucide-react";
-
-interface MetricsOverview {
-  total_runs: number;
-  completed_runs: number;
-  failed_runs: number;
-  active_runs: number;
-  success_rate: number;
-  avg_duration_seconds: number;
-  total_cost_usd: number;
-  total_input_tokens: number;
-  total_output_tokens: number;
-  time_range: string;
-}
+/**
+ * Analytics Dashboard — Template Page
+ *
+ * This page is a template. The analytics backend has been removed as a
+ * degraded stub. To activate, implement apps/backend/src/api/routes/_templates/analytics.py
+ * with real PostgreSQL queries and register it in main.py.
+ *
+ * Design: Scientific Luxury — OLED Black, no Lucide icons.
+ */
 
 export default function AnalyticsDashboardPage() {
-  const [metrics, setMetrics] = useState<MetricsOverview | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchMetrics();
-    const interval = setInterval(fetchMetrics, 30000); // Refresh every 30s
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchMetrics = async () => {
-    try {
-      const response = await fetch("/api/analytics/metrics/overview?time_range=7d");
-      if (response.ok) {
-        const data = await response.json();
-        setMetrics(data);
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Failed to fetch metrics:", error);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto py-8 px-4 flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!metrics) {
-    return (
-      <div className="container mx-auto py-8 px-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Error Loading Metrics</CardTitle>
-            <CardDescription>Failed to load analytics data</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold">Analytics Dashboard</h1>
-        <p className="text-muted-foreground mt-2">
-          Monitor agent performance, costs, and system health
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#050505] p-6">
+      <div className="max-w-5xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="border-[0.5px] border-white/[0.06] rounded-sm p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-2xl font-mono font-bold text-white">Analytics Dashboard</h1>
+              <p className="text-white/50 mt-1 text-sm">
+                Monitor agent performance, costs, and system health
+              </p>
+            </div>
+            <span className="px-2 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono rounded-sm">
+              TEMPLATE
+            </span>
+          </div>
+        </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Runs</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.total_runs}</div>
-            <p className="text-xs text-muted-foreground">Last 7 days</p>
-          </CardContent>
-        </Card>
+        {/* Not implemented notice */}
+        <div className="border-[0.5px] border-[#FFB800]/20 rounded-sm p-6 bg-[#FFB800]/5">
+          <p className="text-[#FFB800] font-mono text-sm font-medium mb-2">
+            ⚠ Analytics not yet configured
+          </p>
+          <p className="text-white/60 text-sm leading-relaxed">
+            The analytics endpoint has been removed as a degraded stub. To activate:
+          </p>
+          <ol className="mt-3 space-y-1 text-white/50 text-sm list-decimal list-inside font-mono">
+            <li>Implement <code className="text-[#00F5FF]">apps/backend/src/api/routes/_templates/analytics.py</code></li>
+            <li>Replace stub responses with real SQLAlchemy queries</li>
+            <li>Register the router in <code className="text-[#00F5FF]">apps/backend/src/api/main.py</code></li>
+            <li>Remove this notice and restore the metrics UI below</li>
+          </ol>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.success_rate}%</div>
-            <p className="text-xs text-muted-foreground">
-              {metrics.completed_runs} completed
-            </p>
-          </CardContent>
-        </Card>
+        {/* Metric card scaffolds */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {["Total Runs", "Success Rate", "Active Runs", "Total Cost (AUD)"].map((label) => (
+            <div key={label} className="border-[0.5px] border-white/[0.06] rounded-sm p-4">
+              <p className="text-white/40 text-xs font-mono mb-2">{label}</p>
+              <div className="h-8 bg-white/[0.04] rounded-sm animate-pulse" />
+            </div>
+          ))}
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Runs</CardTitle>
-            <Loader2 className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.active_runs}</div>
-            <p className="text-xs text-muted-foreground">Currently running</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cost</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.total_cost_usd.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              {(metrics.total_input_tokens + metrics.total_output_tokens).toLocaleString()} tokens
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Additional metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Agent Performance</CardTitle>
-            <CardDescription>Average execution time and status breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Avg Duration</span>
-                <span className="text-2xl font-bold">
-                  {metrics.avg_duration_seconds.toFixed(1)}s
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Failed Runs</span>
-                <span className="text-xl font-semibold text-red-600">
-                  {metrics.failed_runs}
-                </span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {["Agent Performance", "Token Usage"].map((label) => (
+            <div key={label} className="border-[0.5px] border-white/[0.06] rounded-sm p-6">
+              <p className="text-white/60 text-sm font-mono font-medium mb-4">{label}</p>
+              <div className="space-y-3">
+                <div className="h-4 bg-white/[0.04] rounded-sm animate-pulse" />
+                <div className="h-4 bg-white/[0.04] rounded-sm animate-pulse w-3/4" />
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Token Usage</CardTitle>
-            <CardDescription>Input and output token breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Input Tokens</span>
-                <span className="text-xl font-semibold">
-                  {metrics.total_input_tokens.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Output Tokens</span>
-                <span className="text-xl font-semibold">
-                  {metrics.total_output_tokens.toLocaleString()}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

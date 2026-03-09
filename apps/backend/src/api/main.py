@@ -18,9 +18,7 @@ from .middleware.security_headers import SecurityHeadersMiddleware
 from .routes import (
     agent_dashboard,
     agents,
-    analytics,
     chat,
-    contractors,
     discovery,
     documents,
     health,
@@ -32,6 +30,8 @@ from .routes import (
     workflow_builder,
     workflows,
 )
+# analytics + contractors are template implementations in routes/_templates/.
+# Back them with PostgreSQL/SQLAlchemy before registering in a forked product.
 
 settings = get_settings()
 logger = get_logger(__name__)
@@ -98,10 +98,8 @@ app.include_router(webhooks.router, prefix="/api", tags=["Webhooks"])
 app.include_router(prd.router, tags=["PRD Generation"])
 app.include_router(workflows.router, prefix="/api", tags=["Workflows"])
 app.include_router(rag.router, prefix="/api", tags=["RAG Pipeline"])
-app.include_router(analytics.router, prefix="/api", tags=["Analytics"])
 app.include_router(agent_dashboard.router, tags=["Agent Dashboard"])
 app.include_router(task_queue.router, tags=["Task Queue"])
-app.include_router(contractors.router, prefix="/api", tags=["Contractors"])
 app.include_router(search.router, tags=["Search"])
 app.include_router(documents.router, tags=["Documents"])
 app.include_router(workflow_builder.router, prefix="/api", tags=["Workflow Builder"])
