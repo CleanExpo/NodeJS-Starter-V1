@@ -80,10 +80,13 @@ Location: `.skills/custom/`
 | **tdd** | Test-driven development — Iron Law: no production code without a failing test first. Vitest (frontend) + pytest (backend). | "implement", "add feature", "fix bug", "new component", "new endpoint", "write code", "TDD" |
 | **systematic-debugging** | Four-phase root-cause protocol with hard 3-attempt circuit breaker. Enhances bug-hunter agent. | "bug", "error", "failing", "crash", "debug", "broken", "why isn't", "not working" |
 | **verification-before-completion** | Hard gate before any completion claim. Bans hedging language. Evidence required before "Done" or "✅". | "done", "complete", "finished", "fixed", "implemented", "ready", "✅", before PR creation |
+| **git-worktrees** | Isolated git worktrees for feature development. Auto-detects project type, installs deps (pnpm + uv sync), runs baseline tests. .gitignore safety check. | "new feature", "isolate", "worktree", "parallel development", "clean environment" |
+| **dispatching-parallel-agents** | Groups independent failures by component (frontend/backend/DB), launches concurrent agents, integrates results. For 2+ unrelated failures. | "multiple failures", "parallel", "independent tests", "concurrent", "CI failures across components" |
+| **finishing-branch** | End-of-feature workflow: test verification, PR description generation, merge strategy, worktree cleanup, stale branch management. | "create PR", "merge", "finishing", "branch cleanup", "ready to merge", "done with feature" |
 
 ### Identified Gaps
 
-No gaps identified. All **62 skills** are installed. Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
+No gaps identified. All **65 skills** are installed. Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
 
 ## Skill Priority
 

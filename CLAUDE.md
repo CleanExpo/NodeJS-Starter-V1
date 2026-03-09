@@ -66,7 +66,7 @@ Query knowledge sources before loading docs into context. See `.claude/rules/ret
 |--------|---------|--------|
 | **NotebookLM** | Architecture, debugging, security, onboarding | `nlm notebook query <id>` |
 | **Context7 MCP** | Library docs (Next.js, FastAPI, Playwright, etc.) | `resolve-library-id` → `get-library-docs` |
-| **Skills** (62 installed) | Pattern libraries | `.skills/custom/*/SKILL.md` |
+| **Skills** (65 installed) | Pattern libraries | `.skills/custom/*/SKILL.md` |
 | **Jina Reader** | Web content extraction | `https://r.jina.ai/{url}` |
 
 NotebookLM config: `.claude/notebooklm/notebooks.json`
@@ -218,7 +218,7 @@ Full documentation: `.claude/rules/context-drift.md`
 ## Agents & Skills
 
 - **23 subagents**: `.claude/agents/*/agent.md`
-- **62 skills**: `.skills/AGENTS.md` (full registry)
+- **65 skills**: `.skills/AGENTS.md` (full registry)
 - **10 commands**: `.claude/commands/*.md`
 - **Orchestrator**: `.claude/agents/orchestrator/agent.md`
 
