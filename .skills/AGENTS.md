@@ -77,10 +77,13 @@ Location: `.skills/custom/`
 | **system-supervisor** | Architecture drift detection, silent failure scanning, hallucination prevention, and feature completeness audit | "drift", "dead code", "completeness", "audit", "integrity", "silent failure" |
 | **playwright-browser** | Playwright CLI and MCP tools for headless browser automation, E2E testing, screenshots, and web scraping | "playwright", "E2E", "browser test", "screenshot", "headless", "automation" |
 | **claude-browser** | Claude Chrome extension tools for personal browser automation in logged-in sessions | "chrome", "personal browser", "form fill", "logged in", "tab management" |
+| **tdd** | Test-driven development — Iron Law: no production code without a failing test first. Vitest (frontend) + pytest (backend). | "implement", "add feature", "fix bug", "new component", "new endpoint", "write code", "TDD" |
+| **systematic-debugging** | Four-phase root-cause protocol with hard 3-attempt circuit breaker. Enhances bug-hunter agent. | "bug", "error", "failing", "crash", "debug", "broken", "why isn't", "not working" |
+| **verification-before-completion** | Hard gate before any completion claim. Bans hedging language. Evidence required before "Done" or "✅". | "done", "complete", "finished", "fixed", "implemented", "ready", "✅", before PR creation |
 
 ### Identified Gaps
 
-No gaps identified. All **59 skills** are installed. Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
+No gaps identified. All **62 skills** are installed. Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
 
 ## Skill Priority
 

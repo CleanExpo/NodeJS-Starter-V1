@@ -66,7 +66,7 @@ Query knowledge sources before loading docs into context. See `.claude/rules/ret
 |--------|---------|--------|
 | **NotebookLM** | Architecture, debugging, security, onboarding | `nlm notebook query <id>` |
 | **Context7 MCP** | Library docs (Next.js, FastAPI, Playwright, etc.) | `resolve-library-id` → `get-library-docs` |
-| **Skills** (59 installed) | Pattern libraries | `.skills/custom/*/SKILL.md` |
+| **Skills** (62 installed) | Pattern libraries | `.skills/custom/*/SKILL.md` |
 | **Jina Reader** | Web content extraction | `https://r.jina.ai/{url}` |
 
 NotebookLM config: `.claude/notebooklm/notebooks.json`
@@ -169,12 +169,30 @@ Supabase removed. Backend uses **NullStateStore** — no external dependency req
 
 Full system + banned elements: `docs/DESIGN_SYSTEM.md` | Skill: `.skills/custom/scientific-luxury/SKILL.md`
 
+## Testing Discipline
+
+**Iron Law**: No production code without a failing test first. See `.skills/custom/tdd/SKILL.md`.
+
+| Layer | Runner | Test Location | Command |
+|-------|--------|---------------|---------|
+| Frontend (React/Next.js) | vitest | `apps/web/__tests__/` | `pnpm test --filter=web` |
+| Backend (FastAPI/Python) | pytest | `apps/backend/tests/` | `cd apps/backend && uv run pytest -v` |
+| All | turbo | Both | `pnpm turbo run test` |
+
+**Three mandatory skills** for all coding tasks:
+- **`tdd`** — Write failing test → watch fail → write minimal code → watch pass → refactor
+- **`systematic-debugging`** — 4-phase root-cause protocol with 3-attempt circuit breaker
+- **`verification-before-completion`** — Run commands and read output before any "Done" claim
+
+**Banned phrases** (run the command instead): "should work", "probably passes", "seems correct", "likely fixed"
+
 ## Key Principles
 
 1. **Local-First** — Everything runs locally. No cloud required for development.
 2. **Zero Barriers** — No API keys, accounts, or configuration needed to start.
 3. **Production Ready** — Real authentication, testing, CI/CD included.
 4. **Retrieval-First** — Query Context7/NotebookLM/Skills before loading docs into context.
+5. **Test-First** — TDD enforced. No production code without a failing test. See Testing Discipline above.
 
 ## Context Drift Prevention
 
@@ -200,7 +218,7 @@ Full documentation: `.claude/rules/context-drift.md`
 ## Agents & Skills
 
 - **23 subagents**: `.claude/agents/*/agent.md`
-- **59 skills**: `.skills/AGENTS.md` (full registry)
+- **62 skills**: `.skills/AGENTS.md` (full registry)
 - **10 commands**: `.claude/commands/*.md`
 - **Orchestrator**: `.claude/agents/orchestrator/agent.md`
 

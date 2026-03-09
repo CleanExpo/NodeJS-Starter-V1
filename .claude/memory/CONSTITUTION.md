@@ -17,13 +17,15 @@
 | State (NullStateStore) | `apps/backend/src/state/` | backend-specialist |
 | Tests | `apps/web/playwright.config.ts` | test-engineer |
 
-## 5 Critical Rules
+## 7 Critical Rules
 
 1. **Retrieval-First** — Query NotebookLM → Context7 → Skills → Grep BEFORE loading docs inline.
 2. **No cross-layer imports** — Components never import from `server/`. API routes use services, not repos directly.
 3. **Subagent isolation** — All heavy implementation dispatched to subagents. Orchestrator stays lean.
 4. **State on disk** — Decisions written to `.claude/memory/architectural-decisions.md`. Never assume from training data.
 5. **Design system** — Scientific Luxury enforced. No generic Tailwind defaults. No `rounded-lg`. No linear easing.
+6. **Test-Driven Development (IMMUTABLE)** — NO production code without a failing test first. Write test → watch fail → implement → watch pass → refactor. Vitest for `apps/web/`, pytest for `apps/backend/`. Rationalising "just this once" = violation. Skill: `.skills/custom/tdd/SKILL.md`.
+7. **Verification before completion (IMMUTABLE)** — NO "Done", "✅", or completion claims without running the actual commands and reading the full output. Banned: "should work", "probably passes", "seems correct", "likely fixed". Evidence only. Skill: `.skills/custom/verification-before-completion/SKILL.md`.
 
 ## Orchestrator Token Budget
 - **Orchestrator**: Hard cap 80,000 tokens. Delegate file reads to subagents.
