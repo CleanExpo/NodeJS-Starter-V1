@@ -1,698 +1,244 @@
-# Production Deployment Guide - Domain Memory System
+# Production Deployment Guide
 
-Complete guide for deploying the domain memory system to production environments.
+> **Stack**: Next.js 15 (Vercel) + FastAPI (Railway) + PostgreSQL with pgvector
 
-## Table of Contents
+## Architecture Overview
 
-- [Pre-Deployment Checklist](#pre-deployment-checklist)
-- [Database Setup](#database-setup)
-- [Environment Configuration](#environment-configuration)
-- [Deployment Steps](#deployment-steps)
-- [Performance Optimization](#performance-optimization)
-- [Security Hardening](#security-hardening)
-- [Monitoring & Maintenance](#monitoring--maintenance)
-- [Rollback Procedures](#rollback-procedures)
-- [Troubleshooting](#troubleshooting)
+```
+Users → Vercel (Next.js frontend)
+             ↓ API calls
+        Railway (FastAPI backend)
+             ↓ SQL
+        Railway / Neon / Supabase (PostgreSQL 15 + pgvector)
+```
+
+The frontend and backend are **separate deployments**. The frontend calls the backend
+via `NEXT_PUBLIC_BACKEND_URL`. CORS must explicitly allow the Vercel domain.
+
+---
 
 ## Pre-Deployment Checklist
 
-### Database
+- [ ] All tests pass: `pnpm turbo run type-check lint test`
+- [ ] Docker stack runs cleanly: `pnpm run docker:up && pnpm run verify`
+- [ ] Alembic migrations tested locally: `cd apps/backend && uv run alembic upgrade head`
+- [ ] Production secrets generated (JWT, webhook) — see [Secret Generation](#secret-generation)
+- [ ] `.env` files **not** committed to git (check `.gitignore`)
 
-- [ ] **Supabase production project created**
-  - Create at: https://supabase.com/dashboard
-  - Note project reference ID
+---
 
-- [ ] **All migrations tested locally**
-  ```powershell
-  .\scripts\init-database.ps1 -Reset -Verify
-  cd apps\backend
-  uv run pytest -v
-  ```
+## Secret Generation
 
-- [ ] **Migrations ready to apply**
-  ```powershell
-  # Link to production project
-  supabase link --project-ref <your-project-ref>
+Run once locally to generate production-grade secrets:
 
-  # Dry run (verify what will be applied)
-  supabase db push --dry-run --linked
-  ```
+```bash
+# JWT secret (minimum 32 chars — FastAPI startup will reject shorter)
+python -c "import secrets; print(secrets.token_urlsafe(48))"
 
-- [ ] **Database backup strategy in place**
-  - Supabase automatic daily backups enabled
-  - Point-in-time recovery (PITR) enabled (Pro plan)
-  - Manual backup procedure documented
-
-- [ ] **RLS policies verified**
-  - All tables have appropriate policies
-  - Service role can access all data
-  - User access properly restricted
-
-- [ ] **Indexes optimized**
-  - Vector search index (HNSW) configured
-  - Performance benchmarks met locally
-
-### Environment Variables
-
-- [ ] **Production secrets secured**
-  - No secrets in code or version control
-  - Using environment variables or secret manager
-  - API keys have production permissions
-
-- [ ] **Required variables configured:**
-  - [ ] `NEXT_PUBLIC_SUPABASE_URL` (production URL)
-  - [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` (production anon key)
-  - [ ] `SUPABASE_SERVICE_ROLE_KEY` (production service key)
-  - [ ] `OPENAI_API_KEY` (for embeddings - **REQUIRED**)
-  - [ ] `ANTHROPIC_API_KEY` (for agents)
-
-### Code & Tests
-
-- [ ] **All tests passing locally**
-  ```powershell
-  pnpm turbo run type-check lint test
-  ```
-
-- [ ] **Integration tests pass**
-  ```powershell
-  cd apps\backend
-  uv run pytest tests\integration\ -v -m integration
-  ```
-
-- [ ] **Performance benchmarks acceptable**
-  ```powershell
-  uv run pytest tests\performance\ -v -m performance -s
-  ```
-  - [ ] CRUD operations < 100ms (P95)
-  - [ ] Vector search < 500ms (P95)
-
-### Security
-
-- [ ] **RLS policies tested and active**
-- [ ] **API keys secured** (not in code)
-- [ ] **Service role key** restricted to backend only
-- [ ] **No sensitive data in migrations**
-- [ ] **HTTPS enforced** for all production traffic
-
-### Monitoring
-
-- [ ] **Logging configured**
-  - Application logs sent to monitoring service
-  - Error tracking enabled (e.g., Sentry)
-
-- [ ] **Database monitoring enabled**
-  - Supabase dashboard monitoring active
-  - Query performance tracking
-  - Connection pool monitoring
-
-- [ ] **Alerting configured**
-  - Database connection failures
-  - High error rates
-  - Slow queries (> 1s)
-
-## Database Setup
-
-### 1. Create Production Supabase Project
-
-1. Go to https://supabase.com/dashboard
-2. Create new project
-3. Choose region closest to your users
-4. Save credentials (displayed once):
-   - API URL
-   - anon/public key
-   - service_role key
-   - Database password
-
-### 2. Configure Supabase Project
-
-```powershell
-# Link to production project
-supabase link --project-ref <your-project-ref>
-
-# Enter database password when prompted
+# Webhook HMAC secret
+python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-### 3. Enable Required Extensions
+---
 
-Extensions should be enabled via migration, but verify:
+## Step 1 — Database (Railway PostgreSQL or Neon)
 
-```sql
--- Check pgvector is enabled
-SELECT * FROM pg_extension WHERE extname = 'vector';
+### Option A: Railway PostgreSQL
 
--- If not enabled, run:
-CREATE EXTENSION IF NOT EXISTS vector;
-```
-
-### 4. Apply Migrations
-
-```powershell
-# Verify what will be applied
-supabase db push --dry-run --linked
-
-# Apply migrations to production
-supabase db push --linked
-```
-
-**Expected output:**
-```
-✅ Applied migration 00000000000000_initial_schema.sql
-✅ Applied migration 00000000000001_create_users.sql
-...
-✅ Applied migration 00000000000007_domain_memory.sql
-```
-
-### 5. Verify Database Structure
-
-```powershell
-# List all tables
-supabase db execute --linked "
-SELECT table_name
-FROM information_schema.tables
-WHERE table_schema = 'public'
-ORDER BY table_name;
-"
-
-# Verify memory tables
-supabase db execute --linked "
-SELECT table_name
-FROM information_schema.tables
-WHERE table_schema = 'public'
-AND table_name LIKE 'domain_%';
-"
-```
-
-**Expected tables:**
-- `domain_memories`
-- `domain_knowledge`
-- `user_preferences`
-- `test_failure_patterns`
-- `test_results`
-- `debugging_sessions`
-
-### 6. Verify Indexes
-
-```powershell
-supabase db execute --linked "
-SELECT
-  indexname,
-  indexdef
-FROM pg_indexes
-WHERE tablename = 'domain_memories';
-"
-```
-
-**Expected indexes:**
-- `domain_memories_pkey` (PRIMARY KEY)
-- `idx_domain_memories_domain`
-- `idx_domain_memories_category`
-- `idx_domain_memories_user_id`
-- `idx_domain_memories_embedding` (HNSW vector index)
-- `idx_domain_memories_tags` (GIN index)
-
-## Environment Configuration
-
-### Production Environment Variables
-
-Create environment-specific configuration files:
-
-**Vercel/Netlify (Frontend):**
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
-```
-
-**Backend (Railway/Render/AWS):**
-```env
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-```
-
-### Embedding Provider Configuration
-
-**CRITICAL:** Production MUST use OpenAI for embeddings.
-
-```env
-# REQUIRED for production
-OPENAI_API_KEY=sk-...
-```
-
-**Why:**
-- Simple provider is development-only (hash-based)
-- Anthropic embeddings not yet available
-- OpenAI provides production-quality semantic search
-
-### Security Best Practices
-
-1. **Never commit secrets to Git**
-   ```powershell
-   # Verify .env is in .gitignore
-   git check-ignore .env
+1. Create a new Railway project and add the **PostgreSQL** plugin
+2. Enable the `pgvector` extension via the Railway console:
+   ```sql
+   CREATE EXTENSION IF NOT EXISTS vector;
+   CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
    ```
+3. Copy the `DATABASE_URL` from Railway → Variables
 
-2. **Use secret management**
-   - Vercel: Project Settings → Environment Variables
-   - AWS: Secrets Manager or Parameter Store
-   - Railway: Project Settings → Variables
+### Option B: Neon
 
-3. **Rotate keys regularly**
-   - API keys: Every 90 days
-   - Database passwords: Every 180 days
+1. Create a project at https://neon.tech
+2. Enable `pgvector` under Extensions
+3. Copy the connection string (`postgresql://...`)
 
-## Deployment Steps
+### Apply schema and migrations
 
-### Step 1: Deploy Database Changes
+Run from your local machine (or Railway's release command):
 
-```powershell
-# Final verification before applying
-supabase db push --dry-run --linked
+```bash
+# 1. Apply base schema (tables: users, contractors, documents, etc.)
+psql $DATABASE_URL -f scripts/init-db.sql
 
-# Apply to production
-supabase db push --linked
-
-# Verify success
-supabase db execute --linked "SELECT COUNT(*) FROM domain_memories;"
+# 2. Apply Alembic migrations (workflow tables + auth hardening)
+cd apps/backend
+DATABASE_URL=$DATABASE_URL uv run alembic upgrade head
 ```
 
-### Step 2: Deploy Backend
+**As a Railway release command** in `railway.json`:
 
-**Docker (recommended):**
-
-```dockerfile
-# apps/backend/Dockerfile
-FROM python:3.12-slim
-
-WORKDIR /app
-
-# Install uv
-RUN pip install uv
-
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
-
-# Install dependencies
-RUN uv sync --no-dev
-
-# Copy application code
-COPY . .
-
-# Run application
-CMD ["uv", "run", "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```json
+{
+  "deploy": {
+    "releaseCommand": "psql $DATABASE_URL -f scripts/init-db.sql && uv run alembic upgrade head"
+  }
+}
 ```
 
-**Build and deploy:**
-```powershell
-# Build image
-docker build -t your-registry/backend:latest apps/backend
+---
 
-# Push to registry
-docker push your-registry/backend:latest
+## Step 2 — Backend (Railway FastAPI)
 
-# Deploy to hosting (Railway/Render/AWS)
-# (specific to your hosting provider)
+### Environment variables (Railway → Variables)
+
+| Variable | Value | Notes |
+|----------|-------|-------|
+| `DATABASE_URL` | Railway PostgreSQL URL | Auto-injected if using Railway plugin |
+| `ENVIRONMENT` | `production` | Enables safety validators |
+| `JWT_SECRET_KEY` | Generated secret (≥32 chars) | **Required** — startup fails without it |
+| `JWT_EXPIRE_MINUTES` | `60` | Adjust as needed |
+| `WEBHOOK_SECRET` | Generated secret | **Required** in production |
+| `CORS_ORIGINS` | `["https://your-app.vercel.app"]` | Must include your Vercel URL |
+| `AI_PROVIDER` | `anthropic` or `ollama` | Use `anthropic` for cloud deployment |
+| `ANTHROPIC_API_KEY` | `sk-ant-...` | Required if `AI_PROVIDER=anthropic` |
+| `BACKEND_API_KEY` | Random string | Internal service-to-service key |
+| `DEBUG` | `false` | Never `true` in production |
+
+### CORS configuration
+
+`CORS_ORIGINS` must include your exact Vercel URL. Railway parses it as a JSON array:
+
+```
+CORS_ORIGINS=["https://your-app.vercel.app","https://your-custom-domain.com"]
 ```
 
-### Step 3: Deploy Frontend
+If you forget to set this, the frontend will receive CORS errors on all API calls.
 
-**Vercel (recommended for Next.js):**
+### Dockerfile
 
-```powershell
+Railway auto-detects the Dockerfile at `apps/backend/Dockerfile`. If deploying manually:
+
+```bash
+docker build -t backend:latest apps/backend/
+docker run -p 8000:8000 \
+  -e DATABASE_URL=... \
+  -e ENVIRONMENT=production \
+  -e JWT_SECRET_KEY=... \
+  -e CORS_ORIGINS='["https://your-app.vercel.app"]' \
+  backend:latest
+```
+
+### Verify backend is healthy
+
+```bash
+curl https://your-backend.railway.app/health
+# → {"status": "healthy", ...}
+
+curl https://your-backend.railway.app/ready
+# → {"status": "ready", "database": true}
+```
+
+---
+
+## Step 3 — Frontend (Vercel)
+
+### Environment variables (Vercel → Project Settings → Environment Variables)
+
+| Variable | Value | Notes |
+|----------|-------|-------|
+| `NEXT_PUBLIC_BACKEND_URL` | `https://your-backend.railway.app` | No trailing slash |
+| `NEXT_PUBLIC_FRONTEND_URL` | `https://your-app.vercel.app` | Your Vercel URL |
+
+> **Note**: `NEXT_PUBLIC_` variables are bundled into the browser. Never put secrets
+> (JWT keys, API keys) in `NEXT_PUBLIC_` variables.
+
+### Deploy
+
+```bash
 # Install Vercel CLI
 npm install -g vercel
 
-# Deploy
+# Link and deploy
 cd apps/web
 vercel --prod
 ```
 
-**Environment variables in Vercel:**
-1. Project Settings → Environment Variables
-2. Add production variables
-3. Redeploy
-
-### Step 4: Verify Production Deployment
-
-```powershell
-# Test backend health endpoint
-curl https://api.yourapp.com/health
-
-# Test frontend
-curl https://yourapp.com
-
-# Test memory system (via API)
-curl https://api.yourapp.com/api/memory/health
-```
-
-### Step 5: Smoke Test Memory Operations
-
-Create a test script to verify production memory system:
-
-```python
-# scripts/production-smoke-test.py
-import asyncio
-import os
-from src.memory.store import MemoryStore
-from src.memory.models import MemoryDomain
-
-async def smoke_test():
-    """Smoke test for production memory system."""
-    store = MemoryStore()
-    await store.initialize()
-
-    # Create test memory
-    entry = await store.create(
-        domain=MemoryDomain.KNOWLEDGE,
-        category="smoke_test",
-        key="production_test",
-        value={"test": "production smoke test"},
-        generate_embedding=True,
-    )
-    print(f"✅ Created memory: {entry.id}")
-
-    # Retrieve it
-    retrieved = await store.get(entry.id)
-    assert retrieved is not None
-    print(f"✅ Retrieved memory: {retrieved.id}")
-
-    # Search for it
-    results = await store.find_similar(
-        query_text="production test",
-        domain=MemoryDomain.KNOWLEDGE,
-        limit=5,
-    )
-    assert len(results) > 0
-    print(f"✅ Vector search found {len(results)} results")
-
-    # Clean up
-    await store.delete(entry.id)
-    print(f"✅ Deleted test memory")
-
-    print("\n✅ All smoke tests passed!")
-
-if __name__ == "__main__":
-    asyncio.run(smoke_test())
-```
-
-Run against production:
-```powershell
-# Set production environment variables
-$env:NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-$env:SUPABASE_SERVICE_ROLE_KEY="your-production-key"
-$env:OPENAI_API_KEY="your-openai-key"
-
-# Run smoke test
-cd apps\backend
-uv run python scripts\production-smoke-test.py
-```
-
-## Performance Optimization
-
-### Database Optimization
-
-1. **Connection Pooling**
-   - Supabase uses PgBouncer (transaction pooling)
-   - Configure pool size in Supabase dashboard
-   - Recommended: 20 connections for typical workload
-
-2. **Index Optimization**
-   ```sql
-   -- Check index usage
-   SELECT
-     schemaname,
-     tablename,
-     indexname,
-     idx_scan as index_scans
-   FROM pg_stat_user_indexes
-   WHERE tablename = 'domain_memories'
-   ORDER BY idx_scan DESC;
-   ```
-
-3. **Query Performance**
-   ```sql
-   -- Enable query statistics
-   SELECT pg_stat_statements_reset();
-
-   -- Monitor slow queries
-   SELECT
-     mean_exec_time,
-     calls,
-     query
-   FROM pg_stat_statements
-   WHERE query LIKE '%domain_memories%'
-   ORDER BY mean_exec_time DESC
-   LIMIT 10;
-   ```
-
-### Vector Search Optimization
-
-1. **HNSW Index Parameters**
-   ```sql
-   -- Verify HNSW index configuration
-   SELECT
-     indexname,
-     indexdef
-   FROM pg_indexes
-   WHERE indexname LIKE '%embedding%';
-
-   -- Recommended parameters (already in migration):
-   -- m=16, ef_construction=64
-   ```
-
-2. **Tune Search Parameters**
-   - Lower `similarity_threshold` = more results (slower)
-   - Higher `similarity_threshold` = fewer results (faster)
-   - Recommended production: 0.7 - 0.8
-
-### Application Optimization
-
-1. **Enable Caching**
-   ```python
-   # Cache frequently accessed memories
-   from functools import lru_cache
-
-   @lru_cache(maxsize=1000)
-   async def get_cached_memory(memory_id: str):
-       return await memory_store.get(memory_id)
-   ```
-
-2. **Batch Operations**
-   ```python
-   # Instead of individual creates, batch them
-   entries = [...]
-   for entry in entries:
-       await memory_store.create(...)  # Consider batching
-   ```
-
-## Security Hardening
-
-### Row Level Security (RLS)
-
-Verify RLS policies are active:
-
-```sql
--- Check RLS is enabled
-SELECT
-  tablename,
-  rowsecurity
-FROM pg_tables
-WHERE schemaname = 'public'
-AND tablename LIKE 'domain_%';
-
--- List all policies
-SELECT
-  tablename,
-  policyname,
-  permissive,
-  roles,
-  qual
-FROM pg_policies
-WHERE tablename LIKE 'domain_%';
-```
-
-### API Security
-
-1. **Rate Limiting**
-   - Implement at API gateway level
-   - Recommended: 100 requests/minute per IP
-
-2. **Authentication**
-   - Always verify JWT tokens
-   - Use Supabase auth for user operations
-
-3. **Input Validation**
-   - Validate all inputs with Pydantic
-   - Sanitize user-provided content
-
-### Network Security
-
-1. **HTTPS Only**
-   - Enforce SSL/TLS for all connections
-   - Configure HSTS headers
-
-2. **CORS Configuration**
-   ```python
-   # apps/backend/src/api/main.py
-   from fastapi.middleware.cors import CORSMiddleware
-
-   app.add_middleware(
-       CORSMiddleware,
-       allow_origins=["https://yourapp.com"],  # Production only
-       allow_credentials=True,
-       allow_methods=["GET", "POST", "PUT", "DELETE"],
-       allow_headers=["*"],
-   )
-   ```
-
-## Monitoring & Maintenance
-
-### Application Monitoring
-
-1. **Set up error tracking**
-   - Sentry, Rollbar, or similar
-   - Configure in production environment
-
-2. **Performance monitoring**
-   - Track API response times
-   - Monitor memory usage
-   - Database query performance
-
-3. **Logging**
-   ```python
-   # Configure structured logging
-   import logging
-   import json
-
-   logger = logging.getLogger(__name__)
-   logger.setLevel(logging.INFO)
-
-   # Production: JSON logs
-   # Development: Pretty logs
-   ```
-
-### Database Monitoring
-
-1. **Supabase Dashboard**
-   - Monitor connection count
-   - Track query performance
-   - Review error logs
-
-2. **Set up alerts**
-   - Connection pool exhaustion
-   - Slow query threshold (> 1s)
-   - High error rate
-
-### Regular Maintenance
-
-- [ ] **Weekly:** Review error logs
-- [ ] **Monthly:** Check database performance metrics
-- [ ] **Quarterly:** Review and optimize slow queries
-- [ ] **Quarterly:** Prune stale memories
-  ```python
-  # Run maintenance script
-  await memory_store.prune_stale(
-      min_relevance=0.3,
-      max_age_days=90
-  )
-  ```
-
-## Rollback Procedures
-
-### Database Rollback
-
-**If migrations fail:**
-
-```powershell
-# Rollback to previous migration version
-supabase db reset --linked --version <previous-version>
-```
-
-**If data corruption:**
-
-```powershell
-# Restore from backup (Supabase dashboard)
-# 1. Go to Database → Backups
-# 2. Select backup point
-# 3. Restore
-```
-
-### Application Rollback
-
-**Vercel:**
-```powershell
-# Rollback to previous deployment
-vercel rollback
-```
-
-**Docker:**
-```powershell
-# Deploy previous image version
-docker pull your-registry/backend:previous-tag
-# Redeploy with orchestrator (K8s, Docker Swarm, etc.)
-```
-
-### Emergency Procedures
-
-1. **Disable memory system temporarily**
-   ```python
-   # Feature flag to bypass memory operations
-   MEMORY_ENABLED = os.getenv("MEMORY_ENABLED", "true") == "true"
-
-   if MEMORY_ENABLED:
-       await memory_store.create(...)
-   ```
-
-2. **Fallback to read-only mode**
-   ```python
-   MEMORY_READ_ONLY = os.getenv("MEMORY_READ_ONLY", "false") == "true"
-
-   if MEMORY_READ_ONLY:
-       # Only allow read operations
-       raise HTTPException(status_code=503, detail="Memory system in read-only mode")
-   ```
-
-## Troubleshooting
-
-### Common Production Issues
-
-| Issue | Symptoms | Solution |
-|-------|----------|----------|
-| **Slow vector search** | Queries > 500ms | Check HNSW index, reduce `match_count`, optimize similarity threshold |
-| **Connection pool exhausted** | "too many connections" error | Increase pool size in Supabase, check for connection leaks |
-| **High memory usage** | OOM errors | Implement pagination, add memory limits, optimize embedding cache |
-| **RLS blocking queries** | Empty results for authenticated users | Verify RLS policies, check JWT claims, test with service role |
-
-### Debug Checklist
-
-- [ ] Check application logs
-- [ ] Review Supabase logs (Database → Logs)
-- [ ] Verify environment variables
-- [ ] Test with reduced traffic
-- [ ] Check database connection count
-- [ ] Review recent deployments
-- [ ] Verify API keys are valid
-
-### Support
-
-- **Supabase Support:** https://supabase.com/support
-- **OpenAI Status:** https://status.openai.com/
-- **Internal Documentation:** `docs/`
+Or connect your GitHub repo to Vercel for automatic deploys on push to `main`.
 
 ---
 
-## Post-Deployment Checklist
+## Step 4 — Smoke Test
 
-After successful deployment:
+After deployment:
 
-- [ ] **Verify all smoke tests pass**
-- [ ] **Monitor error rates** (first 24 hours)
-- [ ] **Check performance metrics** match benchmarks
-- [ ] **Verify backup strategy** is working
-- [ ] **Document any production-specific config**
-- [ ] **Update runbook** with lessons learned
+```bash
+# Backend health
+curl https://your-backend.railway.app/health
+
+# Register a test user
+curl -X POST https://your-backend.railway.app/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"smoke@test.com","password":"TestPass123"}'
+
+# Login
+curl -X POST https://your-backend.railway.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"smoke@test.com","password":"TestPass123"}'
+```
 
 ---
 
-**Last updated:** December 2025
-**Production-ready:** Yes
+## First Admin User
+
+`seed-dev.sql` is **not** mounted in production (local Docker only). Create your first
+admin via the API, then promote via SQL:
+
+```bash
+# 1. Register
+curl -X POST https://your-backend.railway.app/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@yourapp.com","password":"<strong-password>","full_name":"Admin"}'
+
+# 2. Promote to admin
+psql $DATABASE_URL -c "UPDATE users SET is_admin = TRUE WHERE email = 'admin@yourapp.com';"
+```
+
+---
+
+## Database Migrations (ongoing)
+
+When you add new Alembic migrations:
+
+```bash
+# Generate from model changes
+cd apps/backend && uv run alembic revision --autogenerate -m "description"
+
+# Apply to production
+DATABASE_URL=$PROD_DATABASE_URL uv run alembic upgrade head
+
+# Rollback one step if needed
+DATABASE_URL=$PROD_DATABASE_URL uv run alembic downgrade -1
+```
+
+---
+
+## Security Checklist
+
+- [ ] `ENVIRONMENT=production` set on Railway
+- [ ] `JWT_SECRET_KEY` is randomly generated, ≥ 32 chars
+- [ ] `WEBHOOK_SECRET` is set to a secure random value
+- [ ] `DEBUG=false` on Railway
+- [ ] `CORS_ORIGINS` lists only your actual frontend domain(s)
+- [ ] `seed-dev.sql` not executed in production
+- [ ] `NEXT_PUBLIC_*` variables contain no secrets
+- [ ] HTTPS enforced (Vercel and Railway provide this automatically)
+
+---
+
+## Common Issues
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| CORS errors in browser | `CORS_ORIGINS` missing Vercel URL | Add `https://your-app.vercel.app` to `CORS_ORIGINS` |
+| `startup failed: JWT_SECRET_KEY must be changed` | Default JWT secret in production | Generate and set a real secret |
+| `/ready` returns `"database": false` | DB not reachable | Check `DATABASE_URL`, verify pgvector extension enabled |
+| `relation "workflows" does not exist` | Alembic migrations not run | Run `uv run alembic upgrade head` |
+| Frontend 401 on all requests | CORS preflight failing | Verify `CORS_ORIGINS` includes exact frontend URL |
+| Frontend can't reach backend | Wrong `NEXT_PUBLIC_BACKEND_URL` | Set to Railway URL, no trailing slash |
