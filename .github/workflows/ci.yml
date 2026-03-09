@@ -58,7 +58,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15-alpine
+        image: pgvector/pgvector:pg15
         env:
           POSTGRES_DB: starter_db
           POSTGRES_USER: starter_user
@@ -96,6 +96,15 @@ jobs:
       - name: Install dependencies
         working-directory: apps/backend
         run: uv sync --extra dev
+
+      - name: Initialise database schema
+        run: psql postgresql://starter_user:local_dev_password@localhost:5432/starter_db -f scripts/init-db.sql
+
+      - name: Run Alembic migrations
+        working-directory: apps/backend
+        run: uv run alembic upgrade head
+        env:
+          DATABASE_URL: postgresql://starter_user:local_dev_password@localhost:5432/starter_db
 
       - name: Lint with ruff
         working-directory: apps/backend

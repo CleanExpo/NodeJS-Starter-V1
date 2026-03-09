@@ -189,8 +189,12 @@ ON CONFLICT (version) DO NOTHING;
 -- =============================================================================
 -- Initialization Complete
 -- =============================================================================
+-- NOTE: Workflow tables (workflows, workflow_nodes, workflow_edges,
+-- workflow_executions, workflow_execution_logs, workflow_collaborators)
+-- are created by Alembic migration 001_workflow_tables.py.
+-- After first Docker start, run: cd apps/backend && uv run alembic upgrade head
+-- =============================================================================
 
--- Summary of created objects
 DO $$
 BEGIN
     RAISE NOTICE '=============================================================================';
@@ -199,6 +203,6 @@ BEGIN
     RAISE NOTICE 'Extensions: uuid-ossp, vector (pgvector)';
     RAISE NOTICE 'Tables: users, contractors, availability_slots, documents, schema_version';
     RAISE NOTICE 'Views: available_contractors';
-    RAISE NOTICE 'Default admin: admin@local.dev / admin123 (CHANGE THIS!)';
+    RAISE NOTICE 'Next step: cd apps/backend && uv run alembic upgrade head';
     RAISE NOTICE '=============================================================================';
 END $$;
