@@ -18,6 +18,7 @@ from .middleware.security_headers import SecurityHeadersMiddleware
 from .routes import (
     agent_dashboard,
     agents,
+    auth,
     chat,
     discovery,
     documents,
@@ -91,6 +92,7 @@ async def _global_exception_handler(request: Request, exc: Exception) -> JSONRes
 
 
 # Include routers
+app.include_router(auth.router)
 app.include_router(health.router, tags=["Health"])
 app.include_router(agents.router, prefix="/api", tags=["Agents"])
 app.include_router(chat.router, prefix="/api", tags=["Chat"])

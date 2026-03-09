@@ -10,8 +10,10 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-# Import Base and ALL models so autogenerate detects them
-from src.db.models import Base  # noqa: F401 — registers: users, contractors, availability_slots, documents
+# Import Base and ALL models so autogenerate detects them.
+# auth.models uses src.db.models.Base — all tables share one metadata.
+from src.auth.models import PasswordResetToken, User  # noqa: F401 — registers: users, password_reset_tokens
+from src.db.models import Base  # noqa: F401 — shared Base; registers: contractors, availability_slots, documents
 from src.db.workflow_models import (  # noqa: F401 — registers: workflows, workflow_nodes, workflow_edges, workflow_executions, workflow_execution_logs, workflow_collaborators
     Workflow,
     WorkflowCollaborator,

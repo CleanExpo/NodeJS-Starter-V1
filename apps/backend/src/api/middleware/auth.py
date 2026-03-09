@@ -24,7 +24,19 @@ class AuthMiddleware(BaseHTTPMiddleware):
     """Middleware for JWT authentication."""
 
     # Paths that don't require authentication
-    PUBLIC_PATHS = {"/", "/health", "/ready", "/docs", "/openapi.json"}
+    PUBLIC_PATHS = {
+        "/",
+        "/health",
+        "/ready",
+        "/docs",
+        "/openapi.json",
+        # Auth endpoints — must be public for unauthenticated users
+        "/api/auth/login",
+        "/api/auth/register",
+        "/api/auth/logout",
+        "/api/auth/forgot-password",
+        "/api/auth/reset-password",
+    }
 
     async def dispatch(
         self,
