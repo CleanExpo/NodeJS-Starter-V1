@@ -217,10 +217,41 @@ Full documentation: `.claude/rules/context-drift.md`
 
 ## Agents & Skills
 
-- **23 subagents**: `.claude/agents/*/agent.md`
+- **29 subagents**: `.claude/agents/*/agent.md`
 - **65 skills**: `.skills/AGENTS.md` (full registry)
 - **10 commands**: `.claude/commands/*.md`
 - **Orchestrator**: `.claude/agents/orchestrator/agent.md`
+
+## Multi-Agent Coordination Harness
+
+8-phase convergence loop for coordinating agent work from idea to production. Protocol: `.claude/AGENT_HARNESS.md`
+
+| Phase | Owner | Purpose |
+|-------|-------|---------|
+| 1. Intake | orchestrator | Classify intent, scope, risk |
+| 2. Discovery | product-strategist | Create PRD |
+| 3. Decomposition | technical-architect + senior-engineer | Architecture delta + implementation plan |
+| 4. Execution | specialists | Parallel implementation (TDD enforced) |
+| 5. Aggregation | orchestrator | Merge results, resolve conflicts |
+| 6. Verification | verification + qa-validator + design-reviewer | Code (PASS/FAIL) + acceptance (0-100) + UX audit |
+| 7. Iteration | orchestrator | Remediate failures (max 2 cycles) |
+| 8. Production | delivery-manager | PR creation + hand-off (human review gate) |
+
+### Harness Agents
+
+| Agent | Role | Token Budget |
+|-------|------|-------------|
+| product-strategist | PRD, scope, non-goals, priorities | 40K |
+| technical-architect | Architecture delta, rollout strategy | 50K |
+| design-reviewer | UX review, design consistency audit | 40K |
+| senior-engineer | Implementation planning (plans, doesn't code) | 60K |
+| qa-validator | Rubric scoring (0-100), acceptance validation | 50K |
+| delivery-manager | Sprint slices, tickets, hand-offs, PR bodies | 30K |
+
+### Workflows & Rubrics
+
+- **Workflows**: `.claude/workflows/` — idea-to-prd, prd-to-spec, spec-to-build, build-to-release
+- **Rubrics**: `.claude/rubrics/` — prd, architecture, ui, code, release
 
 ## Documentation
 

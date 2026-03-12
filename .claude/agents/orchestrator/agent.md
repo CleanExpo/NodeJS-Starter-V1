@@ -156,6 +156,34 @@ def route_task(self, task: Task) -> Agent:
     if self.is_skill_management_task(task):
         return self.get_agent('skill-manager')
 
+    # Product strategy tasks → Product Strategist
+    if self.is_product_strategy_task(task):
+        return self.get_agent('product-strategist')
+
+    # Architecture planning tasks → Technical Architect
+    if self.is_architecture_task(task):
+        return self.get_agent('technical-architect')
+
+    # Design/UX review tasks → Design Reviewer
+    if self.is_design_review_task(task):
+        return self.get_agent('design-reviewer')
+
+    # Implementation planning tasks → Senior Engineer
+    if self.is_implementation_planning_task(task):
+        return self.get_agent('senior-engineer')
+
+    # Acceptance validation tasks → QA Validator
+    if self.is_acceptance_validation_task(task):
+        return self.get_agent('qa-validator')
+
+    # Release coordination tasks → Delivery Manager
+    if self.is_release_task(task):
+        return self.get_agent('delivery-manager')
+
+    # Full lifecycle tasks → Execute harness convergence loop
+    if self.is_lifecycle_task(task):
+        return self.execute_harness_convergence_loop(task)
+
     # Fallback: Analyze and route
     return self.analyze_and_route(task)
 ```
