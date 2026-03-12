@@ -11,6 +11,10 @@
 
 # NodeJS-Starter-V1
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-blue.svg)](./SECURITY.md)
+[![Contributing](https://img.shields.io/badge/Contributing-Guide-green.svg)](./CONTRIBUTING.md)
+
 ### Self-Contained AI Application Template
 
 <p align="center">
@@ -123,6 +127,21 @@ sequenceDiagram
 ```
 
 </details>
+
+---
+
+## Getting Started
+
+The quickest way to get up and running is with Docker Compose, which handles PostgreSQL, Redis, and all supporting services:
+
+```bash
+git clone https://github.com/CleanExpo/NodeJS-Starter-V1.git
+cd NodeJS-Starter-V1
+docker compose up -d        # Start PostgreSQL + Redis
+pnpm install && pnpm dev    # Install deps and start dev servers
+```
+
+See the detailed Quick Start below for full prerequisites and verification steps.
 
 ---
 
@@ -476,9 +495,18 @@ Contributions welcome! Please:
 
 ---
 
-## License
+## Community
 
-MIT License - Use freely for any purpose.
+- [Licence (MIT)](./LICENSE)
+- [Security Policy](./SECURITY.md)
+- [Contributing Guide](./CONTRIBUTING.md)
+- [Changelog](./CHANGELOG.md)
+
+---
+
+## Licence
+
+MIT Licence — Use freely for any purpose.
 
 ---
 
