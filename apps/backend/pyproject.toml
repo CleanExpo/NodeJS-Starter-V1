@@ -34,6 +34,9 @@ dependencies = [
     "pyyaml>=6.0.0",
     "structlog>=24.4.0",
     "python-multipart>=0.0.12",
+
+    # Background Workers
+    "arq>=0.26.0",  # Async Redis-backed job queue
 ]
 
 [project.optional-dependencies]
