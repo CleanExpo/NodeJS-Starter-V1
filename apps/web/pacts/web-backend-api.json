@@ -1,0 +1,636 @@
+{
+  "consumer": {
+    "name": "web"
+  },
+  "interactions": [
+    {
+      "description": "a health check request",
+      "providerStates": [
+        {
+          "name": "the API is running"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/health"
+      },
+      "response": {
+        "body": {
+          "status": "healthy",
+          "timestamp": "some string",
+          "version": "some string"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.status": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.timestamp": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.version": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request for non-existent run",
+      "providerStates": [
+        {
+          "name": "no PRD generation exists for the run_id"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/prd/status/invalid_run"
+      },
+      "response": {
+        "body": {
+          "detail": "Run not found"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.detail": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 404
+      }
+    },
+    {
+      "description": "a request to check status",
+      "providerStates": [
+        {
+          "name": "a PRD generation is in progress"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/prd/status/run_123"
+      },
+      "response": {
+        "body": {
+          "created_at": "some string",
+          "current_step": "Analyzing requirements",
+          "progress": 50,
+          "run_id": "run_123",
+          "status": "in_progress",
+          "steps_completed": 2,
+          "steps_total": 4,
+          "updated_at": "some string"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.created_at": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.current_step": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.progress": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.run_id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.status": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.steps_completed": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.steps_total": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.updated_at": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to fetch the PRD result",
+      "providerStates": [
+        {
+          "name": "a PRD has been successfully generated"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/prd/result/prd_123"
+      },
+      "response": {
+        "body": {
+          "completed_at": "some string",
+          "content": {
+            "executive_summary": "Executive summary...",
+            "features": [
+              {
+                "description": "some string",
+                "name": "some string",
+                "priority": "some string"
+              }
+            ],
+            "product_name": "Test Product",
+            "requirements": {
+              "functional": ["some string"],
+              "non_functional": ["some string"]
+            }
+          },
+          "created_at": "some string",
+          "prd_id": "prd_123",
+          "run_id": "run_123",
+          "status": "completed",
+          "title": "Product Requirements Document"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.completed_at": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content.features": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.content.features[*].description": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content.features[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content.features[*].priority": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content.requirements": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content.requirements.functional": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.content.requirements.functional[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.content.requirements.non_functional": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.content.requirements.non_functional[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.created_at": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.prd_id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.run_id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.status": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.title": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to generate a PRD",
+      "providerStates": [
+        {
+          "name": "the PRD generation service is available"
+        }
+      ],
+      "request": {
+        "body": {
+          "description": "A test product for contract testing",
+          "key_features": ["Feature 1", "Feature 2"],
+          "product_name": "Test Product",
+          "target_audience": "Developers"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/prd/generate"
+      },
+      "response": {
+        "body": {
+          "created_at": "some string",
+          "message": "PRD generation started",
+          "run_id": "run_123",
+          "status": "pending"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.created_at": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.run_id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.status": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to list documents",
+      "providerStates": [
+        {
+          "name": "documents have been generated for the PRD"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/prd/documents/prd_123"
+      },
+      "response": {
+        "body": {
+          "documents": [
+            {
+              "created_at": "some string",
+              "download_url": "some string",
+              "filename": "some string",
+              "id": "some string",
+              "size": 101,
+              "type": "some string"
+            }
+          ],
+          "prd_id": "prd_123"
+        },
+        "generators": {
+          "body": {
+            "$.documents[*].size": {
+              "max": 10,
+              "min": 0,
+              "type": "RandomInt"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.documents": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.documents[*].created_at": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.documents[*].download_url": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.documents[*].filename": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.documents[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.documents[*].size": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.documents[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.prd_id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request with missing required fields",
+      "providerStates": [
+        {
+          "name": "the PRD generation service is available"
+        }
+      ],
+      "request": {
+        "body": {
+          "description": "",
+          "product_name": ""
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/prd/generate"
+      },
+      "response": {
+        "body": {
+          "detail": [
+            {
+              "loc": ["some string"],
+              "msg": "some string",
+              "type": "some string"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.detail": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.detail[*].loc": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.detail[*].loc[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.detail[*].msg": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.detail[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 422
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "16.2.0"
+    },
+    "pactRust": {
+      "ffi": "0.4.28",
+      "models": "1.3.5"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "backend-api"
+  }
+}

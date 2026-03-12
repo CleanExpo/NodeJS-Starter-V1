@@ -44,6 +44,7 @@ Your Supabase database is configured but needs the tables created.
 6. Expected result: "Success. No rows returned"
 
 7. Verify in Table Editor:
+
    ```
    https://supabase.com/dashboard/project/ywxwcrmyfovqnquglynh/editor
    ```
