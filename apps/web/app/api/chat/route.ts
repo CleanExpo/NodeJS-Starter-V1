@@ -1,29 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { getProxyAuth } from '@/lib/api/proxy-auth';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
 
 export async function POST(request: NextRequest) {
   try {
-    // Read JWT from httpOnly cookie
-    const cookieStore = await cookies();
-    const token = cookieStore.get('auth_token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const auth = await getProxyAuth();
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
     }
-
-    // Verify token by calling backend /api/auth/me
-    const meResponse = await fetch(`${BACKEND_URL}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-    });
-
-    if (!meResponse.ok) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const user = await meResponse.json();
 
     const body = await request.json();
     const { message, conversationId } = body;
@@ -35,15 +20,11 @@ export async function POST(request: NextRequest) {
     // Forward to LangGraph backend
     const response = await fetch(`${BACKEND_URL}/api/chat`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        'X-User-Id': user.id,
-      },
+      headers: auth.headers,
       body: JSON.stringify({
         message,
         conversationId,
-        userId: user.id,
+        userId: auth.userId,
       }),
     });
 
