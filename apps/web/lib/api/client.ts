@@ -3,8 +3,10 @@
  *
  * Replaces Supabase client with direct fetch calls to FastAPI.
  * Handles JWT authentication via cookies, request timeout,
- * and exponential backoff retry for transient failures.
+ * CSRF protection, and exponential backoff retry for transient failures.
  */
+
+import { getCsrfHeaders } from '../csrf';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -23,7 +25,7 @@ export class ApiClientError extends Error {
     message: string,
     public status: number,
     public errorCode?: string,
-    public requestId?: string,
+    public requestId?: string
   ) {
     super(message);
     this.name = 'ApiClientError';
@@ -81,9 +83,11 @@ async function fetchApi<T>(
   endpoint: string,
   options: RequestInit = {},
   retriesLeft = MAX_RETRIES,
-  didRefresh = false,
+  didRefresh = false
 ): Promise<T> {
   const token = getAuthToken();
+
+  const method = (options.method ?? 'GET').toUpperCase();
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -92,6 +96,11 @@ async function fetchApi<T>(
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // Attach CSRF token for mutation requests
+  if (!['GET', 'HEAD', 'OPTIONS', 'TRACE'].includes(method)) {
+    Object.assign(headers, getCsrfHeaders());
   }
 
   const url = endpoint.startsWith('http') ? endpoint : `${BACKEND_URL}${endpoint}`;
@@ -135,12 +144,7 @@ async function fetchApi<T>(
         detail: `HTTP ${response.status}: ${response.statusText}`,
       }));
 
-      throw new ApiClientError(
-        error.detail,
-        response.status,
-        error.error_code,
-        error.request_id,
-      );
+      throw new ApiClientError(error.detail, response.status, error.error_code, error.request_id);
     }
 
     // Handle 204 No Content
@@ -163,7 +167,7 @@ async function fetchApi<T>(
     throw new ApiClientError(
       err instanceof Error ? err.message : 'Network error',
       0,
-      'NETWORK_ERROR',
+      'NETWORK_ERROR'
     );
   }
 }
