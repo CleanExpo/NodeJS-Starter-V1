@@ -1,0 +1,15 @@
+node_modules
+.next
+tests/
+e2e/
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+.env
+.env.*
+*.md
+pacts/
+coverage/
+.turbo

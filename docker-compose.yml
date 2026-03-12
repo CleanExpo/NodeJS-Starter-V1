@@ -6,15 +6,15 @@ services:
       POSTGRES_DB: starter_db
       POSTGRES_USER: starter_user
       POSTGRES_PASSWORD: local_dev_password
-      POSTGRES_HOST_AUTH_METHOD: trust  # Simplified for local development
+      POSTGRES_HOST_AUTH_METHOD: trust # Simplified for local development
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./scripts/seed-dev.sql:/docker-entrypoint-initdb.d/02-seed-dev.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U starter_user -d starter_db"]
+      test: ['CMD-SHELL', 'pg_isready -U starter_user -d starter_db']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,9 +25,9 @@ services:
     image: redis:7-alpine
     container_name: nodejs-starter-redis
     ports:
-      - "6380:6379"
+      - '6380:6379'
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -58,6 +58,25 @@ services:
   #   volumes:
   #     - ./apps/backend:/app
   #   command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend service (optional - can be run locally for development)
+  # Uncomment if you want to run the entire stack in Docker
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/web/Dockerfile
+  #   container_name: nodejs-starter-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://backend:8000
+  #     - NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
+  #     - NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+  #   depends_on:
+  #     backend:
+  #       condition: service_healthy
+  #   networks:
+  #     - starter-network
 
 volumes:
   postgres_data:

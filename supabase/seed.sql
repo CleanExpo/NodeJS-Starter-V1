@@ -1,9 +1,39 @@
--- Seed data for development
+-- =============================================================================
+-- Seed data for local development
+-- =============================================================================
+-- This file runs after migrations during `supabase db reset`.
+--
+-- Currently no application tables have been defined in supabase/migrations/.
+-- Once migration files are added (e.g. for users, projects, tasks, etc.),
+-- populate this file with realistic development data.
+--
+-- Guidelines:
+--   1. Use Australian locale data (Brisbane/Sydney addresses, AU phone format)
+--   2. Use realistic but clearly fictional names and ABNs
+--   3. Keep seed data minimal — enough to exercise the UI, not stress-test
+--   4. Wrap inserts in a transaction so partial failures roll back cleanly
+-- =============================================================================
 
--- Note: This file is run after migrations during `supabase db reset`
--- Add any development seed data here
+-- Placeholder: uncomment and adapt once application tables exist.
 
--- Example: Create some sample settings
--- INSERT INTO public.settings (key, value) VALUES
---   ('app_name', 'AI Agent Orchestration'),
---   ('version', '1.0.0');
+-- BEGIN;
+--
+-- -- Sample organisations (Australian businesses)
+-- INSERT INTO public.organisations (name, abn, address, city, state, postcode) VALUES
+--   ('Coral Coast Engineering Pty Ltd', '51 824 753 196', '42 Eagle St', 'Brisbane', 'QLD', '4000'),
+--   ('Southern Cross Digital', '30 615 284 937', '100 Collins St', 'Melbourne', 'VIC', '3000'),
+--   ('Harbour City Consulting', '77 409 832 615', '1 Macquarie Pl', 'Sydney', 'NSW', '2000');
+--
+-- -- Sample contacts
+-- INSERT INTO public.contacts (first_name, last_name, email, phone, organisation_id) VALUES
+--   ('Lachlan', 'O''Brien', 'lachlan@coralcoast.com.au', '+61 7 3012 4567', 1),
+--   ('Freya', 'Nguyen', 'freya@southerncross.digital', '+61 3 9876 5432', 2),
+--   ('Taj', 'Patel', 'taj@harbourcity.com.au', '+61 2 8765 4321', 3);
+--
+-- -- Sample projects
+-- INSERT INTO public.projects (name, status, organisation_id) VALUES
+--   ('Brisbane Waterfront Redesign', 'active', 1),
+--   ('Melbourne Transit App', 'active', 2),
+--   ('Sydney Harbour Analytics', 'planning', 3);
+--
+-- COMMIT;
