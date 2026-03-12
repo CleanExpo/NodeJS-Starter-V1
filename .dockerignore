@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+*.md
+!README.md
+apps/backend
+__tests__
+tests
+e2e
+coverage
+.turbo
+.env
+.env.*
+pacts

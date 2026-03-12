@@ -3,29 +3,20 @@
 # Optimised for production deployment with minimal image size
 # =============================================================================
 
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-WORKDIR /app
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/web/package.json apps/web/
-COPY packages/ packages/
-RUN pnpm install --frozen-lockfile --filter web...
-
-# Stage 2: Build
+# Stage 1: Install dependencies and build
 FROM node:20-alpine AS builder
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+# Copy everything (rely on .dockerignore for exclusions)
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter web build
 
-# Stage 3: Runner
+# Install dependencies and build
+RUN pnpm install --frozen-lockfile && pnpm --filter web build
+
+# Stage 2: Production runner (minimal)
 FROM node:20-alpine AS runner
 WORKDIR /app
 
@@ -35,6 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Copy static assets and standalone output
 COPY --from=builder /app/apps/web/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
