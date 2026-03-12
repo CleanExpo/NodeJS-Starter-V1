@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 
+export const maxDuration = 30;
+
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
 
 /**

@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
-import ReactFlow, {
+import { useCallback, useState } from 'react';
+import {
+  ReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -13,17 +14,17 @@ import ReactFlow, {
   Node,
   NodeTypes,
   BackgroundVariant,
-} from "reactflow";
-import "reactflow/dist/style.css";
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
-import StartNode from "../nodes/start-node";
-import EndNode from "../nodes/end-node";
-import LLMNode from "../nodes/llm-node";
-import AgentNode from "../nodes/agent-node";
-import ToolNode from "../nodes/tool-node";
-import ConditionalNode from "../nodes/conditional-node";
-import { Button } from "@/components/ui/button";
-import { Save, Play } from "lucide-react";
+import StartNode from '../nodes/start-node';
+import EndNode from '../nodes/end-node';
+import LLMNode from '../nodes/llm-node';
+import AgentNode from '../nodes/agent-node';
+import ToolNode from '../nodes/tool-node';
+import ConditionalNode from '../nodes/conditional-node';
+import { Button } from '@/components/ui/button';
+import { Save, Play } from 'lucide-react';
 
 const nodeTypes: NodeTypes = {
   start: StartNode,
@@ -46,16 +47,16 @@ interface WorkflowCanvasProps {
 export function WorkflowCanvas({
   initialNodes = [
     {
-      id: "start",
-      type: "start",
+      id: 'start',
+      type: 'start',
       position: { x: 250, y: 50 },
-      data: { label: "Workflow Start" },
+      data: { label: 'Workflow Start' },
     },
     {
-      id: "end",
-      type: "end",
+      id: 'end',
+      type: 'end',
       position: { x: 250, y: 250 },
-      data: { label: "Workflow End" },
+      data: { label: 'Workflow End' },
     },
   ],
   initialEdges = [],
@@ -81,7 +82,7 @@ export function WorkflowCanvas({
     try {
       await onSave(nodes, edges);
     } catch (error) {
-      console.error("Failed to save workflow:", error);
+      console.error('Failed to save workflow:', error);
     } finally {
       setIsSaving(false);
     }
@@ -93,12 +94,12 @@ export function WorkflowCanvas({
     try {
       await onExecute();
     } catch (error) {
-      console.error("Failed to execute workflow:", error);
+      console.error('Failed to execute workflow:', error);
     }
   };
 
   return (
-    <div className="h-full w-full relative">
+    <div className="relative h-full w-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -117,26 +118,26 @@ export function WorkflowCanvas({
         <MiniMap
           className="!bg-background !border-border"
           nodeColor={(node) => {
-            if (node.type === "start") return "#22c55e";
-            if (node.type === "end") return "#ef4444";
-            return "#3b82f6";
+            if (node.type === 'start') return '#22c55e';
+            if (node.type === 'end') return '#ef4444';
+            return '#3b82f6';
           }}
         />
       </ReactFlow>
 
       {/* Action buttons */}
       {!readonly && (
-        <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+        <div className="absolute right-4 bottom-4 z-10 flex gap-2">
           {onExecute && (
             <Button onClick={handleExecute} variant="default">
-              <Play className="h-4 w-4 mr-2" />
+              <Play className="mr-2 h-4 w-4" />
               Execute
             </Button>
           )}
           {onSave && (
             <Button onClick={handleSave} disabled={isSaving}>
-              <Save className="h-4 w-4 mr-2" />
-              {isSaving ? "Saving..." : "Save"}
+              <Save className="mr-2 h-4 w-4" />
+              {isSaving ? 'Saving...' : 'Save'}
             </Button>
           )}
         </div>

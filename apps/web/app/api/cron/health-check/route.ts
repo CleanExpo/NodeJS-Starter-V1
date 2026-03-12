@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 
+export const maxDuration = 30;
+
 /**
  * Health Check Cron Job
  *
