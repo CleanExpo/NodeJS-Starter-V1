@@ -32,6 +32,7 @@ from src.auth.jwt import create_access_token, get_password_hash
 from src.auth.models import PasswordResetToken, User
 from src.config.database import get_async_db
 from src.config.settings import get_settings
+from src.services.email import send_password_reset_email
 from src.utils import get_logger
 
 logger = get_logger(__name__)
@@ -266,12 +267,15 @@ async def forgot_password(
     db.add(reset_token)
     await db.commit()
 
+    # Send password reset email via Resend (falls back to logging if not configured)
+    await send_password_reset_email(to_email=user.email, reset_token=plain_token)
+
     settings = get_settings()
-    if settings.environment not in ("production", "staging"):
+    if settings.environment == "development" and settings.debug:
         # Dev only: surface the token so you can test without an email service.
-        logger.info("Password reset token (dev only)", email=user.email, token=plain_token)
+        logger.warning("Password reset token returned in response (dev+debug only)", email=user.email)
         response["dev_token"] = plain_token
-        response["dev_note"] = "Token returned in response body (dev/local only). Wire up an email provider for production."
+        response["dev_note"] = "Token returned in response body (dev+debug only)."
 
     return response
 

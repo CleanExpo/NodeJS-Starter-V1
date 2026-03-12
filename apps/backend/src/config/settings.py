@@ -107,6 +107,11 @@ class Settings(BaseSettings):
     google_ai_api_key: str = Field(default="", description="Google AI API key (optional)")
     openrouter_api_key: str = Field(default="", description="OpenRouter API key (optional)")
 
+    # Email (Resend)
+    resend_api_key: str = Field(default="", description="Resend API key for sending emails")
+    app_url: str = Field(default="http://localhost:3000", description="Frontend URL for email links")
+    email_from: str = Field(default="noreply@example.com", description="From address for transactional emails")
+
     # MCP Tools
     exa_api_key: str = Field(default="")
     ref_tools_api_key: str = Field(default="")
