@@ -1,0 +1,137 @@
+name: Solution Library Sync
+
+on:
+  push:
+    paths:
+      - 'solution-library/**'
+      - 'solution-library/registry/**'
+  pull_request:
+    paths:
+      - 'solution-library/**'
+      - 'solution-library/registry/**'
+  workflow_dispatch:
+
+jobs:
+  validate-library:
+    name: Validate Solution Library
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate registry files exist
+        run: |
+          echo "Checking registry files..."
+          files=(
+            "solution-library/registry/agents.yaml"
+            "solution-library/registry/skills.yaml"
+            "solution-library/registry/workflows.yaml"
+            "solution-library/registry/projects.yaml"
+            "solution-library/registry/deprecated.yaml"
+            "solution-library/registry/promotion-log.yaml"
+          )
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "FAIL: Missing $f"
+              exit 1
+            else
+              echo "PASS: $f"
+            fi
+          done
+
+      - name: Validate library.yaml exists
+        run: |
+          if [ ! -f "solution-library/library.yaml" ]; then
+            echo "FAIL: solution-library/library.yaml missing"
+            exit 1
+          fi
+          echo "PASS: library.yaml found"
+
+      - name: Validate YAML syntax
+        run: |
+          python3 -c "
+          import yaml, sys, os
+
+          files = [
+            'solution-library/library.yaml',
+            'solution-library/registry/agents.yaml',
+            'solution-library/registry/skills.yaml',
+            'solution-library/registry/workflows.yaml',
+          ]
+
+          failed = []
+          for f in files:
+            if os.path.exists(f):
+              try:
+                with open(f) as fh:
+                  yaml.safe_load(fh)
+                print(f'PASS: {f}')
+              except yaml.YAMLError as e:
+                print(f'FAIL: {f} — {e}')
+                failed.append(f)
+
+          if failed:
+            sys.exit(1)
+          "
+
+      - name: Check governance agents exist
+        run: |
+          agents=(
+            ".claude/agents/senior-project-manager/agent.md"
+            ".claude/agents/senior-orchestrator/agent.md"
+          )
+          for a in "${agents[@]}"; do
+            if [ ! -f "$a" ]; then
+              echo "FAIL: Governance agent missing: $a"
+              exit 1
+            else
+              echo "PASS: $a"
+            fi
+          done
+
+      - name: Count assets
+        run: |
+          echo "=== Asset Count ==="
+          skills=$(grep -c "- name:" solution-library/registry/skills.yaml 2>/dev/null || echo 0)
+          agents=$(grep -c "- name:" solution-library/registry/agents.yaml 2>/dev/null || echo 0)
+          workflows=$(grep -c "- name:" solution-library/registry/workflows.yaml 2>/dev/null || echo 0)
+          echo "Skills:    $skills"
+          echo "Agents:    $agents"
+          echo "Workflows: $workflows"
+
+      - name: Validation summary
+        run: |
+          echo ""
+          echo "=== SOLUTION LIBRARY VALIDATION PASSED ==="
+          echo "All registry files present and valid."
+
+  check-promotion-log:
+    name: Check Promotion Log
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if library assets changed without log entry
+        run: |
+          # Get list of changed files in this PR
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "Changed files:"
+          echo "$changed"
+
+          # Check if skills or agents changed
+          lib_changed=$(echo "$changed" | grep -E "^(\.skills/|\.claude/agents/)" | head -5)
+
+          if [ -n "$lib_changed" ]; then
+            echo ""
+            echo "Library assets changed:"
+            echo "$lib_changed"
+            echo ""
+            echo "INFO: If promoting a pattern, ensure promotion-log.yaml is updated."
+            echo "      Run: /lib push <type> <name>"
+          fi

@@ -1,0 +1,63 @@
+version: '1.0.0'
+library:
+  name: 'solution-library'
+  mode: 'private'
+  locale: 'en-AU'
+  purpose: >
+    Shared Claude development library for reusable agents, skills, workflows,
+    retrieval patterns, evals, and continuous project improvement.
+
+commands:
+  - add # Add new agent/skill/workflow
+  - use # Load workflow for active project
+  - push # Promote proven pattern to library
+  - list # List available assets
+  - search # Search registry + semantic
+  - sync # Pull/push library updates
+  - self_improve # Audit and strengthen library
+  - automate # Register/trigger hook jobs
+
+governance:
+  approvers:
+    - senior-project-manager
+    - senior-orchestrator
+  promotion_rules:
+    min_project_reuse_count: 2
+    requires_eval_pass: true
+    requires_docs: true
+    requires_owner: true
+  skill_limits:
+    max_skills_per_agent: 8
+    recommended_skills_per_agent: 6
+
+memory:
+  strategy: 'layered'
+  layers:
+    - org # Organisation-wide rules
+    - cross_project # Reusable learnings
+    - project_local # Project-specific context
+    - incident # Hard-earned debugging lessons
+
+quality:
+  required_checks:
+    - lint
+    - typecheck
+    - unit_tests
+    - integration_tests
+    - security_scan
+    - eval_pack
+
+models:
+  planner: 'claude-opus-4-6'
+  executor: 'claude-sonnet-4-6'
+  classifier: 'claude-haiku-4-5'
+
+token_control:
+  use_prompt_caching: true
+  delegate_verbose_to_subagents: true
+  max_skills_in_context: 6
+
+distribution:
+  strategy: 'git-submodule'
+  submodule_path: 'lib/solution-library'
+  sync_command: 'git submodule update --remote lib/solution-library'

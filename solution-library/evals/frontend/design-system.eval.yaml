@@ -1,0 +1,28 @@
+name: design-system
+category: frontend
+description: 'Validates overall design system compliance for the Scientific Luxury tier'
+version: '1.0.0'
+
+cases:
+  - id: typography-fonts
+    description: 'Data uses JetBrains Mono, names use Editorial font'
+    rule: font_usage_correct
+    data_font: 'JetBrains Mono'
+    name_font: 'Editorial'
+
+  - id: layout-pattern
+    description: 'Layout follows timeline or orbital structure'
+    rule: layout_uses_approved_pattern
+    allowed: ['timeline', 'orbital', 'grid-with-axis']
+    forbidden: ['centered-card', 'generic-dashboard']
+
+  - id: no-gradients
+    description: 'No gradient backgrounds — solid OLED black only'
+    rule: css_property_absent
+    forbidden: ['bg-gradient', 'from-', 'to-', 'via-']
+    exception: 'spectral accent gradients only'
+
+  - id: no-shadows
+    description: 'No box shadows — use borders and opacity instead'
+    rule: css_property_absent
+    forbidden: ['shadow-', 'drop-shadow']
