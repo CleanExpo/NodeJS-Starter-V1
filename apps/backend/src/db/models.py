@@ -11,7 +11,6 @@ from uuid import UUID, uuid4
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
-    Boolean,
     Column,
     DateTime,
     Enum,
@@ -51,40 +50,6 @@ class AvailabilityStatus(str, enum.Enum):
     BOOKED = "booked"
     TENTATIVE = "tentative"
     UNAVAILABLE = "unavailable"
-
-
-class User(Base):
-    """
-    User model for JWT authentication.
-
-    Table: users
-    """
-
-    __tablename__ = "users"
-
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    email: str = Column(String(255), unique=True, nullable=False, index=True)
-    password_hash: str = Column(String(255), nullable=False)
-    full_name: str | None = Column(String(255), nullable=True)
-    is_active: bool = Column(Boolean, default=True, nullable=False, index=True)
-    is_admin: bool = Column(Boolean, default=False, nullable=False)
-    created_at: datetime = Column(
-        DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
-    )
-    updated_at: datetime = Column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(UTC),
-        onupdate=lambda: datetime.now(UTC),
-        nullable=False,
-    )
-    last_login_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
-
-    # Relationships
-    contractors = relationship("Contractor", back_populates="user")
-    documents = relationship("Document", back_populates="user", cascade="all, delete-orphan")
-
-    def __repr__(self) -> str:
-        return f"<User(id={self.id}, email={self.email})>"
 
 
 class Contractor(Base):

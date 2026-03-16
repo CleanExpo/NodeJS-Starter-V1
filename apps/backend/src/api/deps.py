@@ -11,8 +11,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import extract_user_email
+from src.auth.models import User
 from src.config.database import get_async_db
-from src.db.models import User
 
 # HTTP Bearer token scheme
 bearer_scheme = HTTPBearer(auto_error=False)

@@ -211,13 +211,14 @@ export default function AgentRunsDashboard() {
               </TableHeader>
               <TableBody>
                 {filteredRuns.map((run) => {
+                  const now = new Date().getTime();
                   const duration = run.completed_at
                     ? Math.round(
                         (new Date(run.completed_at).getTime() -
                           new Date(run.started_at).getTime()) /
                           1000
                       )
-                    : Math.round((Date.now() - new Date(run.started_at).getTime()) / 1000);
+                    : Math.round((now - new Date(run.started_at).getTime()) / 1000);
 
                   return (
                     <TableRow

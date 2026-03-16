@@ -8,6 +8,7 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy.orm import relationship
 
 from src.db.models import Base
 
@@ -40,6 +41,10 @@ class User(Base):
         nullable=False,
     )
     last_login_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
+
+    # Relationships (back-populated from db.models)
+    contractors = relationship("Contractor", back_populates="user")
+    documents = relationship("Document", back_populates="user", cascade="all, delete-orphan")
 
     def set_password(self, password: str) -> None:
         """Hash and set the user's password."""
