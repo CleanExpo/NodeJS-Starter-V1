@@ -21,7 +21,7 @@ export async function generateShoppingList(
   const ingredientMap = new Map<string, ShoppingListItem>();
 
   for (const entry of data || []) {
-    const recipe = entry.recipe as {
+    const recipe = entry.recipe as unknown as {
       name: string;
       recipe_ingredients: {
         ingredient_name: string;

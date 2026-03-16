@@ -104,14 +104,14 @@ export function createYjsProvider(config: YjsProviderConfig) {
     const states = awareness.getStates();
     const collaborators: CollaboratorInfo[] = [];
 
-    states.forEach((state, clientId) => {
+    states.forEach((state: Record<string, unknown>, clientId: number) => {
       if (state && clientId !== awareness.clientID) {
         collaborators.push({
-          id: state.id || `user-${clientId}`,
-          name: state.name || 'Anonymous',
-          colour: state.colour || '#6B7280',
-          cursor: state.cursor,
-          selectedNodes: state.selectedNodes,
+          id: String(state.id ?? `user-${clientId}`),
+          name: String(state.name ?? 'Anonymous'),
+          colour: String(state.colour ?? '#6B7280'),
+          cursor: state.cursor as { x: number; y: number } | undefined,
+          selectedNodes: state.selectedNodes as string[] | undefined,
         });
       }
     });

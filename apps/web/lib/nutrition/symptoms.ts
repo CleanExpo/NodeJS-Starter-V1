@@ -115,13 +115,10 @@ export async function getSymptomCorrelations(
     if (relatedSymptoms.length > 0) {
       const avgSeverity =
         relatedSymptoms.reduce((sum, s) => sum + s.severity, 0) / relatedSymptoms.length;
-      const symptomCounts = relatedSymptoms.reduce(
-        (acc, s) => {
-          acc[s.symptom_name] = (acc[s.symptom_name] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
+      const symptomCounts = relatedSymptoms.reduce<Record<string, number>>((acc, s) => {
+        acc[s.symptom_name] = (acc[s.symptom_name] || 0) + 1;
+        return acc;
+      }, {});
       const mostCommon = Object.entries(symptomCounts).sort((a, b) => b[1] - a[1])[0];
 
       correlations.push({

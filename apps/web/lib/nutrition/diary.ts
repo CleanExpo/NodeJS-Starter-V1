@@ -93,13 +93,13 @@ export async function getWeeklySummary(
 
   if (error) throw error;
 
-  const grouped = (data || []).reduce(
+  const grouped = ((data as FoodDiaryEntry[]) || []).reduce<Record<string, FoodDiaryEntry[]>>(
     (acc, entry) => {
       if (!acc[entry.entry_date]) acc[entry.entry_date] = [];
       acc[entry.entry_date].push(entry);
       return acc;
     },
-    {} as Record<string, FoodDiaryEntry[]>
+    {}
   );
 
   return Object.entries(grouped).map(([date, entries]) => ({
