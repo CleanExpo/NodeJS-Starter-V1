@@ -17,12 +17,12 @@
 
 ## NotebookLM Routing
 
-| Query Pattern | Notebook | Command |
-|--------------|----------|---------|
-| Architecture, specs, implementation notes | `project_sot` | `nlm notebook query <id>` |
-| Errors, debugging, test failures | `debug_kb` | `nlm notebook query <id>` |
-| OWASP, auth patterns, security reviews | `security_handbook` | `nlm notebook query <id>` |
-| Codebase atlas, "how does X work?" | `repo_onboarding` | `nlm notebook query <id>` |
+| Query Pattern                             | Notebook            | Command                   |
+| ----------------------------------------- | ------------------- | ------------------------- |
+| Architecture, specs, implementation notes | `project_sot`       | `nlm notebook query <id>` |
+| Errors, debugging, test failures          | `debug_kb`          | `nlm notebook query <id>` |
+| OWASP, auth patterns, security reviews    | `security_handbook` | `nlm notebook query <id>` |
+| Codebase atlas, "how does X work?"        | `repo_onboarding`   | `nlm notebook query <id>` |
 
 Config: `.claude/notebooklm/notebooks.json`
 
@@ -31,6 +31,7 @@ Config: `.claude/notebooklm/notebooks.json`
 ## Context7 MCP Usage
 
 For library documentation, use the two-step pattern:
+
 1. `resolve-library-id` — find the library
 2. `get-library-docs` — fetch relevant docs with topic filter
 
@@ -57,6 +58,7 @@ Windows: add `--ssl-no-revoke` to curl if SSL errors occur. Key in `.env`.
 ## Australian English (en-AU)
 
 All output must use Australian spelling and conventions:
+
 - **Spelling**: colour, behaviour, optimisation, analyse, centre, licence (noun)
 - **Dates**: DD/MM/YYYY
 - **Currency**: AUD ($)

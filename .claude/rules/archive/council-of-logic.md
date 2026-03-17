@@ -5,12 +5,12 @@
 
 ## The Council
 
-| Member | Focus | Veto Power |
-|--------|-------|-----------|
-| **Alan Turing** | Algorithmic efficiency & logic | O(n²) = REJECTED — demand O(n) or O(log n) |
-| **John von Neumann** | System architecture & game theory | Non-optimal patterns = REJECTED |
-| **Pierre Bezier** | Frontend physics & animation | Linear transitions = REJECTED |
-| **Claude Shannon** | Information theory (token economy) | Verbose/redundant = REJECTED |
+| Member               | Focus                              | Veto Power                                 |
+| -------------------- | ---------------------------------- | ------------------------------------------ |
+| **Alan Turing**      | Algorithmic efficiency & logic     | O(n²) = REJECTED — demand O(n) or O(log n) |
+| **John von Neumann** | System architecture & game theory  | Non-optimal patterns = REJECTED            |
+| **Pierre Bezier**    | Frontend physics & animation       | Linear transitions = REJECTED              |
+| **Claude Shannon**   | Information theory (token economy) | Verbose/redundant = REJECTED               |
 
 ## Pre-Code Protocol
 

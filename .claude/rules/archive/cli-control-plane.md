@@ -9,16 +9,16 @@
 
 Detect mode from user intent. Mode determines governance intensity.
 
-| Mode | Signals | Governance |
-|------|---------|-----------|
-| **BUILD** | implement, create, fix, add, write, update | Standard — all systems active |
-| **FIX** | bug, error, broken, failing, crash, debug | Standard — error intelligence active |
-| **REFACTOR** | refactor, clean up, simplify, extract, rename | Standard — Turing complexity check |
-| **MIGRATE** | migrate, upgrade, move, switch, replace | Full — migration safety mode ON |
-| **DEPLOY** | deploy, release, publish, push to prod | Full — rollback plan required |
-| **PLAN** | plan, architecture, compare, evaluate, design, spec | Light — Von Neumann + Shannon only |
-| **AUDIT** | audit, review, check, scan, verify, drift | Light — supervisor + read-only |
-| **EXPLORE** | what is, explain, show me, how does, describe, read | Minimal — momentum protection |
+| Mode         | Signals                                             | Governance                           |
+| ------------ | --------------------------------------------------- | ------------------------------------ |
+| **BUILD**    | implement, create, fix, add, write, update          | Standard — all systems active        |
+| **FIX**      | bug, error, broken, failing, crash, debug           | Standard — error intelligence active |
+| **REFACTOR** | refactor, clean up, simplify, extract, rename       | Standard — Turing complexity check   |
+| **MIGRATE**  | migrate, upgrade, move, switch, replace             | Full — migration safety mode ON      |
+| **DEPLOY**   | deploy, release, publish, push to prod              | Full — rollback plan required        |
+| **PLAN**     | plan, architecture, compare, evaluate, design, spec | Light — Von Neumann + Shannon only   |
+| **AUDIT**    | audit, review, check, scan, verify, drift           | Light — supervisor + read-only       |
+| **EXPLORE**  | what is, explain, show me, how does, describe, read | Minimal — momentum protection        |
 
 **Rules**: Keyword match → context continuation → default to lower governance → HIGH risk always escalates.
 
@@ -36,6 +36,7 @@ Detect mode from user intent. Mode determines governance intensity.
 ## Migration Safety
 
 **HIGH RISK triggers** (require confirmation + rollback plan):
+
 - Database schema changes (migrations, column drops, type changes)
 - Configuration file changes (env vars, auth config, CORS)
 - Authentication/authorisation changes (JWT, RBAC, OAuth)
@@ -49,6 +50,7 @@ Detect mode from user intent. Mode determines governance intensity.
 ## Validation Gates
 
 **DO NOT PROCEED UNTIL**:
+
 - Referenced files/schemas/endpoints have been read and confirmed to exist
 - Import paths verified against actual file locations
 - Environment variables confirmed in `.env.example` or `.env`
@@ -60,11 +62,11 @@ Detect mode from user intent. Mode determines governance intensity.
 
 ## Execution Safety
 
-| Risk | Examples | Action |
-|------|----------|--------|
-| **LOW** | Read files, add comments, create new files | Execute freely |
-| **MEDIUM** | Edit existing code, add dependencies, modify configs | Proceed with verification |
-| **HIGH** | Delete files/branches, schema migrations, force-push, auth changes, production deploys | Pause and confirm with user |
+| Risk       | Examples                                                                               | Action                      |
+| ---------- | -------------------------------------------------------------------------------------- | --------------------------- |
+| **LOW**    | Read files, add comments, create new files                                             | Execute freely              |
+| **MEDIUM** | Edit existing code, add dependencies, modify configs                                   | Proceed with verification   |
+| **HIGH**   | Delete files/branches, schema migrations, force-push, auth changes, production deploys | Pause and confirm with user |
 
 ---
 
@@ -88,6 +90,7 @@ BLOCKING: [yes/no — does this block the current task?]
 ## Hallucination Prevention
 
 Classify every factual claim:
+
 - **Confirmed**: Read from file, verified by tool output, user-provided
 - **Inferred**: Logical deduction from confirmed facts
 - **Assumed**: Not verified — **pause and verify before acting**
@@ -99,6 +102,7 @@ Never invent: API endpoints, database schemas, file paths, env var names, packag
 ## Partial Execution Mode
 
 When a task has independent components:
+
 1. Proceed with safe/unblocked components
 2. Skip blocked components with clear annotation
 3. Work in phases — checkpoint after each
@@ -119,6 +123,7 @@ When a task has independent components:
 ## Supervision + Strategic Signals
 
 Quietly watch for (surface only when meaningful):
+
 - Architecture drift from documented patterns
 - Code duplication across modules
 - Unused imports, dead code, orphaned files
@@ -148,13 +153,13 @@ EXECUTION CONFIDENCE: [0-100]
 
 ## Governance Routing
 
-| Intent | Execution Guardian | System Supervisor | Council of Logic | Genesis Orchestrator |
-|--------|:-----------------:|:-----------------:|:----------------:|:-------------------:|
-| BUILD | Active | Phase boundaries | All four | Full execution |
-| FIX | Active | Off | Turing + Shannon | Off |
-| REFACTOR | Active | Off | Turing + Von Neumann | Off |
-| MIGRATE | Full + rollback | Full audit | All four | Full execution |
-| DEPLOY | Full + rollback | Full audit | Shannon | Off |
-| PLAN | Off | Off | Von Neumann + Shannon | Blueprint mode |
-| AUDIT | Off | Full | Shannon | Off |
-| EXPLORE | Off | Off | Shannon only | Discovery mode |
+| Intent   | Execution Guardian | System Supervisor |   Council of Logic    | Genesis Orchestrator |
+| -------- | :----------------: | :---------------: | :-------------------: | :------------------: |
+| BUILD    |       Active       | Phase boundaries  |       All four        |    Full execution    |
+| FIX      |       Active       |        Off        |   Turing + Shannon    |         Off          |
+| REFACTOR |       Active       |        Off        | Turing + Von Neumann  |         Off          |
+| MIGRATE  |  Full + rollback   |    Full audit     |       All four        |    Full execution    |
+| DEPLOY   |  Full + rollback   |    Full audit     |        Shannon        |         Off          |
+| PLAN     |        Off         |        Off        | Von Neumann + Shannon |    Blueprint mode    |
+| AUDIT    |        Off         |       Full        |        Shannon        |         Off          |
+| EXPLORE  |        Off         |        Off        |     Shannon only      |    Discovery mode    |
