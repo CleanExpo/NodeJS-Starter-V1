@@ -21,12 +21,19 @@ Invokes the `verification-before-completion` skill, which requires:
    pnpm turbo run type-check
    ```
 
-3. **Manual smoke test**
+3. **Lint**
+
+   ```bash
+   pnpm turbo run lint
+   ```
+
+4. **Manual smoke test**
+   - Requires the dev server to be running (`pnpm dev`). If not running, start it first or skip and note as untested.
    - Open the feature in the browser (or call the endpoint)
    - Verify the happy path works
    - Verify the error path works
 
-4. **Report**
+5. **Report**
    Output a checklist:
 
    ```
@@ -34,7 +41,8 @@ Invokes the `verification-before-completion` skill, which requires:
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ✓ / ✗  Tests: [pass/fail count]
    ✓ / ✗  Type check: [pass/fail]
-   ✓ / ✗  Smoke test: [what was tested]
+   ✓ / ✗  Lint: [pass/fail]
+   ✓ / ✗  Smoke test: [what was tested, or "skipped — dev server not running"]
 
    VERDICT: [COMPLETE / NOT COMPLETE]
 

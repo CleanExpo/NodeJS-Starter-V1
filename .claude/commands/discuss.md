@@ -13,8 +13,9 @@ Start a context-gathering conversation before beginning any task. Use this when 
    - What success looks like
    - Any constraints (existing patterns, deadlines, scope limits)
 4. Proposes 2-3 approaches with trade-offs
-5. Produces a Plan Mode block summarising the agreed direction
-6. If a plan will be needed, writes it to `.planning/PLAN.md`
+5. Produces a **Plan Mode block** — a formatted output showing: context gathered, proposed approach, and an explicit confirmation question. No work starts until the user approves this block.
+6. Asks: "Shall I write this to `.planning/PLAN.md`?" — waits for explicit user confirmation before writing anything
+7. If confirmed, writes the agreed plan to `.planning/PLAN.md`
 
 ## Rules
 

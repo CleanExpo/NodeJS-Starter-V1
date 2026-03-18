@@ -12,18 +12,20 @@ Execute the current implementation plan from `.planning/PLAN.md`.
 4. For each incomplete task in order:
    a. Shows the task description
    b. Invokes the appropriate skill(s) based on task type:
-   - Design task → `context-protocol` + `scientific-luxury` skill
-   - Code task → `context-protocol` + `tdd` skill
+   - Design task → `context-protocol` (context-gather only — no re-approval; plan was already approved) + `scientific-luxury` skill
+   - Code task → `context-protocol` (context-gather only — no re-approval; plan was already approved) + `tdd` skill
    - Debug task → `systematic-debugging` skill
    - Verification task → `verification-before-completion` skill
-     c. Marks the task complete (`- [x]`) in PLAN.md when done
-     d. Commits after each completed task
+   - Any other task type → `context-protocol` (context-gather only) + `tdd` skill as default
+     c. Runs `pnpm turbo run type-check lint test` after completing the task's implementation steps (or runs the specific verification command embedded in the task if one is present)
+     d. Marks the task complete (`- [x]`) in PLAN.md only after verification passes
+     e. Commits after marking complete
 5. After all tasks complete, invokes `verification-before-completion`
 
 ## Rules
 
-- Never skip the context-protocol step for design or code tasks
-- Never mark a task `[x]` without running the verification command in that task
+- Tasks from PLAN.md are pre-approved — use `context-protocol` for context-gathering only; do not produce a Plan Mode approval block again
+- Never mark a task `[x]` before running verification — type-check, lint, and tests must pass first
 - Never execute tasks out of order
 - If a task fails, stop and report — do not continue to the next task
 - Keep PLAN.md updated as tasks complete so progress survives session interruption
