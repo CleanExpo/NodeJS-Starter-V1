@@ -11,8 +11,6 @@ pnpm run setup:windows      # Windows
 
 # Development
 pnpm dev                    # Start all services
-pnpm run verify             # Health check
-just --list                 # View all task runner commands
 
 # Docker
 pnpm run docker:up          # Start PostgreSQL + Redis
@@ -24,10 +22,6 @@ pnpm turbo run test         # All tests
 pnpm turbo run lint         # Linting
 pnpm turbo run type-check   # Type checking
 
-# Beads (AI Agent Memory)
-.bin/bd.exe ready           # Show unblocked tasks
-.bin/bd.exe create "Title"  # Create new task
-.bin/bd.exe sync            # Sync to git
 ```
 
 ## Architecture Routing
@@ -91,7 +85,6 @@ Full system: `docs/DESIGN_SYSTEM.md` | Skill: `.skills/custom/scientific-luxury/
 
 - **29 subagents**: `.claude/agents/*/agent.md` | **65 skills**: `.skills/AGENTS.md` | **10 commands**: `.claude/commands/*.md`
 - **8-phase idea-to-production harness**: `.claude/AGENT_HARNESS.md`
-- **Orchestrator**: `.claude/agents/orchestrator/agent.md`
 
 ## Context Drift Defence
 
@@ -111,10 +104,4 @@ Registry: `solution-library/registry/` | Install in other projects: `solution-li
 
 ## Documentation
 
-| Document                           | Purpose          |
-| ---------------------------------- | ---------------- |
-| `PROGRESS.md`                      | Project status   |
-| `docs/LOCAL_SETUP.md`              | Setup guide      |
-| `docs/DESIGN_SYSTEM.md`            | Design system    |
-| `docs/MULTI_AGENT_ARCHITECTURE.md` | Agent workflow   |
-| `docs/production-deployment.md`    | Deployment guide |
+`PROGRESS.md` (status) | `docs/LOCAL_SETUP.md` (setup) | `docs/DESIGN_SYSTEM.md` (design) | `docs/MULTI_AGENT_ARCHITECTURE.md` (agents)
