@@ -19,7 +19,6 @@ is returned in the response body and logged to stdout.
 """
 
 import hashlib
-import os
 import secrets
 from datetime import UTC, datetime, timedelta
 

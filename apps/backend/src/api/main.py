@@ -24,7 +24,6 @@ from .routes import (
     discovery,
     documents,
     health,
-    jobs,
     prd,
     rag,
     search,
@@ -33,6 +32,7 @@ from .routes import (
     workflow_builder,
     workflows,
 )
+
 # analytics + contractors are template implementations in routes/_templates/.
 # Back them with PostgreSQL/SQLAlchemy before registering in a forked product.
 
@@ -109,7 +109,7 @@ app.include_router(search.router, tags=["Search"])
 app.include_router(documents.router, tags=["Documents"])
 app.include_router(workflow_builder.router, prefix="/api", tags=["Workflow Builder"])
 app.include_router(discovery.router, prefix="/api", tags=["Discovery"])
-app.include_router(jobs.router, prefix="/api", tags=["Jobs"])
+
 
 
 @app.get("/")

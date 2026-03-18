@@ -12,7 +12,6 @@ from .base_agent import (
     FrontendAgent,
     GeneralAgent,
 )
-from .marketing_agents import BusinessConsistencyAgent, CopywritingAgent
 
 logger = get_logger(__name__)
 
@@ -33,9 +32,6 @@ class AgentRegistry:
             DatabaseAgent(),
             DevOpsAgent(),
             GeneralAgent(),
-            # Marketing agents
-            CopywritingAgent(),
-            BusinessConsistencyAgent(),
         ]
 
         for agent in default_agents:
@@ -48,15 +44,6 @@ class AgentRegistry:
             "database": "database",
             "devops": "devops",
             "general": "general",
-            # Marketing categories
-            "copywriting": "copywriting",
-            "copy": "copywriting",
-            "content": "copywriting",
-            "consistency": "business_consistency",
-            "nap": "business_consistency",
-            "local_seo": "business_consistency",
-            "schema": "business_consistency",
-            "geo": "business_consistency",
         }
 
     def register(self, agent: BaseAgent) -> None:

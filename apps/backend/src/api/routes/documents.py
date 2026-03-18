@@ -15,8 +15,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.error_handling import create_error_response
 from src.auth.jwt import decode_access_token
-from src.config.database import get_async_db
 from src.auth.models import User
+from src.config.database import get_async_db
 from src.db.models import Document
 from src.utils import get_logger
 
