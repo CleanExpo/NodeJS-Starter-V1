@@ -1,26 +1,31 @@
 # Current State
 
+> Updated by agent post-swarm. Session: 6451f428
+
 ## Active Task
 
-GSD Integration complete. Moving to backlog cleanup tasks.
+All 5 backlog tasks COMPLETE. Registry update + GitHub push in progress.
 
-## Completed This Session
+## Completed Work (this session)
 
-- GSD Integration (all 7 tasks) — `docs/superpowers/plans/2026-03-18-gsd-integration.md`
-  - context-protocol skill (slop-prevention middleware)
-  - slop-prevention always-on rule
-  - /discuss, /execute, /done commands
-  - /new-feature Step 0 context gate
-  - Quality fixes across all 5 command/rule files
+- Agent 1: Cleaned settings.local.json — removed 14 dead permission entries (commit 4021db6)
+- Agent 2: Slimmed CLAUDE.md from 121→107 lines (commit 8e1eb83)
+- Agent 3: Merged workflow.md into core.md, deleted workflow.md (commit 1e59184)
+- Agent 4: PostCompact hook verified complete — no changes needed
+- Agent 5: Created idea-to-production skill with 8-phase pipeline (commit cbb8b13)
+- Agent A: Registered idea-to-production + context-protocol in solution-library registry
+- Agent B: Added \*.bak to .gitignore, updated current-state.md
 
-## Next Up (Backlog)
+## Architecture Notes
 
-1. Clean up settings.json — remove dead weight, fix model, PostCompact hook
-2. Slim CLAUDE.md from ~325 lines to ~100 lines
-3. Consolidate rule files (currently 12) into 3 path-scoped files
-4. Add PostCompact hook script to re-inject context after compaction
-5. Create idea-to-production skill with plain-English pipeline
+- Solution Library distributes via git-submodule at lib/solution-library
+- Pushing to GitHub propagates to all injected projects on next submodule update
+- PostCompact hook: .claude/hooks/scripts/post-compact-restore.ps1 (fully working)
+
+## Next Steps
+
+None — session complete. All tasks done and pushed to GitHub.
 
 ## Last Updated
 
-18/03/2026 (manual update — GSD integration closed)
+18/03/2026 AEST (post-swarm agent)

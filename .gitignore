@@ -66,6 +66,7 @@ supabase/.temp
 
 # Misc
 *.tsbuildinfo
+*.bak
 .vercel
 .cache
 nul
