@@ -1,3 +1,7 @@
+---
+paths: .claude/blueprints/**
+---
+
 # Minions Protocol — Scoped Rule File
 
 > **Scope**: Applies within `.claude/blueprints/**` and `.claude/commands/minion.md` contexts only.
