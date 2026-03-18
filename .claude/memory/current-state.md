@@ -1,39 +1,26 @@
 # Current State
 
-> Updated 18/03/2026 — Framework overhaul COMPLETE.
-
 ## Active Task
 
-None. Framework overhaul fully shipped and battle-tested.
+GSD Integration complete. Moving to backlog cleanup tasks.
 
-## Completed Work (18/03/2026)
+## Completed This Session
 
-- settings.json: lean config, CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=50, PostCompact hook, 27 permissions
-- CLAUDE.md: slimmed 325 → 120 lines
-- Rules: 12 files → 3 path-scoped files (core.md, frontend.md, backend.md) + archive/
-- PostCompact hook: post-compact-restore.ps1 — re-injects CONSTITUTION + state after compaction
-- Skill: idea-to-production — 7-phase intake→plan→build→test→commit→verify→production gate
-- Install script: scripts/install-claude-framework.ps1 — deploys framework to other projects
-- Prettier fix: _.ps1 and _.py excluded from formatting (prevents quote corruption)
+- GSD Integration (all 7 tasks) — `docs/superpowers/plans/2026-03-18-gsd-integration.md`
+  - context-protocol skill (slop-prevention middleware)
+  - slop-prevention always-on rule
+  - /discuss, /execute, /done commands
+  - /new-feature Step 0 context gate
+  - Quality fixes across all 5 command/rule files
 
-## Quality Status
+## Next Up (Backlog)
 
-- type-check: 4/4 PASS
-- lint: 4/4 PASS
-- tests: 133/133 PASS
-
-## Deploy to Other Projects
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/install-claude-framework.ps1 -TargetProject "D:\path\to\project"
-```
-
-Then update CLAUDE.md in the target (under 120 lines, keep Quick Commands + Architecture Routing + Testing Discipline).
-
-## Next Steps
-
-None pending. Ready for deployment to other projects.
+1. Clean up settings.json — remove dead weight, fix model, PostCompact hook
+2. Slim CLAUDE.md from ~325 lines to ~100 lines
+3. Consolidate rule files (currently 12) into 3 path-scoped files
+4. Add PostCompact hook script to re-inject context after compaction
+5. Create idea-to-production skill with plain-English pipeline
 
 ## Last Updated
 
-18/03/2026 (manual — framework overhaul complete)
+18/03/2026 (manual update — GSD integration closed)

@@ -540,7 +540,7 @@ git commit -m "feat(commands): add context-protocol gate to /new-feature as Step
 
 **No files to create. This task is verification only.**
 
-- [ ] **Test 1 — Design path trigger**
+- [x] **Test 1 — Design path trigger**
 
 In a new Claude Code session, run:
 
@@ -553,7 +553,7 @@ Expected: Claude asks "What's the reference? (URL, image URL, or describe the st
 Pass: Question appears. No file written yet.
 Fail: Claude starts writing files immediately without asking.
 
-- [ ] **Test 2 — Design path with URL provided**
+- [x] **Test 2 — Design path with URL provided**
 
 In a new Claude Code session, run:
 
@@ -566,7 +566,7 @@ Expected: Claude produces a CONTEXT GATHERED block showing `✓ Reference: strip
 Pass: Plan Mode block appears. `✓ Reference:` line is present.
 Fail: Claude asks for a reference despite URL being in the task.
 
-- [ ] **Test 3 — Code path**
+- [x] **Test 3 — Code path**
 
 In a new Claude Code session, run:
 
@@ -579,7 +579,7 @@ Expected: Claude produces a CONTEXT GATHERED block showing the file names it rea
 Pass: Plan Mode block lists actual file names read.
 Fail: Claude starts editing files without showing what it read.
 
-- [ ] **Test 4 — Slop prevention (design tokens are read, not assumed)**
+- [x] **Test 4 — Slop prevention (design tokens are read, not assumed)**
 
 In a new Claude Code session, run:
 
@@ -592,7 +592,7 @@ Expected: Plan Mode block includes `✓ Design tokens read: bg #050505, cyan #00
 Pass: Token file values appear in the CONTEXT GATHERED block.
 Fail: Claude uses `#00F5FF` without showing it came from design-tokens.ts.
 
-- [ ] **Test 5 — /execute with no PLAN.md**
+- [x] **Test 5 — /execute with no PLAN.md**
 
 In a new Claude Code session, run:
 
@@ -605,7 +605,7 @@ Expected: Claude responds "No PLAN.md found at `.planning/PLAN.md`. Run `/discus
 Pass: Error message matches expected text.
 Fail: Claude crashes, asks a confusing question, or starts doing work without a plan.
 
-- [ ] **Step: Record results and close plan**
+- [x] **Step: Record results and close plan**
 
 After running all 5 tests:
 
