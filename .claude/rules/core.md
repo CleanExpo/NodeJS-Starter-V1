@@ -104,8 +104,24 @@ When user says "finished", "ready", "ship it", "done", "go live" — produce a D
 
 ## Repo Conventions
 
-- React: `PascalCase.tsx` | Utils: `kebab-case.ts` | Python: `snake_case.py`
+- React: `PascalCase.tsx` | Utils: `kebab-case.ts` | Python: `snake_case.py` | Skills: `SCREAMING-KEBAB.md`
 - Commits: `<type>(<scope>): <description>` (feat, fix, docs, chore, refactor)
 - Branches: `feature/<name>` | `fix/<name>`
 - No cross-layer imports. Each layer imports only from the layer directly below.
 - Anti-duplication: search for existing implementations before creating new ones.
+
+## Architecture Layers
+
+```
+Frontend: Components → Hooks → API Routes → Services
+Backend:  API → Agents → Tools → Graphs → State
+Database: Tables → Functions → Triggers
+```
+
+Backend dev server: `cd apps/backend && uv run uvicorn src.api.main:app --reload`
+
+## Pre-PR
+
+```bash
+pnpm turbo run type-check lint test && echo "Ready for PR"
+```
