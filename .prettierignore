@@ -6,3 +6,7 @@ coverage
 .turbo
 pnpm-lock.yaml
 uv.lock
+
+# Shell and Python scripts — prettier corrupts quotes in these files
+*.ps1
+*.py
