@@ -23,6 +23,8 @@ design, theme, typography, font, button, card, modal, landing page,
 hero, navbar, sidebar, dashboard
 ```
 
+Match case-insensitively.
+
 - Match found → **DESIGN PATH**
 - No match → **CODE PATH**
 
@@ -59,6 +61,7 @@ Wait for the answer. Do NOT ask a second question.
 
 Read the `## Colour System` section of `.skills/custom/scientific-luxury/SKILL.md`.
 Read that section only — not the full file.
+If the `## Colour System` heading is not found, read the first 60 lines of the file only.
 
 ### 5. Produce Plan Mode block
 
@@ -68,7 +71,7 @@ Output this block before writing a single line of code:
 CONTEXT GATHERED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✓ Design tokens read: [list key values found — e.g. "bg #050505, cyan #00F5FF, rounded-sm"]
-✓ Reference: [URL fetched / image URL / style description noted]
+✓ Reference: [URL fetched / image URL / style description — if a style description was provided with no URL, quote it verbatim here]
 ✓ Colour system: Scientific Luxury — OLED black, spectral accents, Framer Motion only
 
 PROPOSED APPROACH
@@ -119,14 +122,14 @@ Does this look right? Shall I proceed?
 
 ### 4. Wait for approval
 
-Do NOT modify any file until the user confirms.
+Do NOT modify any file until the user confirms. If the user redirects, revise the PROPOSED APPROACH section and show the block again.
 
 ---
 
 ## Hard Rules
 
 1. **Design tokens file is always read first** on any DESIGN PATH task — before asking for a reference
-2. **One question maximum** per path — "What's the reference?" or "Which files?" — never both
+2. **One question maximum** per path — abbreviated labels: "What's the reference?" (full string in DESIGN Step 3) or "Which files?" (full string in CODE Step 2) — never ask both
 3. **Plan Mode block is non-negotiable** — fires every time, for every path, before any file is written
 4. **Never hardcode a colour** that is not in `apps/web/lib/design-tokens.ts`
 5. **Never use Tailwind default colours** as design decisions — only as spacing/layout utilities
