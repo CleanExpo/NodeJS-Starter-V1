@@ -1,3 +1,12 @@
+---
+id: csrf-protection
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # CSRF Protection
 
 > Cross-site request forgery prevention with token validation, SameSite cookies, and origin checking for NodeJS-Starter-V1.

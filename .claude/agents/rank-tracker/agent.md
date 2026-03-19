@@ -1,11 +1,15 @@
 ---
+id: rank-tracker
 name: rank-tracker
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: 24/7 Ranking Monitoring & Alerts
 priority: 3
-version: 1.0.0
-market_focus: Australian
 ---
+
 
 # Rank Tracker Agent
 

@@ -1,17 +1,18 @@
 ---
+id: truth-finder
 name: truth-finder
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Fact Verification & Source Validation
 priority: 2
-version: 1.0.0
-data_sources:
-  - .claude/data/trusted-sources.yaml
+blocking: true
 skills_required:
   - verification/truth-finder.skill.md
-hooks_triggered:
-  - pre-publish
-blocking: true
 ---
+
 
 # Truth Finder Agent
 

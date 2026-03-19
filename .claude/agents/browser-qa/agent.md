@@ -1,12 +1,17 @@
 ---
+id: browser-qa
 name: browser-qa
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: User Story Validation via Browser
 priority: 7
-version: 1.0.0
 skills_required:
   - custom/playwright-browser/SKILL.md
 ---
+
 
 # Browser QA Agent
 

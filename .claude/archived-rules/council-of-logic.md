@@ -1,3 +1,12 @@
+---
+id: council-of-logic
+type: rule
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Council of Logic — Mathematical First Principles
 
 > **Mode**: MATHEMATICAL_FIRST_PRINCIPLES

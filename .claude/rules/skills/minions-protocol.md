@@ -1,5 +1,10 @@
 ---
-paths: .claude/blueprints/**
+id: minions-protocol
+type: rule
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 ---
 
 # Minions Protocol — Scoped Rule File

@@ -1,17 +1,22 @@
 ---
+id: frontend-specialist
 name: frontend-specialist
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Frontend Engineer
 priority: 2
-version: 1.0.0
 toolshed: frontend
+token_budget: 60000
 context_scope:
   - apps/web/
-token_budget: 60000
 skills_required:
   - scientific-luxury
   - react-best-practices
 ---
+
 
 # Frontend Specialist Agent
 

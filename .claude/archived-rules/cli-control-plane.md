@@ -1,3 +1,12 @@
+---
+id: cli-control-plane
+type: rule
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # CLI Control Plane
 
 > **Primary Rule**: Validate → Stabilise → Execute → Observe

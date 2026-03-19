@@ -1,3 +1,12 @@
+---
+id: 2026-03-06-self-upgrade-adoption-engine
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Self-Upgrade + Adoption Engine Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.

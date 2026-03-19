@@ -1,21 +1,24 @@
 ---
+id: visual-excellence-enforcer
 name: visual-excellence-enforcer
-description: >
-  Prevent factory-default LLM-generated UI from being accepted as complete output.
-  Enforces the Scientific Luxury design system. Requires screenshot-based proof.
-  Flags any banned visual patterns and blocks acceptance until resolved.
 type: Encoded Preference Workflow
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 triggers:
-  - 'check the UI'
-  - 'review the design'
-  - 'is the visual quality acceptable'
-  - 'audit visual'
-  - 'does it look good'
-  - 'visual review'
-  - 'design review'
-  - 'UI audit'
-  - 'check the frontend'
+  - check the UI
+  - review the design
+  - is the visual quality acceptable
+  - audit visual
+  - does it look good
+  - visual review
+  - design review
+  - UI audit
+  - check the frontend
+description: ">"
 ---
+
 
 # Visual Excellence Enforcer Skill
 

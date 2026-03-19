@@ -1,3 +1,12 @@
+---
+id: quick_start
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Quick Start: Event Bridge & Observability
 
 Get the new event-driven architecture running in 5 minutes.

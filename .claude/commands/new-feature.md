@@ -1,3 +1,12 @@
+---
+id: new-feature
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # New Feature Command
 
 Scaffold a complete feature with all required files.

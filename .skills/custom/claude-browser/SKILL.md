@@ -1,14 +1,18 @@
 ---
+id: claude-browser
 name: claude-browser
-description: >-
-  Claude Chrome extension tools for personal browser automation in the user's
-  actual browser. Use for logged-in sessions, form filling, and interactive tasks.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Claude Browser — Chrome Extension Automation
 

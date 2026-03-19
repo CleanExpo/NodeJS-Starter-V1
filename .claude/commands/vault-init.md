@@ -5,15 +5,9 @@ version: 1.0.0
 created: 20/03/2026
 modified: 20/03/2026
 status: active
-tags: [vault, setup, adoption]
-invocation: /vault-init
-arguments:
-  - name: mode
-    type: string
-    required: false
-    description: 'Installation mode: full (default), minimal, or validate'
 effort: medium
 ---
+
 
 # /vault-init — Vault System Initialisation
 

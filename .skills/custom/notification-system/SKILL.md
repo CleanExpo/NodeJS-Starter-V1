@@ -1,3 +1,12 @@
+---
+id: notification-system
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Notification System
 
 > Multi-channel notification orchestration with queue-backed delivery for NodeJS-Starter-V1.

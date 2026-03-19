@@ -1,14 +1,17 @@
 ---
+id: skill-manager
 name: skill-manager
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Meta-Tooling Specialist - Skill Lifecycle Management
 priority: 2
-version: 1.0.0
 skills_required:
   - context/orchestration.skill.md
-hooks_triggered:
-  - post-verification
 ---
+
 
 # Skill Manager Agent
 

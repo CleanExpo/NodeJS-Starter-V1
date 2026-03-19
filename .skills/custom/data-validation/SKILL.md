@@ -1,15 +1,18 @@
 ---
+id: data-validation
 name: data-validation
-description: >-
-  Zod and Pydantic validation patterns for input sanitisation, schema
-  definition, and type-safe data contracts across the Next.js frontend
-  and FastAPI backend. Enforces validation at system boundaries.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Data Validation - Input Sanitisation & Schema Patterns
 

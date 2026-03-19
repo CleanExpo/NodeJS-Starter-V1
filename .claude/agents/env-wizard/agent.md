@@ -1,10 +1,15 @@
 ---
+id: env-wizard
 name: env-wizard
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Environment Setup & API Configuration
 priority: 3
-version: 1.0.0
 ---
+
 
 # Env Wizard Agent
 

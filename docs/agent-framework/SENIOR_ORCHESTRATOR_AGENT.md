@@ -1,3 +1,12 @@
+---
+id: senior_orchestrator_agent
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Senior Orchestrator Agent
 
 > **Role**: Coordinate specialist agents, enforce dependency order, collect evidence, block false completion.

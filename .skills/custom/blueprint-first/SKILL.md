@@ -1,22 +1,25 @@
 ---
+id: blueprint-first
 name: blueprint-first
-description: >
-  Generate an ASCII wireframe or architecture diagram BEFORE writing any code for UI,
-  dashboards, landing pages, system architecture, or database schemas.
-  Use when user asks to build any visual or structural component.
-triggers:
-  - 'build a dashboard'
-  - 'create a landing page'
-  - 'design the UI'
-  - 'add a page'
-  - 'build the frontend'
-  - 'create the database schema'
-  - 'design the architecture'
-  - 'build a slide deck'
-  - 'create a layout'
-  - 'add a screen'
 type: rigid
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+triggers:
+  - build a dashboard
+  - create a landing page
+  - design the UI
+  - add a page
+  - build the frontend
+  - create the database schema
+  - design the architecture
+  - build a slide deck
+  - create a layout
+  - add a screen
+description: ">"
 ---
+
 
 # Blueprint First Skill
 

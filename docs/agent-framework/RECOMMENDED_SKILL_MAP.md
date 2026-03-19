@@ -1,3 +1,12 @@
+---
+id: recommended_skill_map
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Recommended Skill Map
 
 > Maps each agent tier to their recommended skills. Maximum 8 skills per agent.

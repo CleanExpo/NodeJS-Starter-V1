@@ -1,3 +1,12 @@
+---
+id: outcome_language_and_done_gates
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Outcome Language and Done Gates
 
 > **Purpose**: This document defines how human end-goal language maps to engineering completion criteria.

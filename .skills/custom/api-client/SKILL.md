@@ -1,3 +1,12 @@
+---
+id: api-client
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # API Client
 
 > Type-safe fetch wrapper with interceptors, request/response transforms, and automatic retry for NodeJS-Starter-V1.

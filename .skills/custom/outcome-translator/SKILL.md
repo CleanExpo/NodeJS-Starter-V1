@@ -1,27 +1,28 @@
 ---
+id: outcome-translator
 name: outcome-translator
-description: >
-  Translate human end-goal language into full engineering execution plans with
-  Definition of Done, gap analysis, gated phases, and proof artifacts.
-  Use when user says "Finished", "Ready", "Launch it", "Make it work",
-  "Production ready", "Ready for clients", "Ship it", "Done", "Go live",
-  or any semantically equivalent phrase.
-triggers:
-  - 'finished'
-  - 'ready'
-  - 'launch it'
-  - 'make it work'
-  - 'production ready'
-  - 'ready for clients'
-  - 'ship it'
-  - 'done'
-  - 'go live'
-  - 'just make it work'
-  - "it's ready"
-  - "we're done"
-  - 'release it'
 type: flexible
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+triggers:
+  - finished
+  - ready
+  - launch it
+  - make it work
+  - production ready
+  - ready for clients
+  - ship it
+  - done
+  - go live
+  - just make it work
+  - it's ready
+  - we're done
+  - release it
+description: ">"
 ---
+
 
 # Outcome Translator Skill
 

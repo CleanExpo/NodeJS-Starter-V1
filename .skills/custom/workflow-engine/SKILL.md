@@ -1,3 +1,12 @@
+---
+id: workflow-engine
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Workflow Engine
 
 > Multi-step approval workflows, business process automation, and visual workflow execution for NodeJS-Starter-V1.

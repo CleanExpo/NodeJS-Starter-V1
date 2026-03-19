@@ -1,16 +1,18 @@
 ---
+id: cron-scheduler
 name: cron-scheduler
-description: >-
-  Scheduled task management patterns for Vercel cron jobs, Next.js API route
-  handlers, and backend periodic tasks. Covers cron expression conventions,
-  CRON_SECRET authentication, overlap protection, timezone handling (AEST/AEDT),
-  and failure alerting.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Cron Scheduler - Scheduled Task Management
 

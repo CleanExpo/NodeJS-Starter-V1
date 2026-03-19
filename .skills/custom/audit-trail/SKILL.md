@@ -1,3 +1,12 @@
+---
+id: audit-trail
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Audit Trail
 
 > Structured audit event logging for compliance, forensics, and activity tracking in NodeJS-Starter-V1.

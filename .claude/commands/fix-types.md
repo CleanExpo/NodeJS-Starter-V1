@@ -1,3 +1,12 @@
+---
+id: fix-types
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Fix Types Command
 
 Regenerate database types from Supabase.

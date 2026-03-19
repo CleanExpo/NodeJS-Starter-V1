@@ -1,3 +1,12 @@
+---
+id: context-drift
+type: rule
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Context Drift Prevention
 
 > **Problem**: Claude Code's automatic context compaction is lossy. CLAUDE.md has no protected status —

@@ -1,11 +1,13 @@
 ---
+id: verifier_primer
 type: primer
-agent_type: verifier
-priority: 2
-loads_with: [verification_context]
-inherits_from: BASE_PRIMER.md
 version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+priority: 2
 ---
+
 
 # Independent Verifier Agent Persona
 

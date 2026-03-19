@@ -1,3 +1,12 @@
+---
+id: human-outcome-translation
+type: rule
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Human Outcome Translation Rule
 
 > **Authority**: Always-on. Applies whenever a user speaks in end-goal or outcome language.

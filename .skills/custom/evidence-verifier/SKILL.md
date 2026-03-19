@@ -1,19 +1,22 @@
 ---
+id: evidence-verifier
 name: evidence-verifier
-description: >
-  Verify that proof artifacts exist, are real, and match the claims made.
-  Prevents phantom evidence and assumption-based completion claims.
-  Classifies artifacts as VERIFIED, CLAIMED, or PHANTOM.
 type: Capability Uplift
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 triggers:
-  - 'verify the proof'
-  - 'check the evidence'
-  - 'is there proof'
-  - 'show me the artifacts'
-  - 'validate the evidence'
-  - 'confirm the proof'
-  - 'check artifacts'
+  - verify the proof
+  - check the evidence
+  - is there proof
+  - show me the artifacts
+  - validate the evidence
+  - confirm the proof
+  - check artifacts
+description: ">"
 ---
+
 
 # Evidence Verifier Skill
 

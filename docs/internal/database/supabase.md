@@ -1,3 +1,12 @@
+---
+id: supabase
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Supabase Documentation
 
 > Official documentation sourced from [supabase.com/docs](https://supabase.com/docs/reference/javascript/initializing)

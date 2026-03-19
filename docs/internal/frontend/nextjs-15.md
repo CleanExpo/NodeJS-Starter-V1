@@ -1,3 +1,12 @@
+---
+id: nextjs-15
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Next.js 15 App Router Documentation
 
 > Official documentation sourced from [nextjs.org/docs/15](https://nextjs.org/docs/15/app)

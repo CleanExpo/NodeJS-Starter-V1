@@ -1,3 +1,12 @@
+---
+id: vibe_coding_vs_senior_engineers
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Vibe Coding vs Senior Engineers - SaaS Production Analysis
 
 > **Version**: 1.0.0

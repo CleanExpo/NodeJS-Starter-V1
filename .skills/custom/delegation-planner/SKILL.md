@@ -1,21 +1,24 @@
 ---
+id: delegation-planner
 name: delegation-planner
-description: >
-  Map incoming work to the correct agent hierarchy layer.
-  Prevents PM agents doing implementation work, or specialists doing strategy.
-  Produces a delegation plan table with agent, task, evidence required, and gate condition.
 type: Capability Uplift
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 triggers:
-  - 'who should do this'
-  - 'which agent handles'
-  - 'delegate this'
-  - 'plan delegation'
-  - 'assign tasks'
-  - 'who handles'
-  - 'which specialist'
-  - 'route this task'
-  - 'assign work'
+  - who should do this
+  - which agent handles
+  - delegate this
+  - plan delegation
+  - assign tasks
+  - who handles
+  - which specialist
+  - route this task
+  - assign work
+description: ">"
 ---
+
 
 # Delegation Planner Skill
 

@@ -1,16 +1,18 @@
 ---
+id: csv-processor
 name: csv-processor
-description: >-
-  Streaming CSV parse and generate patterns for large file support across
-  Next.js frontend and FastAPI backend. Covers row-by-row streaming, Zod
-  row validation, Pydantic export models, Australian locale formatting
-  (DD/MM/YYYY dates, AUD currency), and memory-safe chunked processing.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # CSV Processor - Streaming CSV Parse & Generate
 

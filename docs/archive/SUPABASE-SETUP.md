@@ -1,3 +1,12 @@
+---
+id: supabase-setup
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Supabase Database Setup Guide
 
 **Last Updated:** 06/01/2026

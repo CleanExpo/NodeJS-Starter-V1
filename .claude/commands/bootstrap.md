@@ -1,3 +1,12 @@
+---
+id: bootstrap
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Bootstrap Command
 
 Full foundation setup - run ONCE on new project.

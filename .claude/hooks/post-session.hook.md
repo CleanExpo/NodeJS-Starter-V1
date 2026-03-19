@@ -1,11 +1,15 @@
 ---
+id: post-session
 name: post-session
 type: hook
-trigger: End of session
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 3
 blocking: false
-version: 1.0.0
 ---
+
 
 # Post-Session Hook
 

@@ -1,18 +1,23 @@
 ---
+id: bug-hunter
 name: bug-hunter
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Bug Hunter
 priority: 2
-version: 1.0.0
 toolshed: debug
+token_budget: 40000
 context_scope:
   - failing-file-only
   - direct-imports-one-level
-token_budget: 40000
 skills_required:
   - error-taxonomy
   - structured-logging
 ---
+
 
 # Bug Hunter Agent
 

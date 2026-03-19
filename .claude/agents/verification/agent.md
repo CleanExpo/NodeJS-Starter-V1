@@ -1,17 +1,19 @@
 ---
+id: verification
 name: verification
 type: agent
+version: 2.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Independent Quality Gatekeeper
 priority: 1
-version: 2.0.0
-inherits_from: VERIFICATION.md
+blocking: true
 skills_required:
   - verification/verification-first.skill.md
   - verification/error-handling.skill.md
-hooks_triggered:
-  - post-verification
-blocking: true
 ---
+
 
 # Verification Agent
 

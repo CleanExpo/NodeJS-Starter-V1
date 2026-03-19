@@ -1,3 +1,12 @@
+---
+id: audit_modes
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Audit Modes — NodeJS-Starter-V1
 
 > **Purpose**: Documents the three audit modes used by the audit system to correctly classify repositories before scoring.

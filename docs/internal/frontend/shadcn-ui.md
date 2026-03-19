@@ -1,3 +1,12 @@
+---
+id: shadcn-ui
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # shadcn/ui Documentation
 
 > Official documentation sourced from [ui.shadcn.com](https://ui.shadcn.com/docs/components-json)

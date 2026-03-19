@@ -1,16 +1,18 @@
 ---
+id: email-template
 name: email-template
-description: >-
-  Responsive transactional email templates using React Email and Resend.
-  Covers Scientific Luxury dark-theme email design, Australian locale
-  formatting, template composition, preview tooling, and integration
-  with the project's cron jobs and notification flows.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Email Template - Responsive Transactional Emails
 

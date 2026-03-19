@@ -1,20 +1,23 @@
 ---
+id: model-currency-checker
 name: model-currency-checker
-description: >
-  Compare configured AI model usage in the codebase against the approved model
-  currency policy. Flags outdated, deprecated, or unapproved model IDs.
-  Generates a model currency report at reports/model-currency-report.md.
 type: Capability Uplift
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 triggers:
-  - 'check model versions'
-  - 'are models up to date'
-  - 'model currency'
-  - 'which models are we using'
-  - 'audit ai models'
-  - 'check ai versions'
-  - 'model audit'
-  - 'update models'
+  - check model versions
+  - are models up to date
+  - model currency
+  - which models are we using
+  - audit ai models
+  - check ai versions
+  - model audit
+  - update models
+description: ">"
 ---
+
 
 # Model Currency Checker Skill
 

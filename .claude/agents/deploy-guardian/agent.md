@@ -1,10 +1,14 @@
 ---
+id: deploy-guardian
 name: deploy-guardian
 type: agent
-priority: 6
-status: stub
 version: 0.1.0
+created: 20/03/2026
+modified: 20/03/2026
+status: stub
+priority: 6
 ---
+
 
 # Deploy Guardian Agent
 

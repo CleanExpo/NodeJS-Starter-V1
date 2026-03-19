@@ -1,3 +1,12 @@
+---
+id: anthropic-features
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Anthropic API Features — March 2026 Reference
 
 > Master reference for all current Anthropic API capabilities.

@@ -1,20 +1,25 @@
 ---
+id: database-specialist
 name: database-specialist
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Database Engineer
 priority: 2
-version: 1.0.0
 toolshed: database
+token_budget: 40000
 context_scope:
   - apps/backend/src/db/
   - apps/backend/src/state/
   - scripts/init-db.sql
   - apps/backend/alembic/
-token_budget: 40000
 skills_required:
   - data-validation
   - audit-trail
 ---
+
 
 # Database Specialist Agent
 

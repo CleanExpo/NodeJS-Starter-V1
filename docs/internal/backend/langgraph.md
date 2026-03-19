@@ -1,3 +1,12 @@
+---
+id: langgraph
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # LangGraph Documentation
 
 > Official documentation sourced from [langchain-ai.github.io/langgraph](https://langchain-ai.github.io/langgraph/)

@@ -1,3 +1,12 @@
+---
+id: ralph
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Ralph Command
 
 Run the Ralph Wiggum technique for autonomous task completion.

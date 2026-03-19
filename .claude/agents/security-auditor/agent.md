@@ -1,21 +1,26 @@
 ---
+id: security-auditor
 name: security-auditor
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Security Auditor
 priority: 1
-version: 1.0.0
 toolshed: security
+token_budget: 50000
 context_scope:
   - apps/backend/src/auth/
   - apps/backend/src/api/
   - apps/web/middleware.ts
   - apps/web/lib/api/
-token_budget: 50000
 skills_required:
   - input-sanitisation
   - oauth-flow
   - rbac-patterns
 ---
+
 
 # Security Auditor Agent
 

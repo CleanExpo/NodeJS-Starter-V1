@@ -1,3 +1,12 @@
+---
+id: slack-integration
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Slack Integration
 
 > Slack bot commands, webhook notifications, interactive messages, and team alerting patterns for NodeJS-Starter-V1.

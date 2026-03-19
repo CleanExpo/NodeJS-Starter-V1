@@ -1,3 +1,12 @@
+---
+id: migration_guide
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Supabase Migration Guide
 
 Your Supabase database is configured but needs the tables created.

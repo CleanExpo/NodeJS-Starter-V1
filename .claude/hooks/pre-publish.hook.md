@@ -1,11 +1,15 @@
 ---
+id: pre-publish
 name: pre-publish
 type: hook
-trigger: Before publishing content
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 1
 blocking: true
-version: 1.0.0
 ---
+
 
 # Pre-Publish Hook (BLOCKING)
 

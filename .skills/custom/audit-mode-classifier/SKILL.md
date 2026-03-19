@@ -1,3 +1,12 @@
+---
+id: audit-mode-classifier
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Skill: audit-mode-classifier
 
 **Name:** audit-mode-classifier

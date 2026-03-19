@@ -1,10 +1,14 @@
 ---
+id: performance-optimizer
 name: performance-optimizer
 type: agent
-priority: 9
-status: stub
 version: 0.1.0
+created: 20/03/2026
+modified: 20/03/2026
+status: stub
+priority: 9
 ---
+
 
 # Performance Optimizer Agent
 

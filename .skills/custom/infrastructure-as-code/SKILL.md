@@ -1,3 +1,12 @@
+---
+id: infrastructure-as-code
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Infrastructure as Code
 
 > Terraform and Pulumi patterns for cloud provisioning, state management, and environment parity for NodeJS-Starter-V1.

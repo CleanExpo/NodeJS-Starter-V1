@@ -288,6 +288,7 @@ pnpm run verify
 - **Multi-Agent Architecture** hierarchical workflow
 - **Beads** git-backed task memory
 - **Claude Code Hooks** automation
+- **Vault Index System** O(1) wiki-link lookup
 - **Linear Integration** project tracking
 - **Quality Gates** verification system
 
@@ -328,11 +329,15 @@ NodeJS-Starter-V1/
 ├── .claude/                    # Claude Code config & hooks
 │   ├── hooks/scripts/          # Automation scripts
 │   └── rules/                  # Agent rules
-├── .skills/                    # Agent skills (61 installed)
+├── .skills/                    # Agent skills (70 installed)
 │   └── custom/
 │       ├── anthropic-features/ # Anthropic API capability reference
 │       ├── anthropic-streaming/# SSE streaming patterns
 │       └── anthropic-web-search/ # Web Search v2 integration
+├── .claude/
+│   ├── VAULT-INDEX.md          # Wiki-link master index
+│   ├── schemas/                # Frontmatter schema
+│   └── hooks/scripts/          # Claude Code automation
 ├── docs/                       # Documentation
 │   ├── MULTI_AGENT_ARCHITECTURE.md
 │   ├── DESIGN_SYSTEM.md
@@ -340,6 +345,53 @@ NodeJS-Starter-V1/
 ├── scripts/                    # Setup & utility scripts
 └── .github/workflows/          # CI/CD pipelines
 ```
+
+---
+
+## Claude Code Integration
+
+This starter includes full Claude Code (CLI) integration with hooks, agents, and skills.
+
+<details>
+<summary><strong>Vault Index System</strong></summary>
+
+Obsidian-style wiki-linking for O(1) discovery of agents, skills, rules, and commands.
+
+```bash
+# Regenerate indexes after adding new files
+pnpm vault:index
+
+# Check for broken wiki-links
+pnpm vault:validate
+
+# Add frontmatter to existing .md files
+pnpm vault:adopt
+
+# Full initialisation (for downstream projects)
+/vault-init
+```
+
+**Wiki-Link Syntax**:
+- `[[skill-name]]` — lookup by ID
+- `[[agent/frontend-specialist]]` — direct path
+- `[[scientific-luxury#banned-elements]]` — section anchor
+- `[[scientific-luxury|Design System]]` — custom text
+
+</details>
+
+<details>
+<summary><strong>Claude Code Commands</strong></summary>
+
+```bash
+/vault-init           # Initialise vault system
+/verify               # Run verification checks
+/audit                # Framework audit
+/new-feature          # Guided feature development
+/minion <task>        # One-shot task execution
+/skill-manager        # Analyse skill gaps
+```
+
+</details>
 
 ---
 
@@ -365,6 +417,10 @@ pnpm turbo run lint
 pnpm run docker:up          # Start services
 pnpm run docker:down        # Stop services
 pnpm run docker:reset       # Reset database
+
+# Vault management
+pnpm vault:index            # Regenerate wiki-link indexes
+pnpm vault:validate         # Check for broken links
 ```
 
 </details>
@@ -515,6 +571,7 @@ The app automatically detects the credentials at startup and switches to `Supaba
 | [Multi-Agent Architecture](docs/MULTI_AGENT_ARCHITECTURE.md)  | Agent workflow specification |
 | [Design System](docs/DESIGN_SYSTEM.md)                        | Scientific Luxury UI system  |
 | [Beads](docs/BEADS.md)                                        | AI agent memory system       |
+| [Vault Index System](docs/VAULT_INDEX_SYSTEM.md)              | Wiki-link O(1) lookup        |
 | [Testing Guide](docs/guides/TESTING_GUIDE.md)                 | Testing strategies           |
 | [CI/CD Guide](docs/guides/CI_CD_GUIDE.md)                     | Pipeline configuration       |
 | [Production Deployment](docs/guides/PRODUCTION-DEPLOYMENT.md) | Deployment options           |
@@ -632,6 +689,6 @@ MIT Licence — Use freely for any purpose.
 
 <sub>Built with care for developers who want to build AI apps without barriers</sub>
 
-<sub>Last Updated: 06/03/2026</sub>
+<sub>Last Updated: 20/03/2026</sub>
 
 </div>

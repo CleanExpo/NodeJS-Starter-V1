@@ -1,11 +1,15 @@
 ---
+id: post-skill-load
 name: post-skill-load
 type: hook
-trigger: After skill loaded
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 3
 blocking: false
-version: 1.0.0
 ---
+
 
 # Post-Skill-Load Hook
 

@@ -1,11 +1,15 @@
 ---
+id: post-verification
 name: post-verification
 type: hook
-trigger: After verification completes
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 2
 blocking: false
-version: 1.0.0
 ---
+
 
 # Post-Verification Hook
 

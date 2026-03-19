@@ -1,11 +1,13 @@
 ---
+id: database_agent_primer
 type: primer
-agent_type: database
-priority: 3
-loads_with: [database_context]
-inherits_from: BASE_PRIMER.md
 version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+priority: 3
 ---
+
 
 # Database Agent Persona
 

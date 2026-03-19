@@ -1,16 +1,18 @@
 ---
+id: health-check
 name: health-check
-description: >-
-  Liveness, readiness, and deep dependency health endpoints for
-  Next.js and FastAPI. Codifies the project's three-tier health
-  probe architecture, Docker healthchecks, cron-based monitoring,
-  and system health script.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Health Check - Liveness, Readiness & Dependency Probes
 

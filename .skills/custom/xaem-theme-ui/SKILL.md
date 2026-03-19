@@ -1,12 +1,19 @@
 ---
+id: xaem-theme-ui
 name: xaem-theme-ui
-description: Two-pass theme generation and code translation pipeline. Pass 1 generates high-entropy visual themes (colour palettes, glow intensities, animation timing, typography weights). Pass 2 translates themes into CSS variables, TypeScript design tokens, Tailwind config, and Framer Motion presets. Complements scientific-luxury by handling creative generation before constraint enforcement.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: >
+  Two-pass theme generation and code translation pipeline. Pass 1 generates high-entropy visual themes (colour palettes, glow intensities, animation timing, typography weights). Pass 2 translates themes into CSS variables, TypeScript design tokens, Tailwind config, and Framer Motion presets. Complements scientific-luxury by handling creative generation before constraint enforcement.
 ---
+
 
 # XAEM Theme UI - Theme Generation & Code Translation
 

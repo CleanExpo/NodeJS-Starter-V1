@@ -1,3 +1,12 @@
+---
+id: retry-strategy
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Retry Strategy
 
 > Exponential backoff, circuit breaker, and retry policy patterns for Python (httpx, asyncio) and TypeScript (fetch) in NodeJS-Starter-V1.

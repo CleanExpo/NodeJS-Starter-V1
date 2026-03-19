@@ -1,3 +1,12 @@
+---
+id: anthropic-claude
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Anthropic Claude API Documentation
 
 > Official documentation sourced from [docs.anthropic.com](https://docs.anthropic.com) and [github.com/anthropics](https://github.com/anthropics)

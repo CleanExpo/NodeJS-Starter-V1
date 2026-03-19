@@ -1,16 +1,18 @@
 ---
+id: skill-manager
 name: skill-manager
-description: >-
-  Analyse project skill gaps, generate new skills, browse skill catalogues,
-  and validate skill health. Triggers on "skill gap", "generate skill",
-  "skill catalogue", "skill health", "missing skills", or when the project
-  needs new agent capabilities.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Skill Manager - Agent Skill Lifecycle Management
 

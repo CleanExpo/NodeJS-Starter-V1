@@ -1,17 +1,18 @@
 ---
+id: metrics-collector
 name: metrics-collector
-description: >-
-  Database-backed metrics instrumentation for Supabase/PostgreSQL with
-  standardised metric types (counters, gauges, histograms), naming
-  conventions, time-series aggregation, and optional OpenTelemetry
-  export. Codifies the project's existing AgentMetrics and analytics
-  patterns.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Metrics Collector - Observability Metrics Instrumentation
 

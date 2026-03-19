@@ -1,20 +1,23 @@
 ---
+id: definition-of-done-builder
 name: definition-of-done-builder
-description: >
-  Build measurable, verifiable Definition of Done criteria for any outcome phrase.
-  Generates a categorised DoD checklist with Proven/Unknown/Missing status labels
-  and proof artifact requirements per criterion.
 type: Capability Uplift
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 triggers:
-  - 'what does done mean'
-  - 'define done'
-  - 'what needs to be true'
-  - 'when is it finished'
-  - 'what are the success criteria'
-  - 'build a definition of done'
-  - 'what criteria'
-  - 'acceptance criteria'
+  - what does done mean
+  - define done
+  - what needs to be true
+  - when is it finished
+  - what are the success criteria
+  - build a definition of done
+  - what criteria
+  - acceptance criteria
+description: ">"
 ---
+
 
 # Definition of Done Builder
 

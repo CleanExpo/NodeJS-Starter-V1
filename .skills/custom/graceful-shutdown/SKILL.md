@@ -1,3 +1,12 @@
+---
+id: graceful-shutdown
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Graceful Shutdown
 
 > Process signal handling, connection draining, and clean resource teardown for NodeJS-Starter-V1.

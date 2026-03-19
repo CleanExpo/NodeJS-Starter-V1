@@ -1,3 +1,12 @@
+---
+id: sub_agent_protocol
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Sub-Agent Protocol
 
 > **Layer**: 4 — Isolated task execution. Dispatched by Senior Orchestrator or Specialist Agents.

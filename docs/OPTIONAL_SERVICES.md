@@ -1,3 +1,12 @@
+---
+id: optional_services
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Optional Services & Upgrades
 
 This guide covers optional services you can add to NodeJS-Starter-V1 after it's working locally.

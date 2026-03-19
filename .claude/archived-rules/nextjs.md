@@ -1,6 +1,12 @@
 ---
-paths: apps/web/**/*.{ts,tsx}
+id: nextjs
+type: rule
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 ---
+
 
 # Next.js Frontend Rules
 
@@ -17,7 +23,8 @@ paths: apps/web/**/*.{ts,tsx}
 
 ```tsx
 export interface ComponentProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof componentVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof componentVariants> {
   asChild?: boolean;
   loading?: boolean;
 }
@@ -27,7 +34,7 @@ const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
     // Implementation
   }
 );
-Component.displayName = 'Component';
+Component.displayName = "Component";
 
 export { Component, componentVariants };
 ```
@@ -75,4 +82,3 @@ pnpm dev --filter=web              # Development server
 pnpm turbo run type-check --filter=web  # Type checking
 pnpm turbo run lint --filter=web   # Linting
 pnpm build --filter=web           # Build for production
-```

@@ -1,15 +1,18 @@
 ---
+id: error-taxonomy
 name: error-taxonomy
-description: >-
-  Structured error codes, categories, and user-facing messages for consistent
-  error handling across FastAPI backend and Next.js frontend. Enforces a
-  unified error contract between API responses and client-side handling.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Error Taxonomy - Structured Error Classification
 

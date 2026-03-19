@@ -1,3 +1,12 @@
+---
+id: resilience-patterns
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Resilience Patterns
 
 > Bulkhead isolation, timeout policies, fallback strategies, and hedging patterns for NodeJS-Starter-V1.

@@ -1,20 +1,23 @@
 ---
+id: finished-audit
 name: finished-audit
-description: >
-  Verify whether "finished" is actually true by auditing completion against
-  Definition of Done criteria. Blocks false completion claims. Produces
-  COMPLETION APPROVED or NOT COMPLETE output.
 type: Capability Uplift
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 triggers:
-  - 'are we done'
-  - 'is this finished'
-  - 'audit completion'
-  - 'verify done'
-  - 'check if complete'
-  - 'is it ready'
-  - 'can we ship'
-  - 'can we close this'
+  - are we done
+  - is this finished
+  - audit completion
+  - verify done
+  - check if complete
+  - is it ready
+  - can we ship
+  - can we close this
+description: ">"
 ---
+
 
 # Finished Audit Skill
 

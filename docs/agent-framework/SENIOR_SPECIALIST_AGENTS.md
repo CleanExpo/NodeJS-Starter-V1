@@ -1,3 +1,12 @@
+---
+id: senior_specialist_agents
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Senior Specialist Agents
 
 > **Layer**: 3 — Domain experts. Receive delegated work from Senior Orchestrator.

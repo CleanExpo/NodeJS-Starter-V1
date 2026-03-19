@@ -1,18 +1,19 @@
 ---
+id: ralph-wiggum
 name: ralph-wiggum
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Autonomous Task Executor
 priority: 2
-version: 1.0.0
-inherits_from: null
 skills_required:
   - verification/verification-first.skill.md
   - workflow/feature-development.skill.md
   - workflow/ralph-wiggum.skill.md
-hooks_triggered:
-  - post-code.hook.md
-  - pre-commit.hook.md
 ---
+
 
 # Ralph Wiggum Agent
 

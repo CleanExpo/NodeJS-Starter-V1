@@ -1,15 +1,18 @@
 ---
+id: structured-logging
 name: structured-logging
-description: >-
-  JSON-structured logging patterns with correlation IDs, log levels, and
-  contextual metadata for the FastAPI backend (structlog) and Next.js
-  frontend (Logger class). Enforces consistent observability across the stack.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Structured Logging - Observability Patterns
 
