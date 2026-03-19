@@ -7,11 +7,39 @@
 
 ## Priority Order
 
+0. **Vault Index** — Wiki-link resolution via `.claude/VAULT-INDEX.md`
+   - Use `[[id]]` syntax to find agents, skills, rules, blueprints, commands
+   - O(1) lookup — grep for ID in index, follow path to file
+   - Aliases resolve automatically
 1. **NotebookLM** — Project-specific knowledge (architecture, debug, security, onboarding)
 2. **Context7 MCP** — Library/framework documentation (Next.js, FastAPI, Playwright, SQLAlchemy, Tailwind)
 3. **Skills** — Pattern libraries (`.skills/custom/*/SKILL.md`) — load only the relevant section
 4. **Codebase search** — Grep/Glob for implementation details
 5. **Web search** — Last resort for external/current information
+
+---
+
+## Vault Index Usage
+
+For agent/skill/rule discovery, use the Vault Index before loading full files:
+
+```bash
+# Find a skill by ID
+grep "scientific-luxury" .claude/VAULT-INDEX.md
+
+# Resolve wiki-link patterns
+[[id]]              → Search index for matching ID
+[[type/id]]         → Direct path: .claude/agents/frontend-specialist/agent.md
+[[id#section]]      → Link to heading anchor
+[[id|display]]      → Custom display text
+```
+
+**Commands**:
+
+- `pnpm vault:index` — Regenerate all indexes
+- `pnpm vault:validate` — Check for broken wiki-links
+
+**MCP Integration**: If `obsidian-claude-code-mcp` is installed, semantic search is available via `.claude/mcp/obsidian.json`
 
 ---
 

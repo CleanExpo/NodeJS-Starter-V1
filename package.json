@@ -32,7 +32,11 @@
     "starter:build": "cd src && npx tsc",
     "starter:adopt": "npm run starter:build && node scripts/adopt-project.mjs",
     "starter:audit": "npm run starter:build && node scripts/full-audit.mjs",
-    "starter:sync-linear": "npm run starter:build && node scripts/sync-linear.mjs"
+    "starter:sync-linear": "npm run starter:build && node scripts/sync-linear.mjs",
+    "vault:index": "node scripts/vault-index.mjs",
+    "vault:validate": "node scripts/vault-validate.mjs",
+    "vault:adopt": "node scripts/adopt-vault.mjs",
+    "vault:adopt:dry": "node scripts/adopt-vault.mjs --dry-run"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",

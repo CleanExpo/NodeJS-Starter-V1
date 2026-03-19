@@ -45,6 +45,12 @@ pnpm turbo run type-check   # Type checking
 # Browser Automation
 /ui-review run              # Execute UI stories via Playwright
 /automate-browser <task>    # Ad-hoc browser automation
+
+# Vault Index System
+pnpm vault:index            # Regenerate all indexes
+pnpm vault:validate         # Check for broken wiki-links
+pnpm vault:adopt            # Add frontmatter to files
+/vault-init                 # Full vault initialisation
 ```
 
 ## Architecture Routing
@@ -71,15 +77,36 @@ pnpm turbo run type-check   # Type checking
 
 Query knowledge sources before loading docs into context. See `.claude/rules/retrieval-first.md`.
 
-| Source                    | Use For                                           | Access                                    |
-| ------------------------- | ------------------------------------------------- | ----------------------------------------- |
-| **NotebookLM**            | Architecture, debugging, security, onboarding     | `nlm notebook query <id>`                 |
-| **Context7 MCP**          | Library docs (Next.js, FastAPI, Playwright, etc.) | `resolve-library-id` → `get-library-docs` |
-| **Skills** (59 installed) | Pattern libraries                                 | `.skills/custom/*/SKILL.md`               |
-| **Jina Reader**           | Web content extraction                            | `https://r.jina.ai/{url}`                 |
+| Priority | Source                    | Use For                                           | Access                                    |
+| -------- | ------------------------- | ------------------------------------------------- | ----------------------------------------- |
+| **0**    | **Vault Index**           | Agent/skill/rule discovery via wiki-links         | `[[id]]` → `.claude/VAULT-INDEX.md`       |
+| 1        | **NotebookLM**            | Architecture, debugging, security, onboarding     | `nlm notebook query <id>`                 |
+| 2        | **Context7 MCP**          | Library docs (Next.js, FastAPI, Playwright, etc.) | `resolve-library-id` → `get-library-docs` |
+| 3        | **Skills** (70 installed) | Pattern libraries                                 | `.skills/custom/*/SKILL.md`               |
+| 4        | **Jina Reader**           | Web content extraction                            | `https://r.jina.ai/{url}`                 |
 
 NotebookLM config: `.claude/notebooklm/notebooks.json`
 Full skill registry: `.skills/AGENTS.md`
+
+## Vault Index System
+
+Obsidian-style wiki-linking for O(1) discovery of agents, skills, rules, blueprints, and commands.
+
+| File                                      | Purpose                        |
+| ----------------------------------------- | ------------------------------ |
+| `.claude/VAULT-INDEX.md`                  | Master lookup (auto-generated) |
+| `.claude/schemas/frontmatter-schema.yaml` | Frontmatter schema definition  |
+| `.claude/mcp/obsidian.json`               | MCP config for semantic search |
+
+**Wiki-Link Syntax**:
+
+- `[[id]]` — lookup by ID in vault index
+- `[[type/id]]` — direct path (e.g., `[[agent/frontend-specialist]]`)
+- `[[id#section]]` — link to heading anchor
+- `[[id|display]]` — custom display text
+
+**Commands**: `pnpm vault:index`, `pnpm vault:validate`, `pnpm vault:adopt`
+**Docs**: `docs/VAULT_INDEX_SYSTEM.md`
 
 ## Authentication Flow
 
@@ -242,3 +269,4 @@ Docs: `docs/BLUEPRINT_FIRST_PROTOCOL.md`
 | [`docs/MULTI_AGENT_ARCHITECTURE.md`](docs/MULTI_AGENT_ARCHITECTURE.md)               | Agent workflow                          |
 | [`docs/OUTCOME_LANGUAGE_AND_DONE_GATES.md`](docs/OUTCOME_LANGUAGE_AND_DONE_GATES.md) | Human language → engineering completion |
 | [`docs/BLUEPRINT_FIRST_PROTOCOL.md`](docs/BLUEPRINT_FIRST_PROTOCOL.md)               | ASCII diagram planning before code      |
+| [`docs/VAULT_INDEX_SYSTEM.md`](docs/VAULT_INDEX_SYSTEM.md)                           | Wiki-link vault and O(1) lookup         |
