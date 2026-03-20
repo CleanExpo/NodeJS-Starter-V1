@@ -1,38 +1,24 @@
----
-id: current-state
-type: memory
-version: 1.0.0
-created: 20/03/2026
-modified: 20/03/2026
-status: active
----
-
 # Current State
 
-> Updated: 06/03/2026 AEST
+> Updated by PreCompact hook. Session: 1480aa2c
 
 ## Active Task
 
-All tasks from Anthropic Platform Integration plan complete. Branch: `feat/outcome-translation-blueprint-first`.
+Compaction triggered — context was saved at 20/03/2026 10:12 AEST.
+Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
-## Completed This Session
+## Recent Architectural Choices
 
-- Fixed all 343 backend tests (replaced stale X-User-Id auth with real JWTs)
-- Integrated Supabase state backend (SupabaseStateStore with NullStateStore fallback)
-- Updated README.md: model IDs, pricing, Supabase section, Anthropic feature flags, upgrade one-liner
-- Committed: `docs(readme): update to reflect Anthropic integrations and Supabase backend`
+See architectural-decisions.md for logged decisions.
 
-## Branch Status
+## In-Progress Work
 
-- 26 commits ahead of origin — not yet pushed
-- All tests passing: 343/343
-- No uncommitted code changes
+Check recent git status: `git status` and `git log --oneline -5`
 
 ## Next Steps
 
-- Push branch and create PR: `git push && gh pr create`
-- Or continue with remaining items: update anthropic.py API patterns, streamline CLAUDE.md
+Re-read .claude/memory/CONSTITUTION.md to restore rule context.
 
 ## Last Updated
 
-06/03/2026 AEST (session end)
+20/03/2026 10:12 AEST (PreCompact hook)
