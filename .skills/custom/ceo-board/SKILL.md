@@ -24,6 +24,52 @@ Read `references/board-members.md` for the full persona definitions of all nine 
 
 ---
 
+## Configuration
+
+### File Paths
+
+All deliberation artefacts are saved to the `.pi/ceo-agents/` directory structure:
+
+| Artefact | Path |
+|----------|------|
+| Briefs | `.pi/ceo-agents/briefs/<slug>.md` |
+| Deliberations | `.pi/ceo-agents/deliberations/<slug>.md` |
+| Memos | `.pi/ceo-agents/memos/<slug>.md` |
+| Agent definitions | `.pi/ceo-agents/agents/<name>.md` |
+
+Use a `<slug>` derived from the brief's core question (e.g., `acquisition-offer-2026-03`, `build-buy-ai-2026-03`). When saving artefacts, create the directory if it doesn't exist.
+
+### Board Members
+
+Each board member has a definition file in `agents/` and a display colour for UI rendering:
+
+| Name | File | Colour |
+|------|------|--------|
+| CEO | `agents/ceo.md` | `#e2e8f0` |
+| Revenue | `agents/revenue.md` | `#ff7edb` |
+| Product Strategist | `agents/product-strategist.md` | `#fede5d` |
+| Technical Architect | `agents/technical-architect.md` | `#ff6e96` |
+| Contrarian | `agents/contrarian.md` | `#ff4500` |
+| Compounder | `agents/compounder.md` | `#00d4aa` |
+| Custom Oracle | `agents/custom-oracle.md` | `#a78bfa` |
+| Market Strategist | `agents/market-strategist.md` | `#38bdf8` |
+| Moonshot | `agents/moonshot.md` | `#fb923c` |
+
+### Meeting Constraints
+
+Each deliberation runs within these guardrails:
+
+| Constraint | Min | Max |
+|------------|-----|-----|
+| Time | 1 minute | 5 minutes |
+| Budget | $1 | $5 |
+
+**Time constraint in practice**: Calibrate response depth to the available window. A 1-minute brief gets a compressed but complete deliberation — tight rounds, punchy statements, decisive memo. A 5-minute brief gets full depth. When the engineer doesn't specify, default to 3 minutes.
+
+**Budget constraint in practice**: This maps to model call depth. Lighter deliberations use fewer tokens. Do not pad responses — every sentence should earn its place.
+
+---
+
 ## The Deliberation Flow
 
 Every deliberation follows this exact six-stage sequence. Do not skip stages or collapse them together — the structure is the value.
