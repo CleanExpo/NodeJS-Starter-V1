@@ -2,9 +2,9 @@
 id: frontend-specialist
 name: frontend-specialist
 type: agent
-version: 1.0.0
+version: 1.1.0
 created: 20/03/2026
-modified: 20/03/2026
+modified: 26/03/2026
 status: active
 role: Frontend Engineer
 priority: 2
@@ -108,10 +108,71 @@ pnpm turbo run lint --filter=web
 pnpm turbo run test --filter=web
 ```
 
-## Never
+## Banned Defaults (Capability Uplift)
 
-- Use `rounded-lg`, `rounded-full`, or `rounded-xl` (only `rounded-sm`)
-- Use CSS transitions (only Framer Motion)
-- Use `#ffffff` or `#000000` backgrounds (only `#050505` OLED black)
-- Read files outside `apps/web/`
-- Use American English (color -> colour, behavior -> behaviour)
+Before producing ANY frontend code, verify output does not contain:
+
+| # | Banned Pattern | Replacement |
+|---|---------------|-------------|
+| 1 | `rounded-lg`, `rounded-xl`, `rounded-full` | `rounded-sm` only |
+| 2 | `bg-white`, `bg-gray-*` backgrounds | `bg-[#050505]` (OLED Black) |
+| 3 | CSS transitions (`transition-*`) | Framer Motion with physics easing |
+| 4 | Inter, Roboto, Arial fonts | JetBrains Mono (data), system sans (body) |
+| 5 | `text-blue-500`, `text-purple-*` | Spectral colours only (#00F5FF, #00FF88, #FFB800, #FF4444, #FF00FF) |
+| 6 | Symmetrical grid (`grid-cols-2`, `grid-cols-4`) | Asymmetric splits (40/60, 30/70) |
+| 7 | Generic card styling (`shadow-lg`, `border`) | Single-pixel `border-white/10`, no shadow |
+| 8 | Lucide/FontAwesome icons for status | Breathing orbs, pulse indicators |
+| 9 | Static hover states | `whileHover`/`whileTap` with spring physics |
+| 10 | `h-screen` | `min-h-[100dvh]` |
+
+Additional hard rules:
+- Never read files outside `apps/web/`
+- Never use American English (color → colour, behavior → behaviour)
+
+## Reference Components
+
+5 production-ready component patterns following Scientific Luxury:
+
+### SpectralButton
+Framer Motion tap/hover with spring physics, spectral colour variants (primary=Cyan, success=Emerald, warning=Amber, danger=Red), `rounded-sm`, OLED black bg.
+```tsx
+<motion.button
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.98 }}
+  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+  className="rounded-sm border border-[#00F5FF]/30 bg-[#050505] px-4 py-2 text-[#00F5FF] hover:border-[#00F5FF]/60"
+/>
+```
+
+### DataCard
+OLED black bg, single-pixel border, JetBrains Mono for metrics, breathing status orb.
+```tsx
+<div className="rounded-sm border border-white/10 bg-[#050505] p-6">
+  <span className="font-mono text-2xl text-white">{value}</span>
+  <motion.span
+    animate={{ opacity: [0.4, 1, 0.4] }}
+    transition={{ duration: 2, repeat: Infinity }}
+    className="h-2 w-2 rounded-full bg-[#00FF88]"
+  />
+</div>
+```
+
+### DataTable
+Asymmetric columns, spectral row highlights on hover, skeleton loading state.
+
+### Modal
+AnimatePresence mount/unmount, backdrop blur (`blur-md`), z-30 overlay, Framer Motion spring entry.
+
+### FormField
+Label above input, helper text below, inline error in Red #FF4444, en-AU validation messages.
+
+## Self-Verification Gate
+
+Before reporting task complete, verify:
+- [ ] Zero banned patterns in output code
+- [ ] All interactive elements have Framer Motion animations
+- [ ] OLED black `#050505` background on all new components
+- [ ] Spectral colours only (no arbitrary hex values)
+- [ ] en-AU strings in all user-facing text
+- [ ] `rounded-sm` only (no rounded-lg/xl/full)
+- [ ] Single-pixel borders (`border-white/10`)
