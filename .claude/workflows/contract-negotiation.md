@@ -2,7 +2,7 @@
 name: contract-negotiation
 type: workflow
 phases: [3.5]
-version: 1.0.0
+version: 1.1.0
 created: 26/03/2026
 modified: 26/03/2026
 status: active
@@ -66,3 +66,16 @@ senior-engineer → qa-validator → [negotiate max 2 rounds] → orchestrator (
 3. **Scored**: Phase 6 (qa-validator scores against contract criteria)
 4. **Archived**: Phase 8 (delivery-manager includes contract results in PR body)
 5. **Deleted**: After Phase 8 completes or on escalation
+
+## Phase Triggers
+
+### Entry Trigger
+- Auto-triggered by prd-to-spec.md when implementation plan is complete
+- `/harness` command flow (Phase 3.5 activation)
+
+### Exit Trigger
+- Contract agreed → write to `.claude/data/active-contract.json` → **auto-trigger Phase 4** (spec-to-build.md)
+- 2 negotiation rounds exhausted without agreement → **ESCALATE** to user
+
+### Handoff Artifact
+Signed sprint contract (JSON), passed alongside task assignments to `spec-to-build.md` workflow.

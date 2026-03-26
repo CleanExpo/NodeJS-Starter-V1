@@ -2,7 +2,7 @@
 name: build-to-release
 type: workflow
 phases: [6, 7, 8]
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Workflow: Build → Release
@@ -129,3 +129,25 @@ verification + qa-validator + design-reviewer → orchestrator → delivery-mana
 
 - `/verify` maps to Phase 6 (Verification) as a standalone check
 - `/minion` pathway always terminates at Phase 8 PR creation with `minion-generated` label
+
+## Phase Triggers
+
+### Entry Trigger
+- Auto-triggered by spec-to-build.md when aggregation checks pass
+- `/harness` command flow (Phase 6-8 activation)
+- `/verify` command (standalone Phase 6 only)
+
+### Exit Trigger — Verification
+- All 3 tracks pass → proceed to Phase 8 (Production)
+- Any track fails → **auto-trigger Phase 7** (iteration within this workflow)
+
+### Exit Trigger — Iteration
+- Remediation succeeds → re-run verification
+- 2 iteration cycles exhausted → **ESCALATE** to user
+
+### Exit Trigger — Production
+- Release scored ≥70 → create PR → **STOP** (human review gate)
+- Release scored <70 → iterate on PR quality
+
+### Handoff Artifact
+Pull request URL with evidence trail. Contract cleaned up. Human review required.

@@ -2,7 +2,7 @@
 name: spec-to-build
 type: workflow
 phases: [4, 5]
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Workflow: Spec → Build
@@ -89,3 +89,21 @@ orchestrator → [specialists in parallel] → orchestrator (aggregation) → ve
 
 - `/new-feature` maps to this workflow after spec generation
 - `/minion` compresses Phases 4-5 into a single bounded iteration node
+
+## Phase Triggers
+
+### Entry Trigger
+- Auto-triggered by contract-negotiation.md when contract is agreed
+- `/harness` command flow (Phase 4-5 activation)
+- For trivial scope: directly from Phase 1 (Intake)
+
+### Exit Trigger — Execution Complete
+- All specialists report completion with evidence → proceed to aggregation
+- Specialist failure → retry once, then **ESCALATE**
+
+### Exit Trigger — Aggregation Complete
+- `pnpm turbo run type-check lint test` passes → **auto-trigger Phase 6** (build-to-release.md)
+- Integration checks fail → route conflicts to responsible specialists
+
+### Handoff Artifact
+Integrated codebase with all specialist evidence, passed to `build-to-release.md` workflow.

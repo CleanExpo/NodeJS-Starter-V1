@@ -2,7 +2,7 @@
 name: prd-to-spec
 type: workflow
 phases: [3]
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Workflow: PRD → Spec
@@ -66,3 +66,20 @@ orchestrator → technical-architect → qa-validator → senior-engineer → qa
 
 - If the task arrived via `/new-feature`, the spec-builder template output feeds into this workflow as equivalent to a PRD
 - If the task arrived via `/minion`, this workflow is compressed into the blueprint's `implement` node
+
+## Phase Triggers
+
+### Entry Trigger
+- Auto-triggered by idea-to-prd.md when PRD scores ≥70
+- `/harness` command flow (Phase 3 activation)
+
+### Exit Trigger — Architecture
+- Architecture scored ≥70 → proceed to implementation planning
+- Architecture scored 50-69 → iterate once with technical-architect
+- Architecture scored <50 → **ESCALATE**
+
+### Exit Trigger — Implementation Plan
+- Senior-engineer produces task breakdown → **auto-trigger Phase 3.5** (contract-negotiation.md)
+
+### Handoff Artifact
+Implementation plan with task assignments, passed to `contract-negotiation.md` workflow.

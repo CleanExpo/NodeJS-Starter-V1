@@ -2,7 +2,7 @@
 name: idea-to-prd
 type: workflow
 phases: [1, 2]
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Workflow: Idea → PRD
@@ -59,3 +59,18 @@ A scored PRD document that flows into `prd-to-spec.md` (Phase 3).
 ```
 orchestrator → product-strategist → [spec-builder if needed] → qa-validator → orchestrator
 ```
+
+## Phase Triggers
+
+### Entry Trigger
+- `/harness` command with standard or complex scope
+- Phase 1 (Intake) completes with scope ≠ trivial
+- Manual invocation: `/new-feature` (legacy path)
+
+### Exit Trigger
+- PRD scored ≥70 by qa-validator → **auto-trigger Phase 3** (prd-to-spec.md)
+- PRD scored 50-69 → iterate once within this phase
+- PRD scored <50 → **ESCALATE** to user
+
+### Handoff Artifact
+The approved PRD document, passed as input to `prd-to-spec.md` workflow.
