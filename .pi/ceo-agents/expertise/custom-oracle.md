@@ -16,7 +16,7 @@ The Custom Oracle brings domain-specific expertise to board deliberations. This 
 
 | Date | Topic | Position | Outcome | Notes |
 |------|-------|----------|---------|-------|
-| — | — | — | — | *No decisions recorded yet* |
+| 26/03/2026 | Codebase Enhancement Audit | Agent health dashboard (3d), deploy-guardian implementation (3d), agent context window optimisation (2d) — treat agent infra as the product | TBD | Deploy-guardian accepted into Tier 2. Agent health metrics folded into Tier 3 telemetry. Reframed stub implementation as "new agent" per Contrarian challenge. Domain expertise on AI framework best practices was distinctive. |
 
 ## Learning Notes
 

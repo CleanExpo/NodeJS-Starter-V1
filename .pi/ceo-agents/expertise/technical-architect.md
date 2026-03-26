@@ -16,7 +16,7 @@ The Technical Architect brings system-level thinking to board deliberations. Thi
 
 | Date | Topic | Position | Outcome | Notes |
 |------|-------|----------|---------|-------|
-| — | — | — | — | *No decisions recorded yet* |
+| 26/03/2026 | Codebase Enhancement Audit | E2E test suite (5d), intelligent router de-stubbing (4d), error monitoring bootstrap (2d) — harden foundation before adding floors | TBD | All three recommendations accepted into Tier 1 (Foundation). E2E tests became the #1 priority across the entire roadmap. Structural integrity argument won the day. |
 
 ## Learning Notes
 

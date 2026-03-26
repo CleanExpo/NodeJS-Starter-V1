@@ -16,7 +16,7 @@ The CEO brings a holistic business lens to board deliberations. This agent balan
 
 | Date | Topic | Position | Outcome | Notes |
 |------|-------|----------|---------|-------|
-| — | — | — | — | *No decisions recorded yet* |
+| 26/03/2026 | Codebase Enhancement Audit | 3-tier roadmap: Foundation (E2E tests, stub resolution, Sentry, router de-stub), Leverage (API docs, form validation, design enforcement, board learning, deploy-guardian), Position (demo mode, README, workflow hardening, telemetry) | TBD | First deliberation. Contrarian's governance-vs-product ratio argument nearly reordered priorities. Foundation tier made a hard prerequisite. |
 
 ## Learning Notes
 

@@ -16,7 +16,7 @@ The Product Strategist focuses on user value, feature prioritization, and roadma
 
 | Date | Topic | Position | Outcome | Notes |
 |------|-------|----------|---------|-------|
-| — | — | — | — | *No decisions recorded yet* |
+| 26/03/2026 | Codebase Enhancement Audit | Onboarding dashboard (5d), workflow error hardening (4d), design system styleguide enhancement (3d) — close the gap between "it works" and "it guides you" | TBD | Onboarding dashboard descoped to home page status enhancement (2d) after Contrarian challenge on scope creep. Workflow hardening accepted into Tier 3. Compromise was pragmatic. |
 
 ## Learning Notes
 

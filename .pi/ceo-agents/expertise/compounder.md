@@ -16,7 +16,7 @@ The Compounder focuses on long-term leverage and compound effects. This agent ev
 
 | Date | Topic | Position | Outcome | Notes |
 |------|-------|----------|---------|-------|
-| — | — | — | — | *No decisions recorded yet* |
+| 26/03/2026 | Codebase Enhancement Audit | CEO Board auto-learning loop (2d), design system build-time enforcement (3d), test coverage ratchet (2d) — invest in self-reinforcing systems | TBD | All three recommendations accepted. Coverage ratchet in Tier 1, design enforcement and board learning in Tier 2. Compounding lens validated: self-reinforcing gates over one-time fixes. |
 
 ## Learning Notes
 
