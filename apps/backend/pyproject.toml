@@ -20,11 +20,17 @@ dependencies = [
     "python-jose[cryptography]>=3.3.0",  # JWT tokens
     "passlib[bcrypt]>=1.7.0",  # Password hashing
 
+    # Supabase (Optional - real state backend)
+    "supabase>=2.9.0",  # Supabase client
+
     # AI Models (All Optional - Ollama used by default via HTTP)
     "anthropic>=0.40.0",  # Optional - Claude API
     "google-generativeai>=0.8.0",  # Optional - Gemini API
     "openai>=1.50.0",  # Optional - OpenAI API
     # Note: Ollama provider uses httpx (already included) for local AI
+
+    # Email
+    "resend>=2.0.0",
 
     # Core
     "pydantic>=2.9.0",
@@ -34,6 +40,9 @@ dependencies = [
     "pyyaml>=6.0.0",
     "structlog>=24.4.0",
     "python-multipart>=0.0.12",
+
+    # Background Workers
+    "arq>=0.26.0",  # Async Redis-backed job queue
 ]
 
 [project.optional-dependencies]
@@ -102,3 +111,8 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.8",
+]

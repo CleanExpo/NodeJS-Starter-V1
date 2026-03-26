@@ -1,0 +1,26 @@
+name: skill-loading
+category: core
+description: 'Validates that skills are loaded correctly and respect token budgets'
+version: '1.0.0'
+
+cases:
+  - id: max-skills-respected
+    description: 'No agent should load more than 8 skills at once'
+    rule: max_skills_in_context <= 8
+    check: all_agents
+
+  - id: recommended-skills-respected
+    description: 'Agents should ideally load 6 or fewer skills'
+    rule: recommended_skills_in_context <= 6
+    check: all_agents
+    severity: warning
+
+  - id: skill-exists-before-load
+    description: 'All referenced skills must have SKILL.md files'
+    rule: skill_file_exists
+    check: all_registry_entries
+
+  - id: governance-skills-prioritised
+    description: 'Governance skills (tdd, systematic-debugging) loaded for implementation tasks'
+    rule: governance_skills_present_for_build_tasks
+    check: [tdd, systematic-debugging, verification-before-completion]

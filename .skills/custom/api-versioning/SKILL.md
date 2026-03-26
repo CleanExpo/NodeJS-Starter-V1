@@ -1,3 +1,12 @@
+---
+id: api-versioning
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # API Versioning
 
 > URL and header-based versioning with deprecation policies for NodeJS-Starter-V1.

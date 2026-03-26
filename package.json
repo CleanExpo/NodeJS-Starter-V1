@@ -28,10 +28,19 @@
     "deps:check": "bash scripts/dependency-checks.sh",
     "deps:sync": "pnpm install && pnpm verify:deps",
     "deps:clean": "pnpm prune && pnpm install",
-    "prepare": "husky"
+    "prepare": "husky",
+    "starter:build": "cd src && npx tsc",
+    "starter:adopt": "npm run starter:build && node scripts/adopt-project.mjs",
+    "starter:audit": "npm run starter:build && node scripts/full-audit.mjs",
+    "starter:sync-linear": "npm run starter:build && node scripts/sync-linear.mjs",
+    "vault:index": "node scripts/vault-index.mjs",
+    "vault:validate": "node scripts/vault-validate.mjs",
+    "vault:adopt": "node scripts/adopt-vault.mjs",
+    "vault:adopt:dry": "node scripts/adopt-vault.mjs --dry-run"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
+    "@rushstack/eslint-patch": "1.16.1",
     "@types/node": "^22.10.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",

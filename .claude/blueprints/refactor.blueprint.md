@@ -1,9 +1,13 @@
 ---
-blueprint: refactor
+id: refactor.blueprint
+type: blueprint
 version: 1.0.0
-triggers: [refactor, clean, simplify, extract, rename, restructure, organise, reorganise]
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 toolshed: general
 ---
+
 
 # Refactor Blueprint
 

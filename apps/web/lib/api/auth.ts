@@ -1,10 +1,9 @@
 /**
  * Authentication API
  *
- * Handles login, logout, registration, and user management.
+ * All calls go through Next.js API routes (which proxy to FastAPI backend).
+ * The httpOnly auth_token cookie is sent automatically via credentials: 'include'.
  */
-
-import { apiClient } from './client';
 
 export interface User {
   id: string;
@@ -22,8 +21,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  access_token: string;
-  token_type: string;
+  success: boolean;
   user: User;
 }
 
@@ -39,6 +37,29 @@ export interface RegisterResponse {
 }
 
 /**
+ * Fetch helper for auth routes. All calls go to Next.js API routes
+ * with credentials: 'include' so the httpOnly cookie is sent automatically.
+ */
+async function authFetch<T>(url: string, options: RequestInit = {}): Promise<T> {
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers as Record<string, string>),
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+    throw new Error(err.error || err.detail || `Request failed (${res.status})`);
+  }
+
+  if (res.status === 204) return {} as T;
+  return res.json();
+}
+
+/**
  * Authentication API methods
  */
 export const authApi = {
@@ -46,41 +67,27 @@ export const authApi = {
    * Login with email and password
    */
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    // Login via Next.js API route which sets the httpOnly cookie server-side
-    const res = await fetch('/api/auth/login', {
+    return authFetch<LoginResponse>('/api/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
-      credentials: 'include',
     });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Login failed' }));
-      throw new Error(err.error || 'Login failed');
-    }
-
-    return res.json();
   },
 
   /**
    * Register a new user
    */
   async register(data: RegisterRequest): Promise<RegisterResponse> {
-    return apiClient.post<RegisterResponse>('/api/auth/register', data);
+    return authFetch<RegisterResponse>('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   },
 
   /**
    * Logout (clear auth token)
    */
   async logout(): Promise<void> {
-    // Call backend logout
-    try {
-      await apiClient.post('/api/auth/logout');
-    } catch {
-      // Ignore errors — proceed to clear cookie
-    }
-    // Clear the httpOnly cookie via server-side API route
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    await authFetch('/api/auth/logout', { method: 'POST' });
   },
 
   /**
@@ -88,9 +95,8 @@ export const authApi = {
    */
   async getCurrentUser(): Promise<User | null> {
     try {
-      return await apiClient.get<User>('/api/auth/me');
-    } catch (_error) {
-      // Not authenticated
+      return await authFetch<User>('/api/auth/me');
+    } catch {
       return null;
     }
   },
@@ -99,16 +105,22 @@ export const authApi = {
    * Update current user profile
    */
   async updateProfile(data: Partial<User>): Promise<User> {
-    return apiClient.patch<User>('/api/auth/me', data);
+    return authFetch<User>('/api/auth/me', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
   },
 
   /**
    * Change password
    */
   async changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
-    return apiClient.post('/api/auth/change-password', {
-      current_password: currentPassword,
-      new_password: newPassword,
+    return authFetch('/api/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
     });
   },
 
@@ -116,16 +128,19 @@ export const authApi = {
    * Request password reset
    */
   async requestPasswordReset(email: string): Promise<{ message: string }> {
-    return apiClient.post('/api/auth/forgot-password', { email });
+    return authFetch('/api/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
   },
 
   /**
    * Reset password with token
    */
   async resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
-    return apiClient.post('/api/auth/reset-password', {
-      token,
-      new_password: newPassword,
+    return authFetch('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
     });
   },
 };

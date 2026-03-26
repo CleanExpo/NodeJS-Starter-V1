@@ -1,3 +1,12 @@
+---
+id: skill-manager
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Skill Manager Command
 
 Manage the project's skill ecosystem: analyse gaps, generate new skills, browse the catalogue, and validate health.

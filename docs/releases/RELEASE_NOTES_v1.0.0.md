@@ -1,3 +1,12 @@
+---
+id: release_notes_v1.0.0
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # 🎉 NodeJS-Starter-V1 v1.0.0 - Self-Contained Starter Template
 
 **The first production-ready release!** This template now works completely offline with zero mandatory API keys or external services.

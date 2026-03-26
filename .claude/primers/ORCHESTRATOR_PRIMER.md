@@ -1,11 +1,13 @@
 ---
+id: orchestrator_primer
 type: primer
-agent_type: orchestrator
-priority: 1
-loads_with: [orchestrator_context]
-inherits_from: BASE_PRIMER.md
 version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+priority: 1
 ---
+
 
 # Orchestrator Agent Persona
 

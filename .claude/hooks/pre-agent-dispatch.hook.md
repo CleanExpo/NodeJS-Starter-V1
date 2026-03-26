@@ -1,11 +1,15 @@
 ---
+id: pre-agent-dispatch
 name: pre-agent-dispatch
 type: hook
-trigger: Before agent dispatched
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 2
 blocking: false
-version: 1.0.0
 ---
+
 
 # Pre-Agent-Dispatch Hook
 

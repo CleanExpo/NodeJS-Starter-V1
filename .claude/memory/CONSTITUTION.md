@@ -1,3 +1,12 @@
+---
+id: constitution
+type: memory
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # CONSTITUTION — NodeJS-Starter-V1
 > Immutable rules. Survives compaction. Re-read if context feels wrong.
 

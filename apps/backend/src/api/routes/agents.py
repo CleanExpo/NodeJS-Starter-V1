@@ -4,11 +4,12 @@ This module provides HTTP endpoints for triggering and monitoring agent runs.
 Uses Supabase Realtime to push updates to the frontend in real-time.
 """
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
-from pydantic import BaseModel, Field
+import asyncio
+
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Path, Request
+from pydantic import BaseModel, ConfigDict, Field
 
 from src.agents.orchestrator import OrchestratorAgent
-from src.api.error_handling import create_error_response
 from src.state.events import AgentEventPublisher
 from src.state.supabase import SupabaseStateStore
 from src.utils import get_logger
@@ -23,12 +24,22 @@ router = APIRouter(prefix="/agents", tags=["agents"])
 # ============================================================================
 
 
+class AgentContext(BaseModel):
+    """Typed context passed to agent execution."""
+
+    model_config = ConfigDict(extra="allow")  # Allow extra fields during transition
+
+    user_id: str | None = None
+    conversation_id: str | None = None
+    metadata: dict[str, str] = Field(default_factory=dict)
+
+
 class TriggerAgentRequest(BaseModel):
     """Request to trigger an agent run."""
 
     task_description: str = Field(..., min_length=1, max_length=1000)
     user_id: str | None = None
-    context: dict | None = None
+    context: AgentContext | None = None
 
 
 class TriggerAgentResponse(BaseModel):
@@ -91,12 +102,13 @@ async def execute_agent_with_events(
             step="Starting orchestrator",
         )
 
-        # Execute the orchestrator
-        # Note: In a real implementation, you'd update progress throughout execution
-        # For now, we'll do a simple start -> execute -> complete flow
-        result = await orchestrator.run(
-            task_description=task_description,
-            context=context or {},
+        # Execute the orchestrator with a hard timeout to prevent hung tasks
+        result = await asyncio.wait_for(
+            orchestrator.run(
+                task_description=task_description,
+                context=context or {},
+            ),
+            timeout=300.0,  # 5-minute hard cap
         )
 
         # Check if completed successfully
@@ -117,6 +129,9 @@ async def execute_agent_with_events(
                 error=f"Task failed or blocked. Result: {result}",
             )
 
+    except asyncio.TimeoutError:
+        await publisher.fail_run(run_id=run_id, error="Agent execution timed out after 300s")
+        logger.error("Agent execution timed out", run_id=run_id, task=task_description[:100])
     except Exception as e:
         logger.error("Agent execution failed", error=str(e))
         await publisher.fail_run(
@@ -173,12 +188,15 @@ async def trigger_agent_run(
             status="pending",
         )
 
+        # Serialise typed context to dict for downstream use
+        context_dict = trigger_request.context.model_dump() if trigger_request.context else None
+
         # Create agent run
         run_id = await publisher.start_run(
             task_id=task_id,
             user_id=trigger_request.user_id,
             agent_name="orchestrator",
-            metadata={"context": trigger_request.context or {}},
+            metadata={"context": context_dict or {}},
         )
 
         # Execute agent in background
@@ -188,7 +206,7 @@ async def trigger_agent_run(
             run_id,
             task_id,
             trigger_request.user_id,
-            trigger_request.context,
+            context_dict,
         )
 
         logger.info(
@@ -206,17 +224,15 @@ async def trigger_agent_run(
         )
 
     except Exception as e:
-        logger.error("Failed to trigger agent run", error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to trigger agent run",
-            error_code="AGENT_TRIGGER_ERROR",
-        )
+        logger.error("Failed to trigger agent run", error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to trigger agent run")
 
 
 @router.get("/run/{run_id}", response_model=AgentRunStatusResponse)
-async def get_agent_run_status(request: Request, run_id: str) -> AgentRunStatusResponse:
+async def get_agent_run_status(
+    request: Request,
+    run_id: str = Path(..., min_length=1, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$"),
+) -> AgentRunStatusResponse:
     """Get current status of an agent run.
 
     Args:
@@ -254,13 +270,8 @@ async def get_agent_run_status(request: Request, run_id: str) -> AgentRunStatusR
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("Failed to get agent run status", run_id=run_id, error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to get agent run status",
-            error_code="AGENT_STATUS_ERROR",
-        )
+        logger.error("Failed to get agent run status", run_id=run_id, error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to get agent run status")
 
 
 @router.get("/active", response_model=list[AgentRunStatusResponse])
@@ -300,10 +311,5 @@ async def get_active_agent_runs(request: Request, user_id: str) -> list[AgentRun
         ]
 
     except Exception as e:
-        logger.error("Failed to get active agent runs", user_id=user_id, error=str(e))
-        return create_error_response(
-            request=request,
-            exc=e,
-            public_message="Failed to get active agent runs",
-            error_code="AGENT_LIST_ERROR",
-        )
+        logger.error("Failed to get active agent runs", user_id=user_id, error=str(e), exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to get active agent runs")

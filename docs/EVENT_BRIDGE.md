@@ -1,3 +1,12 @@
+---
+id: event_bridge
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Supabase Realtime Event Bridge
 
 Complete implementation of real-time communication between Next.js frontend and FastAPI backend using Supabase Realtime.

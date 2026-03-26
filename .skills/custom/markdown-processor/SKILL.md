@@ -1,3 +1,12 @@
+---
+id: markdown-processor
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Markdown Processor
 
 > Parse, transform, and render Markdown with plugins, syntax highlighting, and custom components for NodeJS-Starter-V1.

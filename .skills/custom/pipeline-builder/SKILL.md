@@ -1,3 +1,12 @@
+---
+id: pipeline-builder
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Pipeline Builder
 
 > Composable data and task pipeline construction with typed stages, error handling, and parallel execution for NodeJS-Starter-V1.

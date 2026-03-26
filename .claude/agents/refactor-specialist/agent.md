@@ -1,10 +1,14 @@
 ---
+id: refactor-specialist
 name: refactor-specialist
 type: agent
-priority: 8
-status: stub
 version: 0.1.0
+created: 20/03/2026
+modified: 20/03/2026
+status: stub
+priority: 8
 ---
+
 
 # Refactor Specialist Agent
 

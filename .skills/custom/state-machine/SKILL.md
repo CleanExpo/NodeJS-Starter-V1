@@ -1,16 +1,18 @@
 ---
+id: state-machine
 name: state-machine
-description: >-
-  Finite state machine patterns for complex flows using Python Enums and
-  TypeScript union types. Covers state definition, transition validation,
-  guard conditions, and side effects for orchestrator tasks, workflow
-  execution, and UI component states.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # State Machine - Finite State Machines for Complex Flows
 

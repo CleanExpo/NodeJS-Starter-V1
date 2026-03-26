@@ -1,10 +1,13 @@
 ---
+id: base_primer
 type: primer
-agent_type: base
-priority: 1
-loads_with: [all_contexts]
 version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+priority: 1
 ---
+
 
 # Base Agent Persona
 

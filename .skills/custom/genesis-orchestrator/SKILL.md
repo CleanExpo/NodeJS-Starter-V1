@@ -1,12 +1,19 @@
 ---
+id: genesis-orchestrator
 name: genesis-orchestrator
-description: Autonomous project orchestration protocol for Next.js full-stack builds. Triggers on "build", "implement", "create feature", "plan", "architecture", or when starting new phases. Enforces phase-locked execution, token economy, and sectional verification gates.
-license: MIT
+type: skill
+version: 2.0.1
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '2.0.1'
+  version: 2.0.1
   locale: en-AU
+description: >
+  Autonomous project orchestration protocol for Next.js full-stack builds. Triggers on \"build\", \"implement\", \"create feature\", \"plan\", \"architecture\", or when starting new phases. Enforces phase-locked execution, token economy, and sectional verification gates.
 ---
+
 
 # Genesis Hive Mind Orchestrator
 

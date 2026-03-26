@@ -1,0 +1,29 @@
+name: input-validation
+category: security
+description: 'Validates input sanitisation and injection prevention patterns'
+version: '1.0.0'
+
+cases:
+  - id: no-raw-sql-strings
+    description: 'No raw SQL string concatenation — parameterised queries only'
+    rule: no_string_format_in_sql
+    forbidden_patterns:
+      - 'f"SELECT.*{.*}"'
+      - '"SELECT" + '
+      - '% (SELECT'
+    allowed: 'SQLAlchemy ORM or parameterised queries'
+
+  - id: html-escaping
+    description: 'User content is escaped before rendering in HTML'
+    rule: html_escape_present
+    applies_to: user_supplied_content
+
+  - id: file-upload-validation
+    description: 'File uploads validate type, size, and content'
+    rule: upload_validation_present
+    required_checks: [mime_type, file_size_limit, malware_scan]
+
+  - id: path-traversal-prevention
+    description: 'File paths are sanitised to prevent traversal attacks'
+    rule: path_sanitisation_present
+    forbidden: 'user_input in file path operations'

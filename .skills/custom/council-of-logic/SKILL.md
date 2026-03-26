@@ -1,12 +1,19 @@
 ---
+id: council-of-logic
 name: council-of-logic
-description: Mathematical first principles validation for code quality. Triggers on "optimise", "algorithm", "performance", "complexity", "O(n)", or when reviewing code for efficiency. Enforces Turing (algorithmic), Von Neumann (architecture), Bezier (animation), and Shannon (compression) principles.
-license: MIT
+type: skill
+version: 2.0.1
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '2.0.1'
+  version: 2.0.1
   locale: en-AU
+description: >
+  Mathematical first principles validation for code quality. Triggers on \"optimise\", \"algorithm\", \"performance\", \"complexity\", \"O(n)\", or when reviewing code for efficiency. Enforces Turing (algorithmic), Von Neumann (architecture), Bezier (animation), and Shannon (compression) principles.
 ---
+
 
 # Council of Logic - Mathematical First Principles
 

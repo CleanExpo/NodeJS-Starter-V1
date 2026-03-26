@@ -35,9 +35,9 @@ logger = get_logger(__name__)
 class ClaudeModels:
     """Claude model identifiers - updated January 2025."""
 
-    # Claude 4.5 Family (Latest)
-    OPUS_4_5 = "claude-opus-4-5-20251101"
-    SONNET_4_5 = "claude-sonnet-4-5-20250929"
+    # Claude 4.6 Family (Latest)
+    OPUS_4_5 = "claude-opus-4-6"
+    SONNET_4_5 = "claude-sonnet-4-6"
     HAIKU_4_5 = "claude-haiku-4-5-20251001"
 
     # Claude 4 Family
@@ -341,6 +341,190 @@ class AnthropicClient(BaseLLMProvider):
         except Exception as e:
             logger.error("Anthropic API error", error=str(e))
             raise
+
+    async def create_message(
+        self,
+        messages: list[dict[str, Any]],
+        system: str | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        stream: bool = False,
+        thinking: bool = False,
+        thinking_budget: int = 10000,
+        fast_mode: bool = False,
+        schema: dict[str, Any] | None = None,
+    ) -> Any:
+        """Create a message with full feature support.
+
+        Args:
+            messages: Conversation messages
+            system: Optional system prompt (auto-cached if > 2000 chars)
+            tools: Optional tool definitions
+            stream: Return a streaming context manager instead of a coroutine
+            thinking: Enable adaptive thinking (Opus 4.6 / Sonnet 4.6 only)
+            thinking_budget: Thinking token budget (default 10000)
+            fast_mode: Enable Fast Mode — 2.5× faster output (Opus 4.6, research preview)
+            schema: JSON schema for Structured Outputs
+
+        Returns:
+            API response or streaming context manager
+        """
+        kwargs: dict[str, Any] = {
+            "model": self.model,
+            "max_tokens": self.max_tokens,
+            "messages": messages,
+        }
+
+        # System prompt — auto-cache if long
+        if system:
+            if self.features.prompt_caching and len(system) > 2000:
+                kwargs["system"] = self._create_cached_system(system)
+            else:
+                kwargs["system"] = system
+
+        if tools:
+            kwargs["tools"] = self._add_cache_to_tools(tools)
+
+        # Adaptive thinking — Opus 4.6 and Sonnet 4.6 only
+        if thinking and self.model in (ClaudeModels.OPUS_4_5, ClaudeModels.SONNET_4_5):
+            kwargs["thinking"] = {"type": "enabled", "budget_tokens": thinking_budget}
+
+        # Fast Mode — Opus 4.6 only (research preview)
+        if fast_mode and self.model == ClaudeModels.OPUS_4_5:
+            kwargs.setdefault("output_config", {})["speed"] = "fast"
+
+        # Structured Outputs
+        if schema:
+            kwargs.setdefault("output_config", {})["format"] = {
+                "type": "json_schema",
+                "json_schema": schema,
+            }
+
+        beta_headers = self._build_beta_headers()
+        if beta_headers:
+            kwargs["betas"] = beta_headers
+
+        if stream:
+            return self.client.messages.stream(**kwargs)
+
+        return await self.client.messages.create(**kwargs)
+
+    async def count_tokens(
+        self,
+        messages: list[dict[str, Any]],
+        system: str | None = None,
+        tools: list[dict[str, Any]] | None = None,
+    ) -> int:
+        """Count tokens before sending — free API call, no model inference.
+
+        Use this to estimate cost and warn users before large requests.
+
+        Args:
+            messages: Conversation messages
+            system: Optional system prompt
+            tools: Optional tool definitions
+
+        Returns:
+            Estimated input token count
+        """
+        kwargs: dict[str, Any] = {"model": self.model, "messages": messages}
+        if system:
+            kwargs["system"] = system
+        if tools:
+            kwargs["tools"] = tools
+
+        result = await self.client.messages.count_tokens(**kwargs)
+        return result.input_tokens
+
+    @staticmethod
+    def get_web_search_tool(
+        max_uses: int = 5,
+        allowed_domains: list[str] | None = None,
+        blocked_domains: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Web Search Tool v2 — GA Feb 2026.
+
+        Requires Opus 4.6 or Sonnet 4.6.
+
+        Args:
+            max_uses: Max web search calls per request (default 5)
+            allowed_domains: Restrict searches to these domains
+            blocked_domains: Exclude these domains from searches
+
+        Returns:
+            Tool definition dict for the Anthropic API
+        """
+        tool: dict[str, Any] = {"type": "web_search_20260209", "name": "web_search"}
+        if max_uses != 5:
+            tool["max_uses"] = max_uses
+        if allowed_domains:
+            tool["allowed_domains"] = allowed_domains
+        if blocked_domains:
+            tool["blocked_domains"] = blocked_domains
+        return tool
+
+    @staticmethod
+    def get_code_execution_tool() -> dict[str, Any]:
+        """Code Execution Tool — GA Feb 2026.
+
+        Free when bundled with web search. Runs Python in a secure sandbox.
+
+        Returns:
+            Tool definition dict for the Anthropic API
+        """
+        return {"type": "code_execution_20250825", "name": "code_execution"}
+
+    @staticmethod
+    def get_agent_skill(skill_name: str) -> dict[str, Any]:
+        """Agent Skills beta — Anthropic-managed document processing skills.
+
+        This is the 'Skill-creator' capability.
+        Beta header required: 'skills-2025-10-02'
+
+        Supported skills: 'excel', 'powerpoint', 'word', 'pdf'
+
+        Args:
+            skill_name: One of 'excel', 'powerpoint', 'word', 'pdf'
+
+        Returns:
+            Skill tool definition dict
+
+        Raises:
+            ValueError: If skill_name is not supported
+        """
+        supported = ("excel", "powerpoint", "word", "pdf")
+        if skill_name not in supported:
+            raise ValueError(
+                f"Unsupported Agent Skill '{skill_name}'. Supported: {supported}"
+            )
+        return {"type": "anthropic_skill", "name": skill_name}
+
+    @staticmethod
+    def get_mcp_server_tool(
+        server_name: str,
+        server_url: str,
+        allowed_tools: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """MCP Connector beta — connect remote MCP servers in the messages API.
+
+        This is the 'Remote Control' capability.
+        Beta header required: 'mcp-connector-2025-05-14'
+
+        Args:
+            server_name: Identifier for this MCP server
+            server_url: URL of the remote MCP server
+            allowed_tools: Optional allowlist of tool names from this server
+
+        Returns:
+            MCP server configuration dict
+        """
+        config: dict[str, Any] = {
+            "type": "mcp",
+            "name": server_name,
+            "source": {"type": "url", "url": server_url},
+        }
+        if allowed_tools:
+            config["tools"] = allowed_tools
+        return config
 
     async def chat(
         self,

@@ -1,17 +1,19 @@
 ---
+id: seo-intelligence
 name: seo-intelligence
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Search Dominance Strategy
 priority: 2
-version: 1.0.0
-market_focus: Australian (Brisbane primary)
 skills_required:
   - search-dominance/search-dominance.skill.md
   - search-dominance/blue-ocean.skill.md
   - australian/geo-australian.skill.md
-hooks_triggered:
-  - pre-seo-task
 ---
+
 
 # SEO Intelligence Agent
 

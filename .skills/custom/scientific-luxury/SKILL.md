@@ -1,12 +1,19 @@
 ---
+id: scientific-luxury
 name: scientific-luxury
-description: Design system enforcement for Scientific Luxury tier UI. Triggers on "design", "UI", "component", "styling", "animation", or when creating React components. Enforces OLED black backgrounds, spectral colours, single-pixel borders, physics-based animations, and timeline layouts.
-license: MIT
+type: skill
+version: 2.0.1
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '2.0.1'
+  version: 2.0.1
   locale: en-AU
+description: >
+  Design system enforcement for Scientific Luxury tier UI. Triggers on \"design\", \"UI\", \"component\", \"styling\", \"animation\", or when creating React components. Enforces OLED black backgrounds, spectral colours, single-pixel borders, physics-based animations, and timeline layouts.
 ---
+
 
 # Scientific Luxury Design System
 

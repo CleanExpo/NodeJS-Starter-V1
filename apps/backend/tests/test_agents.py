@@ -1,6 +1,7 @@
 """Tests for agent implementations."""
 
 import pytest
+from unittest.mock import AsyncMock, patch
 
 from src.agents.base_agent import (
     BaseAgent,
@@ -93,8 +94,11 @@ class TestFrontendAgent:
     @pytest.mark.asyncio
     async def test_execute_task(self, agent: FrontendAgent) -> None:
         """Test executing a frontend task."""
-        result = await agent.execute("Build a button component")
-        assert result["status"] == "pending_verification"
+        with patch.object(agent, "_call_llm", new=AsyncMock(return_value={"content": "Button component built.", "stop_reason": "end_turn"})):
+            result = await agent.execute("Build a button component")
+        assert result["status"] == "completed"
+        assert result["agent"] == "frontend"
+        assert "result" in result
 
 
 class TestBackendAgent:
@@ -114,5 +118,8 @@ class TestBackendAgent:
     @pytest.mark.asyncio
     async def test_execute_task(self, agent: BackendAgent) -> None:
         """Test executing a backend task."""
-        result = await agent.execute("Create an API endpoint")
-        assert result["status"] == "pending_verification"
+        with patch.object(agent, "_call_llm", new=AsyncMock(return_value={"content": "API endpoint created.", "stop_reason": "end_turn"})):
+            result = await agent.execute("Create an API endpoint")
+        assert result["status"] == "completed"
+        assert result["agent"] == "backend"
+        assert "result" in result

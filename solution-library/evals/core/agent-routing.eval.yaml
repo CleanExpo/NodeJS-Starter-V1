@@ -1,0 +1,49 @@
+name: agent-routing
+category: core
+description: 'Validates that the Senior Orchestrator correctly routes tasks to specialist agents'
+version: '1.0.0'
+
+cases:
+  - id: route-frontend-task
+    description: 'Frontend component task should route to frontend-specialist'
+    input:
+      task: 'Build a dashboard card component with Framer Motion animation'
+      context: 'Next.js 15, React 19, Tailwind v4'
+    expected:
+      primary_agent: frontend-specialist
+      skills_loaded: [scientific-luxury, dashboard-patterns]
+      must_not_route_to: [backend-specialist, database-specialist]
+
+  - id: route-backend-api
+    description: 'API endpoint task should route to backend-specialist'
+    input:
+      task: 'Create a webhook endpoint with HMAC-SHA256 validation'
+      context: 'FastAPI, Python'
+    expected:
+      primary_agent: backend-specialist
+      skills_loaded: [webhook-handler, api-contract]
+      must_not_route_to: [frontend-specialist]
+
+  - id: route-security-concern
+    description: 'Security audit task should route to security-auditor'
+    input:
+      task: 'Review the auth middleware for OWASP vulnerabilities'
+    expected:
+      primary_agent: security-auditor
+      skills_loaded: [input-sanitisation, rbac-patterns]
+
+  - id: route-tdd-task
+    description: 'Test writing task should involve test-engineer'
+    input:
+      task: 'Write tests for the rate limiter'
+    expected:
+      primary_agent: test-engineer
+      skills_loaded: [tdd, systematic-debugging]
+
+  - id: route-multi-domain
+    description: 'Multi-domain task should spawn subagents'
+    input:
+      task: 'Build a full auth flow with tests and security review'
+    expected:
+      strategy: spawn-subagents
+      agents: [backend-specialist, test-engineer, security-auditor]

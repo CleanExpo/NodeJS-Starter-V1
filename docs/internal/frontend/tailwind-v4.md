@@ -1,3 +1,12 @@
+---
+id: tailwind-v4
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Tailwind CSS v4 Documentation
 
 > Official documentation sourced from [tailwindcss.com](https://tailwindcss.com/docs/installation/using-vite) and [tailwindcss.com/blog/tailwindcss-v4-beta](https://tailwindcss.com/blog/tailwindcss-v4-beta)

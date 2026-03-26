@@ -1,11 +1,15 @@
 ---
+id: pre-response
 name: pre-response
 type: hook
-trigger: Before every Claude response
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 1
 blocking: false
-version: 1.0.0
 ---
+
 
 # Pre-Response Hook
 

@@ -7,7 +7,6 @@ from .models import (
     Base,
     Contractor,
     Document,
-    User,
 )
 from .workflow_models import (
     Workflow,
@@ -25,7 +24,6 @@ __all__ = [
     # Base
     "Base",
     # Core models
-    "User",
     "Contractor",
     "AvailabilitySlot",
     "Document",

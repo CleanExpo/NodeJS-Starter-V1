@@ -1,3 +1,12 @@
+---
+id: ci-cd-patterns
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # CI/CD Patterns
 
 > GitHub Actions workflow optimisation, caching strategies, and pipeline architecture for NodeJS-Starter-V1.

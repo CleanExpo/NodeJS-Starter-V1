@@ -1,15 +1,19 @@
 """Unit tests for PRD API routes."""
 
 import pytest
+from datetime import timedelta
 from unittest.mock import AsyncMock, patch, MagicMock
 from fastapi.testclient import TestClient
 
 from src.api.main import app
+from src.auth.jwt import create_access_token
 
 
 client = TestClient(app)
 
-AUTH_HEADERS = {"X-User-Id": "00000000-0000-0000-0000-000000000001"}
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {create_access_token({'sub': 'test@example.com'}, timedelta(hours=24))}"
+}
 
 
 @pytest.fixture

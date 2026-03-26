@@ -1,3 +1,12 @@
+---
+id: react-19
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # React 19 Documentation
 
 > Official documentation sourced from [react.dev](https://react.dev/reference/react)

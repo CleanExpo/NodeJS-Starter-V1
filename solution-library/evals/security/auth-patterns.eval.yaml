@@ -1,0 +1,35 @@
+name: auth-patterns
+category: security
+description: 'Validates authentication and authorisation implementation'
+version: '1.0.0'
+
+cases:
+  - id: jwt-expiry-set
+    description: 'JWT tokens have expiry configured'
+    rule: jwt_expiry_present
+    required: 'exp claim in JWT payload'
+
+  - id: password-hashing
+    description: 'Passwords are hashed with bcrypt (min cost 12)'
+    rule: bcrypt_cost_sufficient
+    min_cost: 12
+    forbidden: ['md5', 'sha1', 'sha256 direct', 'plaintext']
+
+  - id: account-lockout
+    description: 'Auth endpoints lock account after failed attempts'
+    rule: lockout_present
+    threshold: 5
+    duration_minutes: 15
+
+  - id: reset-tokens-hashed
+    description: 'Password reset tokens are SHA-256 hashed in storage'
+    rule: token_stored_hashed
+    algorithm: sha256
+    max_ttl_minutes: 60
+    single_use: true
+
+  - id: httponly-cookies
+    description: 'JWT cookies are httpOnly and Secure'
+    rule: cookie_flags_set
+    required: [httpOnly, Secure, SameSite]
+    SameSite: strict_or_lax

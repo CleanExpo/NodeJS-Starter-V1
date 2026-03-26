@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "obsidian-vault",
+  "description": "Obsidian-style vault integration for NodeJS-Starter-V1",
+  "version": "1.0.0",
+  "type": "obsidian-claude-code-mcp",
+  "config": {
+    "vault_path": ".",
+    "index_file": ".claude/VAULT-INDEX.md",
+    "port": 22360,
+    "auto_discovery": false,
+    "search": {
+      "semantic": true,
+      "fuzzy_threshold": 0.8,
+      "index_on_startup": true
+    },
+    "operations": {
+      "read": true,
+      "search": true,
+      "link_resolution": true,
+      "backlink_discovery": true,
+      "write": false
+    },
+    "indexing": {
+      "include_patterns": [
+        ".claude/agents/**/*.md",
+        ".skills/custom/**/*.md",
+        ".claude/rules/**/*.md",
+        ".claude/blueprints/**/*.md",
+        ".claude/commands/**/*.md",
+        ".claude/hooks/**/*.md",
+        ".claude/primers/**/*.md",
+        ".claude/memory/**/*.md",
+        "docs/**/*.md"
+      ],
+      "exclude_patterns": ["**/node_modules/**", "**/index.md", "**/.git/**"],
+      "frontmatter_fields": ["id", "type", "status", "tags", "aliases", "links"]
+    },
+    "wiki_links": {
+      "resolve_aliases": true,
+      "report_broken": true,
+      "patterns": {
+        "simple": "[[id]]",
+        "typed": "[[type/id]]",
+        "anchored": "[[id#section]]",
+        "aliased": "[[id|display]]"
+      }
+    }
+  },
+  "locale": "en-AU",
+  "notes": {
+    "setup": "If obsidian-claude-code-mcp is installed, this config enables semantic search via WebSocket on port 22360",
+    "fallback": "Without the MCP server, VAULT-INDEX.md provides O(1) lookup via grep/read",
+    "regenerate": "Run 'pnpm vault:index' to rebuild all indexes"
+  }
+}

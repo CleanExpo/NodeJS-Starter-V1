@@ -171,3 +171,34 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  library-modification-check:
+    name: Library Modification Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect library modifications
+        run: |
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          registry_changed=$(echo "$changed" | grep "^solution-library/registry/" | head -5)
+
+          if [ -n "$registry_changed" ]; then
+            echo "LIBRARY_MODIFIED=true" >> $GITHUB_ENV
+            echo "Registry files modified:"
+            echo "$registry_changed"
+          else
+            echo "LIBRARY_MODIFIED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Warn on library registry changes
+        if: env.LIBRARY_MODIFIED == 'true'
+        run: |
+          echo "::warning::Library registry modified — Senior Orchestrator approval required"
+          echo "Ensure the /lib push workflow was followed for any promoted patterns."

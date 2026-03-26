@@ -1,3 +1,12 @@
+---
+id: graphql-patterns
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # GraphQL Patterns
 
 > Schema design, resolver patterns, dataloader optimisation, and type-safe client integration for NodeJS-Starter-V1.

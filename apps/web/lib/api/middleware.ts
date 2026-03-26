@@ -4,9 +4,9 @@
  * Validates JWT tokens and handles protected routes.
  */
 
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from 'next/server';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
 interface User {
   id: string;
@@ -19,13 +19,19 @@ interface User {
  * Verify JWT token with backend
  */
 async function verifyToken(token: string): Promise<User | null> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   try {
     const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      cache: "no-store",
+      cache: 'no-store',
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       return null;
@@ -33,6 +39,7 @@ async function verifyToken(token: string): Promise<User | null> {
 
     return response.json();
   } catch {
+    clearTimeout(timeoutId);
     return null;
   }
 }
@@ -46,7 +53,7 @@ export async function updateSession(request: NextRequest) {
   });
 
   // Get auth token from cookies
-  const token = request.cookies.get("auth_token")?.value;
+  const token = request.cookies.get('auth_token')?.value;
 
   // Verify token if present
   let user: User | null = null;
@@ -55,43 +62,37 @@ export async function updateSession(request: NextRequest) {
 
     // Clear invalid token
     if (!user) {
-      response.cookies.delete("auth_token");
+      response.cookies.delete('auth_token');
     }
   }
 
   // Protected routes
-  const protectedPaths = ["/dashboard"];
-  const isProtectedPath = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
+  const protectedPaths = ['/dashboard'];
+  const isProtectedPath = protectedPaths.some((path) => request.nextUrl.pathname.startsWith(path));
 
   if (isProtectedPath && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = '/login';
     // Validate redirect target is relative (prevent open redirect)
     const redirectPath = request.nextUrl.pathname;
-    if (redirectPath.startsWith("/") && !redirectPath.startsWith("//")) {
-      url.searchParams.set("redirect", redirectPath);
+    if (redirectPath.startsWith('/') && !redirectPath.startsWith('//')) {
+      url.searchParams.set('redirect', redirectPath);
     }
     return NextResponse.redirect(url);
   }
 
   // Redirect logged in users away from auth pages
-  const authPaths = ["/login", "/register"];
-  const isAuthPath = authPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
+  const authPaths = ['/login', '/register'];
+  const isAuthPath = authPaths.some((path) => request.nextUrl.pathname.startsWith(path));
 
   if (isAuthPath && user) {
     const url = request.nextUrl.clone();
-    const redirect = request.nextUrl.searchParams.get("redirect");
+    const redirect = request.nextUrl.searchParams.get('redirect');
     // Validate redirect is a safe relative path (prevent open redirect)
     const safePath =
-      redirect && redirect.startsWith("/") && !redirect.startsWith("//")
-        ? redirect
-        : "/dashboard";
+      redirect && redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/dashboard';
     url.pathname = safePath;
-    url.searchParams.delete("redirect");
+    url.searchParams.delete('redirect');
     return NextResponse.redirect(url);
   }
 

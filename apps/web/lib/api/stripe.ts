@@ -36,7 +36,7 @@ function getSecretKey(): string {
 export function getStripeClient(): Stripe {
   if (!_stripe) {
     _stripe = new Stripe(getSecretKey(), {
-      apiVersion: '2025-12-15.clover',
+      apiVersion: '2026-02-25.clover',
       typescript: true,
     });
   }

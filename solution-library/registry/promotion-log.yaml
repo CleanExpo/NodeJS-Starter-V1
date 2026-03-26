@@ -1,0 +1,15 @@
+version: '1.0.0'
+last_updated: '2026-03-17'
+
+# Append-only promotion audit trail
+# Format:
+# - date: "YYYY-MM-DD"
+#   type: "skill|agent|workflow"
+#   name: "pattern-name"
+#   promoted_from: "project-name"
+#   promoted_by: "agent|human"
+#   approvers: [senior-project-manager, senior-orchestrator]
+#   eval_pass: true
+#   reuse_count: N
+
+promotions: []

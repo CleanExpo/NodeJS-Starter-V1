@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+
+export const maxDuration = 10;
 
 interface HealthResponse {
-  status: "healthy" | "degraded" | "unhealthy";
+  status: 'healthy' | 'degraded' | 'unhealthy';
   timestamp: string;
   version: string;
   uptime: number;
@@ -17,11 +19,11 @@ const startTime = Date.now();
 
 export async function GET(): Promise<NextResponse<HealthResponse>> {
   const response: HealthResponse = {
-    status: "healthy",
+    status: 'healthy',
     timestamp: new Date().toISOString(),
-    version: process.env.npm_package_version || "1.0.0",
+    version: process.env.npm_package_version || '1.0.0',
     uptime: Math.floor((Date.now() - startTime) / 1000),
-    environment: process.env.NODE_ENV || "development",
+    environment: process.env.NODE_ENV || 'development',
     verification_system: {
       enabled: true,
       independent_verification: true,

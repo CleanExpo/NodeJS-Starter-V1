@@ -1,12 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(ls -la \"D:\\Node JS Starter V1\\apps\\web\"\" 2>/dev/null || dir \"D:Node JS Starter V1appsweb\"\")",
       "Bash(dir:*)",
-      "Bash(find:*)",
       "Bash(powershell -ExecutionPolicy Bypass -File \".\\scripts\\health-check.ps1\" -Quick)",
       "Bash(powershell -Command \"Get-Content -Path ''.\\scripts\\health-check.ps1'' -Raw | Out-Null\")",
       "WebFetch(domain:vercel.com)",
@@ -16,17 +11,9 @@
       "Skill(react-best-practices)",
       "Skill(scientific-luxury)",
       "Skill(genesis-orchestrator)",
-      "Bash(pnpm add:*)",
-      "Bash(pnpm turbo run type-check:*)",
-      "Bash(uv run python:*)",
-      "Bash(uv run pytest:*)",
-      "Bash(pnpm turbo run lint:*)",
-      "Bash(grep:*)",
       "mcp__Desktop_Commander__read_file"
     ]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "linear"
-  ]
+  "enabledMcpjsonServers": ["linear"]
 }

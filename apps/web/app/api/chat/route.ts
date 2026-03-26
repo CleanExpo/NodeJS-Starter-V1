@@ -24,8 +24,38 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await meResponse.json();
-
     const body = await request.json();
+
+    // Streaming path — proxies SSE directly from FastAPI to the client
+    if (body.stream) {
+      const { messages, system } = body;
+      const upstream = await fetch(`${BACKEND_URL}/api/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ messages, system }),
+      });
+
+      if (!upstream.ok) {
+        const errorData = await upstream.json().catch(() => ({}));
+        return NextResponse.json(
+          { error: errorData.detail || 'Backend streaming error' },
+          { status: upstream.status }
+        );
+      }
+
+      return new Response(upstream.body, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      });
+    }
+
+    // Non-streaming path
     const { message, conversationId } = body;
 
     if (!message) {
@@ -38,12 +68,11 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
-        'X-User-Id': user.id,
       },
       body: JSON.stringify({
         message,
-        conversationId,
-        userId: user.id,
+        conversation_id: conversationId,
+        user_id: user.id,
       }),
     });
 

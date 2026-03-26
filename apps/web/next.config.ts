@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   transpilePackages: ['@shared'],
   experimental: {
@@ -35,11 +36,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://js.stripe.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https: blob:",
-              `connect-src 'self' ${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}`,
+              `connect-src 'self' ${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'} https://api.stripe.com https://r.stripe.com`,
               "frame-ancestors 'none'",
             ].join('; '),
           },

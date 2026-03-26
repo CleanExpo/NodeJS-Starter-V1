@@ -1,3 +1,12 @@
+---
+id: saga-pattern
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Saga Pattern
 
 > Distributed transaction orchestration with compensation, rollback, and step-based execution for NodeJS-Starter-V1.

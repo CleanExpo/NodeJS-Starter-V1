@@ -1,0 +1,24 @@
+name: memory-layering
+category: core
+description: 'Validates correct memory layer usage across agents'
+version: '1.0.0'
+
+cases:
+  - id: org-layer-immutable
+    description: 'Org layer (CONSTITUTION.md) is never modified by agents'
+    rule: file_never_written_by_agent
+    target: '.claude/memory/CONSTITUTION.md'
+
+  - id: incident-layer-append-only
+    description: 'Incident layer (architectural-decisions.md) is append-only'
+    rule: file_only_appended
+    target: '.claude/memory/architectural-decisions.md'
+
+  - id: project-local-sandboxed
+    description: 'Project-local memory does not bleed into org layer'
+    rule: no_cross_layer_writes
+
+  - id: locale-enforced
+    description: 'All memory output uses en-AU spelling'
+    rule: locale_is_en_AU
+    check: [colour, behaviour, optimisation, licence, organise]

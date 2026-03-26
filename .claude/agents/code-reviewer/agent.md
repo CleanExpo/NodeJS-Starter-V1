@@ -1,10 +1,14 @@
 ---
+id: code-reviewer
 name: code-reviewer
 type: agent
-priority: 7
-status: stub
 version: 0.1.0
+created: 20/03/2026
+modified: 20/03/2026
+status: stub
+priority: 7
 ---
+
 
 # Code Reviewer Agent
 

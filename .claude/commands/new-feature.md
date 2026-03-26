@@ -1,3 +1,12 @@
+---
+id: new-feature
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # New Feature Command
 
 Scaffold a complete feature with all required files.
@@ -5,6 +14,16 @@ Scaffold a complete feature with all required files.
 **Usage**: `/new-feature <name>`
 
 Create a complete feature called '$ARGUMENTS':
+
+## 0. Context Gate (MANDATORY — do not skip)
+
+Before scaffolding any files, read `.skills/custom/context-protocol/SKILL.md` and follow its instructions with `$ARGUMENTS` as the task input.
+
+The skill will run the Context Protocol. Depending on the task, it may first ask one clarifying question (for a reference URL or for target files). It will then produce a **Plan Mode block** showing what was gathered and the proposed approach, ending with: "Does this look right? Shall I proceed?"
+
+Do not take any action beyond reading files until the user has explicitly approved the Plan Mode block.
+
+---
 
 ## 1. API Routes
 
@@ -50,6 +69,7 @@ Create `src/server/services/$ARGUMENTS.service.ts`:
 - `delete(id)` - Delete item or throw NotFoundError
 
 The service should:
+
 - Call the repository for data access
 - Contain business logic
 - Throw NotFoundError when item not found
@@ -65,6 +85,7 @@ Create `src/server/repositories/$ARGUMENTS.repository.ts`:
 - `delete(id)` - Delete from database
 
 Repository rules:
+
 - Direct database calls only
 - NO business logic
 - Returns raw data or null
@@ -104,32 +125,40 @@ Create `src/types/api/$ARGUMENTS.ts`:
 Create these files:
 
 ### `src/components/features/$ARGUMENTS/index.tsx`
+
 ```typescript
 export { $ARGUMENTS } from './$ARGUMENTS';
 export type { $ARGUMENTSProps } from './$ARGUMENTS.types';
 ```
 
 ### `src/components/features/$ARGUMENTS/$ARGUMENTS.tsx`
+
 Main component with state handling
 
 ### `src/components/features/$ARGUMENTS/$ARGUMENTS.types.ts`
+
 Props and type definitions
 
 ### `src/components/features/$ARGUMENTS/$ARGUMENTS.hooks.ts`
+
 Custom hooks for data fetching
 
 ### `src/components/features/$ARGUMENTS/$ARGUMENTS.skeleton.tsx`
+
 Loading skeleton state
 
 ### `src/components/features/$ARGUMENTS/$ARGUMENTS.error.tsx`
+
 Error state component
 
 ### `src/components/features/$ARGUMENTS/$ARGUMENTS.empty.tsx`
+
 Empty state component
 
 ## 7. Update Barrel Files
 
 Add exports to:
+
 - `src/server/services/index.ts`
 - `src/server/repositories/index.ts`
 - `src/server/validators/index.ts`

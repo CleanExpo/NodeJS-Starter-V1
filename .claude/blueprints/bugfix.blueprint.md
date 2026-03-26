@@ -1,9 +1,13 @@
 ---
-blueprint: bugfix
+id: bugfix.blueprint
+type: blueprint
 version: 1.0.0
-triggers: [bug, fix, broken, error, failing, crash, regression, issue]
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 toolshed: debug
 ---
+
 
 # Bugfix Blueprint
 

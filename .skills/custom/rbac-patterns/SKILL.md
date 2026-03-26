@@ -1,3 +1,12 @@
+---
+id: rbac-patterns
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # RBAC Patterns
 
 > Role-based access control with permission hierarchies, middleware guards, and row-level security for NodeJS-Starter-V1.

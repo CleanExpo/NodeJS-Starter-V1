@@ -1,3 +1,12 @@
+---
+id: oauth-flow
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # OAuth Flow
 
 > OAuth 2.0 and OIDC integration patterns with PKCE, provider configuration, and session management for NodeJS-Starter-V1.

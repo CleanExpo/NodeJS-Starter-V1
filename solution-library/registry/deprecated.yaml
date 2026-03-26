@@ -1,0 +1,13 @@
+version: '1.0.0'
+last_updated: '2026-03-17'
+
+deprecated: []
+
+# Template for deprecated items:
+# - name: "old-skill-name"
+#   type: "skill|agent|workflow"
+#   deprecated_date: "YYYY-MM-DD"
+#   removal_date: "YYYY-MM-DD"
+#   reason: "Why deprecated"
+#   replacement: "new-skill-name"
+#   migration_guide: "How to migrate"

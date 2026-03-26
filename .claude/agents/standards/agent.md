@@ -1,16 +1,18 @@
 ---
+id: standards
 name: standards
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Australian Context & Design Guardian
 priority: 1
-version: 1.0.0
 skills_required:
   - australian/australian-context.skill.md
   - design/design-system.skill.md
-hooks_triggered:
-  - pre-response
-auto_load: true
 ---
+
 
 # Standards Agent
 

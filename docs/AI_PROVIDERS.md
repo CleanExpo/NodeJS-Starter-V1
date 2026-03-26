@@ -1,3 +1,12 @@
+---
+id: ai_providers
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # AI Provider Guide
 
 Complete guide to using Ollama (local) and Claude (cloud) AI providers.

@@ -1,3 +1,12 @@
+---
+id: changelog-generator
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Changelog Generator
 
 > Automated changelog generation from Conventional Commits with semantic versioning and GitHub Release integration for NodeJS-Starter-V1.

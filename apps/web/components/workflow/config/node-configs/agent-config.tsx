@@ -68,8 +68,11 @@ export function AgentNodeConfig({ config, onChange }: NodeConfigProps) {
           setAgentTypes(data.agents.map(toAgentOption));
         }
       })
-      .catch(() => {
-        // Keep fallback list
+      .catch((error) => {
+        console.warn(
+          'Failed to fetch agent types, using fallback:',
+          error instanceof Error ? error.message : String(error)
+        );
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

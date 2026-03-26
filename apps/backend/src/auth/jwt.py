@@ -72,7 +72,16 @@ def decode_access_token(token: str) -> dict | None:
         Decoded payload dict if valid, None otherwise
     """
     try:
-        payload = jwt.decode(token, _get_secret_key(), algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token,
+            _get_secret_key(),
+            algorithms=[ALGORITHM],
+            options={
+                "verify_signature": True,
+                "verify_exp": True,
+                "require": ["exp", "sub"],  # Reject tokens missing these claims
+            },
+        )
         return payload
     except jwt.ExpiredSignatureError:
         return None

@@ -1,0 +1,272 @@
+version: '1.0.0'
+last_updated: '2026-03-17'
+
+governance:
+  - name: senior-project-manager
+    tier: governance
+    description: 'Scope decomposition, priority management, acceptance criteria, release gates'
+    skills:
+      [
+        task-breakdown,
+        acceptance-criteria,
+        risk-mapping,
+        pr-summarization,
+        release-gating,
+        backlog-hygiene,
+      ]
+    memory: user
+    owner: system
+    status: active
+
+  - name: senior-orchestrator
+    tier: governance
+    description: 'Agent routing, skill selection, subagent spawn policy, library promotion decisions'
+    skills:
+      [
+        repo-discovery,
+        agent-routing,
+        library-promotion,
+        deprecation-review,
+        context-budgeting,
+        eval-gating,
+      ]
+    memory: user
+    owner: system
+    status: active
+
+workers:
+  - name: orchestrator
+    tier: worker
+    description: 'Primary orchestration — routes tasks to specialist agents'
+    skills: [repo-discovery, agent-routing, context-budgeting]
+    owner: system
+    status: active
+
+  - name: product-strategist
+    tier: worker
+    description: 'PRD creation, scope definition, non-goals, priorities'
+    skills: [prd-writer, acceptance-criteria, task-breakdown, risk-mapping]
+    owner: system
+    status: active
+
+  - name: technical-architect
+    tier: worker
+    description: 'Architecture delta, rollout strategy, system design'
+    skills: [system-design, api-contract, infrastructure-as-code]
+    owner: system
+    status: active
+
+  - name: senior-engineer
+    tier: worker
+    description: "Implementation planning — plans, doesn't code"
+    skills: [tdd, systematic-debugging, verification-before-completion]
+    owner: system
+    status: active
+
+  - name: frontend-specialist
+    tier: worker
+    description: 'React/Next.js, Tailwind, Framer Motion, Scientific Luxury design'
+    skills:
+      [
+        scientific-luxury,
+        dashboard-patterns,
+        i18n-patterns,
+        state-machine,
+        playwright-browser,
+        error-boundary,
+      ]
+    owner: system
+    status: active
+
+  - name: backend-specialist
+    tier: worker
+    description: 'FastAPI, SQLAlchemy 2.0, LangGraph, JWT auth'
+    skills:
+      [api-contract, api-client, webhook-handler, rate-limiter, structured-logging, health-check]
+    owner: system
+    status: active
+
+  - name: database-specialist
+    tier: worker
+    description: 'PostgreSQL, Alembic migrations, schema design'
+    skills: [database-patterns, data-validation, audit-trail]
+    owner: system
+    status: active
+
+  - name: test-engineer
+    tier: worker
+    description: 'TDD enforcement, pytest, vitest, Playwright E2E'
+    skills:
+      [
+        tdd,
+        systematic-debugging,
+        verification-before-completion,
+        data-validation,
+        error-taxonomy,
+        resilience-patterns,
+      ]
+    owner: system
+    status: active
+
+  - name: security-auditor
+    tier: worker
+    description: 'OWASP, input sanitisation, auth patterns, RBAC'
+    skills:
+      [
+        input-sanitisation,
+        csrf-protection,
+        rbac-patterns,
+        oauth-flow,
+        audit-trail,
+        secret-management,
+      ]
+    owner: system
+    status: active
+
+  - name: design-reviewer
+    tier: worker
+    description: 'UX review, Scientific Luxury design consistency audit'
+    skills: [scientific-luxury, xaem-theme-ui, dashboard-patterns]
+    owner: system
+    status: active
+
+  - name: qa-validator
+    tier: worker
+    description: 'Rubric scoring (0-100), acceptance validation'
+    skills: [tdd, verification-before-completion, systematic-debugging]
+    owner: system
+    status: active
+
+  - name: delivery-manager
+    tier: worker
+    description: 'Sprint slices, tickets, hand-offs, PR bodies'
+    skills: [task-breakdown, pr-summarization, release-gating]
+    owner: system
+    status: active
+
+  - name: performance-optimizer
+    tier: worker
+    description: 'Bundle analysis, Core Web Vitals, query optimisation'
+    skills: [cache-strategy, ci-cd-patterns]
+    owner: system
+    status: active
+
+  - name: refactor-specialist
+    tier: worker
+    description: 'Code quality, dead code removal, complexity reduction'
+    skills: [systematic-debugging, tdd]
+    owner: system
+    status: active
+
+  - name: platform-devops
+    tier: worker
+    description: 'CI/CD, Docker, infrastructure, secret management'
+    skills:
+      [
+        ci-cd-patterns,
+        docker-patterns,
+        infrastructure-as-code,
+        secret-management,
+        graceful-shutdown,
+        cache-strategy,
+      ]
+    owner: system
+    status: active
+
+  - name: deploy-guardian
+    tier: worker
+    description: 'Deployment safety, rollback plans, production gates'
+    skills: [ci-cd-patterns, graceful-shutdown, health-check]
+    owner: system
+    status: active
+
+  - name: code-reviewer
+    tier: worker
+    description: 'Code review, standards enforcement, quality gates'
+    skills: [tdd, systematic-debugging, verification-before-completion]
+    owner: system
+    status: active
+
+  - name: bug-hunter
+    tier: worker
+    description: 'Root cause analysis, systematic debugging protocol'
+    skills: [systematic-debugging, error-taxonomy, resilience-patterns]
+    owner: system
+    status: active
+
+  - name: env-wizard
+    tier: worker
+    description: 'Environment variable management, .env validation'
+    skills: [secret-management, health-check]
+    owner: system
+    status: active
+
+  - name: docs-writer
+    tier: worker
+    description: 'Documentation generation, README maintenance'
+    skills: [structured-logging]
+    owner: system
+    status: active
+
+  - name: skill-manager
+    tier: worker
+    description: 'Skill gap analysis, skill generation, skill registry management'
+    skills: [task-breakdown, verification-before-completion]
+    owner: system
+    status: active
+
+  - name: playwright-browser
+    tier: worker
+    description: 'Browser automation, E2E testing, UI story execution'
+    skills: [playwright-browser, systematic-debugging]
+    owner: system
+    status: active
+
+  - name: browser-qa
+    tier: worker
+    description: 'Visual QA, accessibility testing, cross-browser validation'
+    skills: [playwright-browser, verification-before-completion]
+    owner: system
+    status: active
+
+  - name: standards
+    tier: worker
+    description: 'Coding standards enforcement, style guide compliance'
+    skills: [tdd, systematic-debugging]
+    owner: system
+    status: active
+
+  - name: truth-finder
+    tier: worker
+    description: 'Hallucination prevention, fact verification, source validation'
+    skills: [systematic-debugging, verification-before-completion]
+    owner: system
+    status: active
+
+  - name: verification
+    tier: worker
+    description: 'End-to-end verification of completed work'
+    skills: [verification-before-completion, systematic-debugging, tdd]
+    owner: system
+    status: active
+
+  - name: seo-intelligence
+    tier: worker
+    description: 'SEO analysis, schema markup, Core Web Vitals'
+    skills: [structured-logging]
+    owner: system
+    status: active
+
+  - name: rank-tracker
+    tier: worker
+    description: 'Search ranking monitoring, SERP analysis'
+    skills: [structured-logging]
+    owner: system
+    status: active
+
+  - name: ralph-wiggum
+    tier: worker
+    description: 'User-facing communication, plain English summaries'
+    skills: [structured-logging]
+    owner: system
+    status: active

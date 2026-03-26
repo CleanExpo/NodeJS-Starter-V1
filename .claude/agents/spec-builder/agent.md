@@ -1,13 +1,18 @@
 ---
+id: spec-builder
 name: spec-builder
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Requirements Gathering via 6-Phase Interview
 priority: 3
-version: 1.0.0
 skills_required:
   - design/foundation-first.skill.md
   - context/project-context.skill.md
 ---
+
 
 # Spec Builder Agent
 

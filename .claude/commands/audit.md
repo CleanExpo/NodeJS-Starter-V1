@@ -1,8 +1,46 @@
+---
+id: audit
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Audit Command
 
 Perform a full architecture audit of the codebase.
 
-## Audit Categories
+## Phase 0 — Repository Classification (MANDATORY FIRST STEP)
+
+**HARD RULE**: Classification MUST run before any scoring. See `.claude/rules/audit-mode-classifier.md`.
+
+Run the `audit-mode-classifier` skill to detect repository type:
+
+```
+CLASSIFICATION → MODE SELECTION → SCORING → REPORT
+```
+
+Signal detection:
+
+- Framework signals (max 14 pts): CLAUDE.md with agents, .skills/ custom skills, .claude/agents/, adopt-project.\* script, "starter"/"template" in README, CONSTITUTION.md/memory.md, hooks system, no production URL
+- Application signals (max 9 pts): live production URL, business-specific models, customer-facing docs, production deployment guide, apps/web + apps/backend as primary output
+
+Scoring:
+
+- Framework ≥ 8 AND Application ≤ 3 → FRAMEWORK MODE
+- Application ≥ 8 AND Framework ≤ 3 → APPLICATION MODE
+- Both ≥ 4 → HYBRID MODE
+
+Output classification block before proceeding to Phase 1.
+
+---
+
+## Phase 1–8 — Audit (Mode-Aware)
+
+After classification, apply mode-appropriate criteria. See `docs/AUDIT_MODES.md`.
+
+## Architecture Audit Categories
 
 ### 1. LAYER VIOLATIONS (Critical)
 
@@ -13,6 +51,7 @@ Check for improper imports between layers:
 - **Repositories importing from services/**: Repositories should be independent of services
 
 Search patterns:
+
 ```
 src/components/**/*.{ts,tsx} -> import from '@/server/'
 src/app/api/**/*.ts -> import from '@/server/repositories'
@@ -40,6 +79,7 @@ src/server/repositories/**/*.ts -> import from '@/server/services'
 ### 5. COMPONENT ISSUES (Medium)
 
 For each component in `src/components/features/`:
+
 - **Missing loading state**: No skeleton or loading indicator
 - **Missing error state**: No error boundary or error display
 - **Missing empty state**: No empty state handling
@@ -77,6 +117,7 @@ Summary:
 ## Remediation
 
 For each issue found, provide:
+
 1. File path and line number
 2. Description of the problem
 3. Suggested fix

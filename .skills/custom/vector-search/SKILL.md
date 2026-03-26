@@ -1,16 +1,18 @@
 ---
+id: vector-search
 name: vector-search
-description: >-
-  pgvector embedding queries, similarity search, hybrid search, and
-  multi-provider embedding generation for Supabase/PostgreSQL. Codifies
-  the project's existing Memory Store and RAG Pipeline vector
-  infrastructure.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Vector Search - Embedding Queries & Similarity Search
 

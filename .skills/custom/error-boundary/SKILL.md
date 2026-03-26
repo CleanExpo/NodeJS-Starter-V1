@@ -1,3 +1,12 @@
+---
+id: error-boundary
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Error Boundary
 
 > React error boundary patterns with graceful degradation, fallback UI, and error reporting for NodeJS-Starter-V1.

@@ -24,15 +24,11 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
     def _get_client_id(self, request: Request) -> str:
         """Get a unique identifier for the client."""
-        # Use user ID if available, otherwise use IP
-        user_id = request.headers.get("X-User-Id")
-        if user_id:
-            return f"user:{user_id}"
-
-        # Get client IP from X-Forwarded-For header or connection
+        # Get client IP from X-Forwarded-For header or connection.
+        # Use the rightmost IP — it is added by the trusted proxy and cannot be spoofed by clients.
         forwarded_for = request.headers.get("X-Forwarded-For")
         if forwarded_for:
-            return f"ip:{forwarded_for.split(',')[0].strip()}"
+            return f"ip:{forwarded_for.split(',')[-1].strip()}"
 
         client_host = request.client.host if request.client else "unknown"
         return f"ip:{client_host}"

@@ -1,0 +1,74 @@
+name: Autoresearch — Quality Improvement Loop
+
+on:
+  schedule:
+    - cron: '17 */2 * * *'   # Every 2 hours at :17 (avoids :00 fleet collision)
+  workflow_dispatch:           # Manual trigger from Actions tab
+
+jobs:
+  autoresearch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write          # Required to commit results back to main
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Node.js + pnpm ──────────────────────────────────────────────────
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        # Reads version from packageManager field in package.json (pnpm@9.15.0)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ── Python + uv ─────────────────────────────────────────────────────
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: 'latest'
+
+      - name: Install Python 3.12
+        run: uv python install 3.12
+
+      - name: Cache uv dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/uv
+            apps/backend/.venv
+          key: ${{ runner.os }}-uv-autoresearch-${{ hashFiles('apps/backend/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-autoresearch-
+            ${{ runner.os }}-uv-
+
+      - name: Install backend dependencies (including dev extras for ruff + mypy)
+        working-directory: apps/backend
+        run: uv sync --extra dev
+
+      # ── Run the loop ─────────────────────────────────────────────────────
+      - name: Run autoresearch quality loop
+        working-directory: apps/backend
+        run: uv run python ../../scripts/autoresearch/orchestrator.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # ── Commit results ───────────────────────────────────────────────────
+      - name: Commit results back to main
+        run: |
+          git config user.name "autoresearch[bot]"
+          git config user.email "autoresearch@noreply"
+          git add \
+            scripts/autoresearch/results.tsv \
+            scripts/autoresearch/improvements-queue.md \
+            scripts/autoresearch/resources.md
+          git diff --staged --quiet || git commit -m "chore(autoresearch): quality loop run $(date -u +%Y-%m-%dT%H:%M)"
+          git push

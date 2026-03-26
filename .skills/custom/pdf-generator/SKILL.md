@@ -1,3 +1,12 @@
+---
+id: pdf-generator
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # PDF Generator
 
 > Server-side PDF generation from templates with React PDF and reportlab for NodeJS-Starter-V1.

@@ -1,7 +1,6 @@
 """Authentication middleware for JWT validation."""
 
 import hmac
-import re
 from collections.abc import Callable
 
 from fastapi import Request, Response
@@ -13,11 +12,6 @@ from src.utils import get_logger
 
 settings = get_settings()
 logger = get_logger(__name__)
-
-_UUID_RE = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-    re.IGNORECASE,
-)
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -77,20 +71,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 request.state.user_email = payload["sub"]
                 request.state.auth_type = "jwt_cookie"
                 return await call_next(request)
-
-        # Check for user ID header (set by frontend after auth)
-        user_id = request.headers.get("X-User-Id")
-        if user_id:
-            # Validate UUID format to prevent header spoofing with arbitrary values
-            if not _UUID_RE.match(user_id):
-                return Response(
-                    content='{"error": "Invalid X-User-Id format"}',
-                    status_code=400,
-                    media_type="application/json",
-                )
-            request.state.user_id = user_id
-            request.state.auth_type = "user"
-            return await call_next(request)
 
         # Reject unauthenticated requests in all environments
         return Response(

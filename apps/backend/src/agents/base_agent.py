@@ -15,6 +15,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from src.models.selector import ModelSelector
 from src.skills import SkillExecutor
 from src.utils import get_logger
 
@@ -107,6 +108,9 @@ class BaseAgent(ABC):
         self._current_task_id: str | None = None
         self._current_outputs: list[dict[str, Any]] = []
         self._completion_criteria: list[dict[str, Any]] = []
+
+        # LLM provider
+        self._model_selector = ModelSelector()
 
         # Skill integration
         self._skill_executor = SkillExecutor()
@@ -262,6 +266,26 @@ class BaseAgent(ABC):
         """
         task_lower = task_description.lower()
         return any(cap.lower() in task_lower for cap in self.capabilities)
+
+    async def _call_llm(
+        self,
+        messages: list[dict[str, Any]],
+        system: str | None = None,
+        tier: str = "sonnet",
+    ) -> dict[str, Any]:
+        """Execute an LLM call through the model selector.
+
+        Args:
+            messages: List of message dicts with 'role' and 'content'
+            system: Optional system prompt
+            tier: Model tier — 'opus', 'sonnet', or 'haiku'
+
+        Returns:
+            Dict with 'content' and 'stop_reason' keys
+        """
+        client = self._model_selector.get_client(tier=tier)  # type: ignore[arg-type]
+        response = await client.chat(messages=messages, system=system or "")
+        return {"content": response, "stop_reason": "end_turn"}
 
     # =========================================================================
     # SKILL INTEGRATION - Load and use skills during task execution
@@ -675,19 +699,27 @@ class FrontendAgent(BaseAgent):
         task_description: str,
         context: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Execute a frontend task."""
+        """Execute a frontend task via LLM."""
         task_id = f"frontend_{uuid.uuid4().hex[:8]}"
         self.start_task(task_id)
 
         self.logger.info("Executing frontend task", task=task_description)
 
-        # Report what we're producing (will be verified independently)
-        # In real implementation, this would track actual file outputs
-        result = {"status": "pending_verification", "task": task_description}
+        system = (
+            "You are a senior frontend engineer specialising in Next.js 15, React 19, "
+            "and Tailwind CSS v4. Provide clear, production-quality guidance and code."
+        )
+        response = await self._call_llm(
+            messages=[{"role": "user", "content": task_description}],
+            system=system,
+            tier="sonnet",
+        )
+        content = response.get("content", "")
 
-        # Return result - verification happens separately via IndependentVerifier
         return {
-            **result,
+            "status": "completed",
+            "result": content,
+            "agent": "frontend",
             "task_output": self.get_task_output().model_dump(),
         }
 
@@ -706,16 +738,27 @@ class BackendAgent(BaseAgent):
         task_description: str,
         context: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Execute a backend task."""
+        """Execute a backend task via LLM."""
         task_id = f"backend_{uuid.uuid4().hex[:8]}"
         self.start_task(task_id)
 
         self.logger.info("Executing backend task", task=task_description)
 
-        result = {"status": "pending_verification", "task": task_description}
+        system = (
+            "You are a senior backend engineer specialising in FastAPI, LangGraph, "
+            "SQLAlchemy 2.0, and Python 3.12. Provide clear, production-quality guidance and code."
+        )
+        response = await self._call_llm(
+            messages=[{"role": "user", "content": task_description}],
+            system=system,
+            tier="sonnet",
+        )
+        content = response.get("content", "")
 
         return {
-            **result,
+            "status": "completed",
+            "result": content,
+            "agent": "backend",
             "task_output": self.get_task_output().model_dump(),
         }
 
@@ -734,16 +777,27 @@ class DatabaseAgent(BaseAgent):
         task_description: str,
         context: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Execute a database task."""
+        """Execute a database task via LLM."""
         task_id = f"database_{uuid.uuid4().hex[:8]}"
         self.start_task(task_id)
 
         self.logger.info("Executing database task", task=task_description)
 
-        result = {"status": "pending_verification", "task": task_description}
+        system = (
+            "You are a senior database engineer specialising in PostgreSQL, SQLAlchemy 2.0, "
+            "and Alembic migrations. Provide clear, production-quality SQL and migration guidance."
+        )
+        response = await self._call_llm(
+            messages=[{"role": "user", "content": task_description}],
+            system=system,
+            tier="sonnet",
+        )
+        content = response.get("content", "")
 
         return {
-            **result,
+            "status": "completed",
+            "result": content,
+            "agent": "database",
             "task_output": self.get_task_output().model_dump(),
         }
 
@@ -762,16 +816,27 @@ class DevOpsAgent(BaseAgent):
         task_description: str,
         context: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Execute a devops task."""
+        """Execute a devops task via LLM."""
         task_id = f"devops_{uuid.uuid4().hex[:8]}"
         self.start_task(task_id)
 
         self.logger.info("Executing devops task", task=task_description)
 
-        result = {"status": "pending_verification", "task": task_description}
+        system = (
+            "You are a senior DevOps engineer specialising in Docker, GitHub Actions CI/CD, "
+            "and cloud deployment. Provide clear, production-quality infrastructure guidance."
+        )
+        response = await self._call_llm(
+            messages=[{"role": "user", "content": task_description}],
+            system=system,
+            tier="sonnet",
+        )
+        content = response.get("content", "")
 
         return {
-            **result,
+            "status": "completed",
+            "result": content,
+            "agent": "devops",
             "task_output": self.get_task_output().model_dump(),
         }
 
@@ -790,15 +855,26 @@ class GeneralAgent(BaseAgent):
         task_description: str,
         context: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Execute a general task."""
+        """Execute a general task via LLM."""
         task_id = f"general_{uuid.uuid4().hex[:8]}"
         self.start_task(task_id)
 
         self.logger.info("Executing general task", task=task_description)
 
-        result = {"status": "pending_verification", "task": task_description}
+        system = (
+            "You are a general-purpose AI agent. Complete the task thoroughly. "
+            "Return a clear, structured response."
+        )
+        response = await self._call_llm(
+            messages=[{"role": "user", "content": task_description}],
+            system=system,
+            tier="sonnet",
+        )
+        content = response.get("content", "")
 
         return {
-            **result,
+            "status": "completed",
+            "result": content,
+            "agent": "general",
             "task_output": self.get_task_output().model_dump(),
         }

@@ -1,19 +1,24 @@
 ---
+id: backend-specialist
 name: backend-specialist
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Backend Engineer
 priority: 2
-version: 1.0.0
 toolshed: backend
+token_budget: 60000
 context_scope:
   - apps/backend/src/
   - apps/backend/tests/
-token_budget: 60000
 skills_required:
   - api-contract
   - error-taxonomy
   - structured-logging
 ---
+
 
 # Backend Specialist Agent
 

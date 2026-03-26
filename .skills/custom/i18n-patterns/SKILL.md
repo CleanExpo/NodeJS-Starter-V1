@@ -1,3 +1,12 @@
+---
+id: i18n-patterns
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # i18n Patterns
 
 > Internationalisation patterns with en-AU as the default locale for NodeJS-Starter-V1.

@@ -1,17 +1,22 @@
 ---
+id: test-engineer
 name: test-engineer
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Test Engineer
 priority: 3
-version: 1.0.0
 toolshed: test
+token_budget: 50000
 context_scope:
   - test-files
   - source-file-under-test
-token_budget: 50000
 skills_required:
   - playwright-browser
 ---
+
 
 # Test Engineer Agent
 

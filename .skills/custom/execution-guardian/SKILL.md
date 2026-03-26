@@ -1,15 +1,18 @@
 ---
+id: execution-guardian
 name: execution-guardian
-description: >-
-  Pre-execution governance with dynamic validation gates, risk/confidence
-  scoring, and structured error format. Activates before destructive,
-  multi-layer, or security-impacting operations to assess safety.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Execution Guardian - Pre-Execution Governance
 

@@ -1,116 +1,352 @@
-# CLAUDE.md — Node JS Starter V1
+# Claude Integration Guide
 
-> Self-contained AI starter template: Next.js 15 + FastAPI/LangGraph + PostgreSQL. Everything runs locally in Docker.
+Claudeintegration enables AI-assisted development, decision-making, and system intelligence for CleanExpo/NodeJS-Starter-V1.
 
-## Quick Commands
+## Quick Start
 
-```bash
-# Setup
-pnpm run setup              # Unix/macOS
-pnpm run setup:windows      # Windows
+1. **Getting Context:** Run `/hey-claude` to start a session with full system context
+2. **Making Decisions:** Use `/ceo-begin` to run a CEO Board deliberation
+3. **System Audit:** Run `/swarm-audit` to analyze codebase health
+4. **Documentation:** Use `/generate-route-reference` to keep docs in sync
 
-# Development
-pnpm dev                    # Start all services
-pnpm run verify             # Health check
-just --list                 # View all task runner commands
+---
 
-# Docker
-pnpm run docker:up          # Start PostgreSQL + Redis
-pnpm run docker:down        # Stop services
-pnpm run docker:reset       # Reset database
+## Commands Available
 
-# Quality
-pnpm turbo run test         # All tests
-pnpm turbo run lint         # Linting
-pnpm turbo run type-check   # Type checking
+### 1. `/hey-claude`
 
-# Beads (AI Agent Memory)
-.bin/bd.exe ready           # Show unblocked tasks
-.bin/bd.exe create "Title"  # Create new task
-.bin/bd.exe sync            # Sync to git
+**What:** Start a new Claude session with full system context
+
+**Use when:**
+- Onboarding new team members
+- Starting major feature development
+- Debugging complex issues
+- Need architecture guidance
+- Want code examples or best practices
+
+**Example:**
+```
+/hey-claude "How do I add a new API endpoint?"
+/hey-claude "Explain the authentication flow"
 ```
 
-## Architecture Routing
+**See:** [.claude/commands/hey-claude.md](./.claude/commands/hey-claude.md)
 
-| What                                         | Where                           |
-| -------------------------------------------- | ------------------------------- |
-| Frontend (Next.js 15, React 19, Tailwind v4) | `apps/web/`                     |
-| Backend (FastAPI, LangGraph, SQLAlchemy 2.0) | `apps/backend/`                 |
-| API client                                   | `apps/web/lib/api/client.ts`    |
-| JWT middleware                               | `apps/web/middleware.ts`        |
-| AI agents                                    | `apps/backend/src/agents/`      |
-| FastAPI routes                               | `apps/backend/src/api/`         |
-| JWT auth                                     | `apps/backend/src/auth/jwt.py`  |
-| SQLAlchemy models                            | `apps/backend/src/db/`          |
-| Database schema                              | `scripts/init-db.sql`           |
-| Design tokens                                | `apps/web/lib/design-tokens.ts` |
+---
 
-## Knowledge Retrieval
+### 2. `/ceo-begin`
 
-Query before loading docs into context. Priority: NotebookLM → Context7 MCP → Skills → Codebase → Web.
+**What:** Begin a CEO Board deliberation on a strategic decision
 
-| Source       | Use For                                     | Access                                    |
-| ------------ | ------------------------------------------- | ----------------------------------------- |
-| NotebookLM   | Architecture, debugging, security           | `nlm notebook query <id>`                 |
-| Context7 MCP | Library docs (Next.js, FastAPI, Playwright) | `resolve-library-id` → `get-library-docs` |
-| Skills       | Pattern libraries (65 installed)            | `.skills/custom/*/SKILL.md`               |
+**Use when:**
+- Making significant strategic decisions
+- Need multiple perspectives on a decision
+- Want documented decision history
+- Need to update agent expertise
+- Want visual decision artifacts
 
-Config: `.claude/notebooklm/notebooks.json` | Registry: `.skills/AGENTS.md`
+**How:**
+1. Prepare a brief at `.pi/ceo-agents/briefs/[TOPIC]-[DATE].md`
+2. Run `/ceo-begin [TOPIC]-[DATE]`
+3. Review decision memo at `.pi/ceo-agents/memos/[TOPIC]-[DATE].md`
 
-## Design System — Scientific Luxury
+**The 9 Board Members:**
+- CEO — Holistic business lens
+- Revenue — Growth and unit economics
+- Product Strategist — User value and roadmap
+- Technical Architect — System design and feasibility
+- Contrarian — Risks and blindspots
+- Compounder — Long-term leverage
+- Custom Oracle — Domain-specific expertise
+- Market Strategist — Competitive positioning
+- Moonshot — Radical innovation
 
-**Background**: OLED Black `#050505` | **Corners**: `rounded-sm` only | **Animations**: Framer Motion only
+**Example:**
+```
+/ceo-begin "acquisition-offer-2026-03-24"
+```
 
-**Spectral colours**: Cyan `#00F5FF` (active), Emerald `#00FF88` (success), Amber `#FFB800` (warning), Red `#FF4444` (error), Magenta `#FF00FF` (escalation)
+**See:**
+- [.claude/commands/ceo-begin.md](./.claude/commands/ceo-begin.md)
+- [.pi/README.md](./.pi/README.md)
+- [.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md](./.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md)
 
-Full system: `docs/DESIGN_SYSTEM.md` | Skill: `.skills/custom/scientific-luxury/SKILL.md`
+---
 
-## Testing Discipline
+### 3. `/swarm-audit`
 
-**Iron Law**: No production code without a failing test first. See `.skills/custom/tdd/SKILL.md`.
+**What:** Run automated audit of codebase architecture, patterns, and quality
 
-| Layer    | Runner | Location              | Command                               |
-| -------- | ------ | --------------------- | ------------------------------------- |
-| Frontend | vitest | `apps/web/__tests__/` | `pnpm test --filter=web`              |
-| Backend  | pytest | `apps/backend/tests/` | `cd apps/backend && uv run pytest -v` |
-| All      | turbo  | Both                  | `pnpm turbo run test`                 |
+**Use when:**
+- Before major refactoring
+- Before releases to catch issues
+- Quarterly architecture review
+- After onboarding major features
+- Need to identify inconsistencies
 
-**Three mandatory skills**: `tdd` | `systematic-debugging` | `verification-before-completion`
+**Audits:**
+- Architecture compliance
+- Pattern consistency
+- Code quality metrics
+- Documentation coverage
+- Security issues
 
-**Banned phrases** (run the command instead): "should work", "probably passes", "seems correct", "likely fixed"
+**Example:**
+```
+/swarm-audit
+/swarm-audit routes
+/swarm-audit middleware
+```
 
-## Key Principles
+**See:** [.claude/commands/swarm-audit.md](./.claude/commands/swarm-audit.md)
 
-1. **Local-First** — Everything runs locally. No cloud required for development.
-2. **Zero Barriers** — No API keys, accounts, or configuration needed to start.
-3. **Production Ready** — Real authentication, testing, CI/CD included.
-4. **Retrieval-First** — Query Context7/NotebookLM/Skills before loading docs into context.
-5. **Test-First** — TDD enforced. No production code without a failing test.
+---
 
-## Agents & Multi-Agent Harness
+### 4. `/generate-route-reference`
 
-- **29 subagents**: `.claude/agents/*/agent.md` | **65 skills**: `.skills/AGENTS.md` | **10 commands**: `.claude/commands/*.md`
-- **8-phase idea-to-production harness**: `.claude/AGENT_HARNESS.md`
-- **Orchestrator**: `.claude/agents/orchestrator/agent.md`
+**What:** Auto-generate API route reference documentation
 
-## Context Drift Defence
+**Use when:**
+- After adding new routes
+- Before deployments
+- In CI/CD pipeline
+- Need to sync docs with code
 
-If rules feel ignored after compaction: `cat .claude/memory/CONSTITUTION.md`
-Full docs: `.claude/rules/context-drift.md` | Saved state: `.claude/memory/current-state.md`
+**Generates:**
+- Complete route listing
+- Request/response examples
+- Parameter documentation
+- Status code reference
+- Error code guide
 
-## Default Credentials (Dev Only)
+**Output:** Updates [ROUTE_REFERENCE.md](./ROUTE_REFERENCE.md)
 
-`admin@local.dev` / `admin123` | Auth routes: `apps/backend/src/api/routes/auth.py`
-DB migrations: `apps/backend/alembic/versions/` | Env vars: `.env.example`
+**Example:**
+```
+/generate-route-reference
+```
 
-## Documentation
+**See:** [.claude/commands/generate-route-reference.md](./.claude/commands/generate-route-reference.md)
 
-| Document                           | Purpose          |
-| ---------------------------------- | ---------------- |
-| `PROGRESS.md`                      | Project status   |
-| `docs/LOCAL_SETUP.md`              | Setup guide      |
-| `docs/AI_PROVIDERS.md`             | Ollama vs Claude |
-| `docs/DESIGN_SYSTEM.md`            | Design system    |
-| `docs/MULTI_AGENT_ARCHITECTURE.md` | Agent workflow   |
-| `docs/BEADS.md`                    | AI agent memory  |
-| `docs/SPEC_GENERATION.md`          | Spec workflows   |
+---
+
+## The PI Agent Workspace
+
+The `.pi/` directory is a persistent workspace for agent deliberation systems.
+
+### Key Directories
+
+**`.pi/ceo-agents/`** — CEO Board deliberation system
+- `briefs/` — Board decision briefs (copy `_TEMPLATE.md`)
+- `memos/` — Decision memos and conclusions
+- `conversations/` — Full deliberation transcripts
+- `artifacts/` — SVG diagrams and visual arguments
+- `expertise/` — 9 agent expertise files with decision history
+
+**`.pi/shared/`** — Shared business context
+- `context/` — Business context template agents load
+
+### Workflow
+
+1. **Prepare Brief** — Copy `_TEMPLATE.md`, fill it out
+2. **Submit to Board** — Run `/ceo-begin`
+3. **Review Outputs** — Check memo, transcript, artifacts
+4. **Update Expertise** — Agents record their learning
+5. **Track Outcomes** — Compare predictions to actual results
+
+**See:**
+- [.pi/README.md](./.pi/README.md) — Full workspace documentation
+- [.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md](./.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md) — Golden example
+
+---
+
+## Living Documentation System
+
+Documentation that stays in sync with your code.
+
+### Key Files
+
+**[SYSTEM_DOCS.md](./SYSTEM_DOCS.md)**
+- Architecture overview
+- Running the application
+- Adding new routes
+- Middleware reference
+- Configuration guide
+- API standards
+- Logging and observability
+
+**[ROUTE_REFERENCE.md](./ROUTE_REFERENCE.md)**
+- Complete API endpoint listing
+- Request/response examples
+- Status codes and errors
+- Parameter documentation
+- Auto-generated by `/generate-route-reference`
+
+**[This File - CLAUDE.md](./CLAUDE.md)**
+- Claude integration guide
+- Command reference
+- Workflow documentation
+
+### Keeping Docs Fresh
+
+1. Update code with clear JSDoc comments
+2. Run `/generate-route-reference` after route changes
+3. Update [SYSTEM_DOCS.md](./SYSTEM_DOCS.md) for architecture changes
+4. Use `/hey-claude` to ask for documentation help
+
+---
+
+## Typical Workflows
+
+### Onboarding a New Team Member
+
+```bash
+# 1. Get full system context
+/hey-claude "Give me an overview of CleanExpo"
+
+# 2. Ask specific questions
+/hey-claude "How is authentication implemented?"
+/hey-claude "Where do I add a new endpoint?"
+/hey-claude "What's the project structure?"
+
+# 3. Review documentation
+- Read SYSTEM_DOCS.md
+- Review ROUTE_REFERENCE.md
+- Check .pi/README.md for decision framework
+```
+
+### Adding a New Feature
+
+```bash
+# 1. Get architectural guidance
+/hey-claude "I want to add user notifications. How should I structure this?"
+
+# 2. Implement with confidence
+# (Claude provides patterns and examples)
+
+# 3. Update documentation
+/generate-route-reference
+
+# 4. Get code review
+/hey-claude "Review my new notification service"
+```
+
+### Making a Strategic Decision
+
+```bash
+# 1. Prepare your brief
+cp .pi/ceo-agents/briefs/_TEMPLATE.md \
+   .pi/ceo-agents/briefs/[your-topic]-[date].md
+
+# 2. Review the golden example
+# (Read _EXAMPLE-acquisition-offer.md for format)
+
+# 3. Start deliberation
+/ceo-begin [your-topic]-[date]
+
+# 4. Review results
+# Check .pi/ceo-agents/memos/[your-topic]-[date].md
+```
+
+### Auditing Code Quality
+
+```bash
+# 1. Run full audit
+/swarm-audit
+
+# 2. Review findings
+# Get detailed report of architecture, patterns, quality, docs, security
+
+# 3. Ask for help fixing issues
+/hey-claude "The audit found 3 routes missing error handling. Help me fix them."
+
+# 4. Track improvements
+# Re-run quarterly or before releases
+```
+
+---
+
+## Best Practices
+
+### For Developers
+
+1. **Use `/hey-claude` Early** — Get architectural guidance before coding
+2. **Document as You Go** — Keep JSDoc comments current
+3. **Run `/swarm-audit` Regularly** — Catch issues before they compound
+4. **Review Past Decisions** — Learn from prior board deliberations
+
+### For Leads & Decision-Makers
+
+1. **Structure Your Briefs** — Use the template, be specific
+2. **Trust the Process** — Diverse agent perspectives catch blindspots
+3. **Track Predictions** — Come back and see how board decisions aged
+4. **Update Agent Expertise** — Keep files current with learning
+
+### For Team Health
+
+1. **Transparent Decisions** — Share decision memos with team
+2. **Learn from Outcomes** — Revisit decisions quarterly
+3. **Improve Expertise** — Update agent files as patterns emerge
+4. **Use `/hey-claude` for Training** — Help new members understand systems
+
+---
+
+## File Structure
+
+```
+CleanExpo/NodeJS-Starter-V1/
+├── .pi/                              # Agent workspace
+│   ├── README.md                     # PI workspace overview
+│   ├── ceo-agents/
+│   │   ├── briefs/
+│   │   │   ├── _TEMPLATE.md          # Copy this to start
+│   │   │   └── _EXAMPLE-acquisition-offer.md # Learn from this
+│   │   ├── memos/                    # Decision summaries
+│   │   ├── conversations/            # Full transcripts
+│   │   ├── artifacts/                # Visual arguments
+│   │   └── expertise/                # 9 agent expertise files
+│   └── shared/
+│       └── context/                  # Shared business context
+├── .claude/
+│   └── commands/
+│       ├── hey-claude.md             # Get system context
+│       ├── ceo-begin.md              # Start board deliberation
+│       ├── swarm-audit.md            # Audit code quality
+│       └── generate-route-reference.md # Update API docs
+├── SYSTEM_DOCS.md                    # Architecture & systems
+├── ROUTE_REFERENCE.md                # API documentation
+└── CLAUDE.md                         # This file
+```
+
+---
+
+## Troubleshooting
+
+**"I don't know where to start"**
+→ Run `/hey-claude "Help me understand CleanExpo"`
+
+**"The board's decision doesn't feel right"**
+→ Review the Contrarian's concerns—they often surface real risks
+
+**"Docs are out of date"**
+→ Run `/generate-route-reference` to auto-sync
+
+**"I want to understand the audit findings"**
+→ Run `/hey-claude "Explain the swarm audit results and help me fix them"`
+
+**"How do I improve decision quality?"**
+→ Track decision outcomes quarterly, update agent expertise files with learnings
+
+---
+
+## Credits
+
+**Inspired by:** IndyDevDan's agent scaling insights
+
+*"If you template your engineering, your agents can do exactly what you did. This is the big advantage. When you're not creating prescriptions, workflows, and systems for your agents to repeat, you miss out on all the true leverage."*
+
+---
+
+**Last Updated:** 2026-03-24
+**Status:** Active
+**Maintainer:** CleanExpo Team

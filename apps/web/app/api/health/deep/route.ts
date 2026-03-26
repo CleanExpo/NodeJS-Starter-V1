@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const maxDuration = 10;
+
 interface DependencyCheck {
   name: string;
   status: 'healthy' | 'degraded' | 'unhealthy' | 'unchecked';

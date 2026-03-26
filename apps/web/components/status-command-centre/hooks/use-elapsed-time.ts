@@ -14,7 +14,7 @@ export function useElapsedTime(
   startTime: string | null,
   endTime?: string | null
 ): UseElapsedTimeResult {
-  const [elapsed, setElapsed] = useState(0);
+  const [, setTick] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Calculate elapsed time
@@ -23,19 +23,15 @@ export function useElapsedTime(
     return calculateDuration(startTime, endTime ?? undefined);
   }, [startTime, endTime]);
 
-  // Update elapsed time
+  // Start interval to trigger re-renders for live updates
   useEffect(() => {
-    // Initial calculation
-    setElapsed(calculateElapsed());
-
-    // If there's an end time, don't start interval
+    // If there's an end time or no start, no interval needed
     if (endTime || !startTime) {
       return;
     }
 
-    // Start interval for live updates
     intervalRef.current = setInterval(() => {
-      setElapsed(calculateElapsed());
+      setTick((t) => t + 1);
     }, DEFAULTS.refreshInterval);
 
     // Cleanup
@@ -45,7 +41,10 @@ export function useElapsedTime(
         intervalRef.current = null;
       }
     };
-  }, [startTime, endTime, calculateElapsed]);
+  }, [startTime, endTime]);
+
+  // Compute current elapsed during render — avoids synchronous setState in effect
+  const elapsed = calculateElapsed();
 
   return {
     elapsed,
@@ -64,12 +63,10 @@ export function useCountdown(estimatedSeconds: number | null): UseElapsedTimeRes
 
   useEffect(() => {
     if (estimatedSeconds === null || estimatedSeconds <= 0) {
-      setRemaining(0);
       return;
     }
 
-    setRemaining(estimatedSeconds);
-
+    // Decrement remaining via interval callback — async setState is allowed
     intervalRef.current = setInterval(() => {
       setRemaining((prev) => Math.max(0, prev - 1));
     }, DEFAULTS.refreshInterval);
@@ -82,9 +79,11 @@ export function useCountdown(estimatedSeconds: number | null): UseElapsedTimeRes
     };
   }, [estimatedSeconds]);
 
+  const displayRemaining = estimatedSeconds === null || estimatedSeconds <= 0 ? 0 : remaining;
+
   return {
-    elapsed: remaining,
-    formatted: formatElapsedAU(remaining),
-    isRunning: remaining > 0,
+    elapsed: displayRemaining,
+    formatted: formatElapsedAU(displayRemaining),
+    isRunning: displayRemaining > 0,
   };
 }

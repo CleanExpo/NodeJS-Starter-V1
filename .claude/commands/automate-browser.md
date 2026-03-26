@@ -1,3 +1,12 @@
+---
+id: automate-browser
+type: command
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Automate Browser — Higher-Order Browser Command
 
 > **Usage**: `/automate-browser [workflow-description] [--engine playwright|chrome]`

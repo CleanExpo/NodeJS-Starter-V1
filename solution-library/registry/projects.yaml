@@ -1,0 +1,13 @@
+version: '1.0.0'
+last_updated: '2026-03-17'
+
+projects: []
+
+# Template for adding a new project:
+# - name: "project-name"
+#   repo: "https://github.com/CleanExpo/project-name"
+#   submodule_path: "lib/solution-library"
+#   library_version: "1.0.0"
+#   added: "2026-03-17"
+#   team: []
+#   active: true

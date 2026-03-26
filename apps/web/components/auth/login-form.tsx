@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -24,6 +25,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function LoginForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,8 +61,8 @@ export function LoginForm() {
         return;
       }
 
-      // Server-side login succeeded, cookies are set - redirect to dashboard
-      window.location.href = '/dashboard';
+      // Server-side login succeeded, cookies are set - navigate to dashboard
+      router.push('/dashboard');
     } catch (_err) {
       setError('Failed to connect to server');
       setIsLoading(false);

@@ -18,12 +18,16 @@ Standards:
 """
 
 import pytest
+from datetime import timedelta
 from fastapi.testclient import TestClient
 from src.api.main import app
+from src.auth.jwt import create_access_token
 
 client = TestClient(app)
 
-AUTH_HEADERS = {"X-User-Id": "00000000-0000-0000-0000-000000000001"}
+AUTH_HEADERS = {
+    "Authorization": f"Bearer {create_access_token({'sub': 'test@example.com'}, timedelta(hours=24))}"
+}
 
 
 class TestSQLInjectionPrevention:
@@ -206,7 +210,7 @@ class TestAuthorizationSecurity:
         response = client.get(
             "/api/agents/active",
             params={"user_id": user_b},
-            headers={"X-User-Id": user_a},
+            headers=AUTH_HEADERS,
         )
         # Should not return user B's data to user A
         assert response.status_code in [200, 403]
@@ -224,7 +228,7 @@ class TestInputValidation:
         response = client.post(
             "/api/prd/generate",
             data="not-valid-json",
-            headers={"Content-Type": "application/json", "X-User-Id": "00000000-0000-0000-0000-000000000001"},
+            headers={**AUTH_HEADERS, "Content-Type": "application/json"},
         )
 
         assert response.status_code == 422
@@ -373,14 +377,13 @@ class TestErrorHandling:
         response = client.post(
             "/api/chat",
             json={"message": "test"},
-            headers={"X-User-Id": "00000000-0000-0000-0000-000000000001"},
+            headers=AUTH_HEADERS,
         )
 
         if response.status_code == 500:
             data = response.json()
-            # Should have structured error format
-            assert "error" in data
-            assert "error_code" in data or "request_id" in data
+            # Should have structured error format (either "error" or "detail" key)
+            assert "error" in data or "detail" in data
             # Should NOT contain exception details
             error_str = str(data).lower()
             assert "traceback" not in error_str
@@ -400,7 +403,7 @@ class TestFileUploadSecurity:
             "/api/rag/upload",
             files={"file": ("malware.exe", fake_exe, "application/x-msdownload")},
             data={"project_id": "test-project"},
-            headers={"X-User-Id": "00000000-0000-0000-0000-000000000001"},
+            headers=AUTH_HEADERS,
         )
 
         # Should either reject or process safely (not execute)
@@ -416,7 +419,7 @@ class TestFileUploadSecurity:
             "/api/rag/upload",
             files={"file": ("large.txt", large_file, "text/plain")},
             data={"project_id": "test-project"},
-            headers={"X-User-Id": "00000000-0000-0000-0000-000000000001"},
+            headers=AUTH_HEADERS,
         )
 
         # Should reject with 413 or handle gracefully

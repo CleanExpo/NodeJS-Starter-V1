@@ -1,3 +1,12 @@
+---
+id: new-project-checklist
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # New Project Setup Checklist
 
 Quick setup guide for NodeJS-Starter-V1 - your self-contained AI starter template.

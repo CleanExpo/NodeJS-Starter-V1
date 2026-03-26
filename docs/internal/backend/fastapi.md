@@ -1,3 +1,12 @@
+---
+id: fastapi
+type: doc
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # FastAPI Documentation
 
 > Official documentation sourced from [fastapi.tiangolo.com](https://fastapi.tiangolo.com)

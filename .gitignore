@@ -66,6 +66,7 @@ supabase/.temp
 
 # Misc
 *.tsbuildinfo
+*.bak
 .vercel
 .cache
 nul
@@ -79,6 +80,9 @@ nul
 # AI Review (generated outputs)
 ai-review/results/
 ai-review/screenshots/
+
+# Adoption engine generated reports
+reports/
 
 # NotebookLM generated artifacts
 .claude/notebooklm/repo-pack.txt

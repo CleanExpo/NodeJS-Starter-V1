@@ -1,11 +1,15 @@
 ---
+id: pre-commit
 name: pre-commit
 type: hook
-trigger: Before git commit
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 priority: 2
 blocking: false
-version: 1.0.0
 ---
+
 
 # Pre-Commit Hook
 

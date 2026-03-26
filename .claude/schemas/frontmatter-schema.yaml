@@ -1,0 +1,400 @@
+# Frontmatter Schema — NodeJS-Starter-V1 Vault System
+# Version: 1.0.0
+# Locale: en-AU
+
+# This schema defines the frontmatter structure for all .md files in the vault.
+# All files MUST include the common fields. Type-specific fields are optional
+# but recommended for full vault functionality.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMMON FIELDS (required for all .md files)
+# ─────────────────────────────────────────────────────────────────────────────
+
+common:
+  id:
+    type: string
+    required: true
+    pattern: '^[a-z0-9-]+$'
+    description: 'Unique kebab-case identifier for wiki-link resolution'
+    example: 'frontend-specialist'
+
+  type:
+    type: enum
+    required: true
+    values:
+      - agent
+      - skill
+      - rule
+      - hook
+      - blueprint
+      - primer
+      - memory
+      - command
+      - doc
+    description: 'File type for routing and indexing'
+
+  version:
+    type: string
+    required: true
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    description: 'SemVer version string'
+    example: '1.0.0'
+
+  created:
+    type: string
+    required: true
+    pattern: "^\\d{2}/\\d{2}/\\d{4}$"
+    description: 'Creation date in DD/MM/YYYY format (en-AU)'
+    example: '20/03/2026'
+
+  modified:
+    type: string
+    required: true
+    pattern: "^\\d{2}/\\d{2}/\\d{4}$"
+    description: 'Last modification date — auto-updated by post-file-write hook'
+    example: '20/03/2026'
+
+  status:
+    type: enum
+    required: true
+    values:
+      - active
+      - deprecated
+      - draft
+    default: active
+    description: 'Lifecycle status for filtering'
+
+  aliases:
+    type: array
+    required: false
+    items: string
+    description: 'Alternative names for wiki-link resolution'
+    example: ['frontend', 'fe-specialist', 'react-agent']
+
+  tags:
+    type: array
+    required: false
+    items: string
+    description: 'Tags for dataview-style queries'
+    example: ['frontend', 'react', 'ui']
+
+  links:
+    type: object
+    required: false
+    properties:
+      depends_on:
+        type: array
+        items: string
+        description: 'Hard dependencies — must be loaded first'
+        example: ['scientific-luxury', 'council-of-logic']
+      extends:
+        type: array
+        items: string
+        description: 'Inheritance relationships'
+        example: ['base-agent']
+      see_also:
+        type: array
+        items: string
+        description: 'Related reading — soft links'
+        example: ['xaem-theme-ui', 'design-tokens']
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TYPE-SPECIFIC EXTENSIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+agent:
+  inherits: common
+  additional_fields:
+    role:
+      type: string
+      required: true
+      description: 'Human-readable role title'
+      example: 'Frontend Engineer'
+
+    priority:
+      type: integer
+      required: false
+      min: 1
+      max: 10
+      description: 'Routing priority (1 = highest)'
+      example: 2
+
+    toolshed:
+      type: string
+      required: true
+      description: 'Reference to toolshed in .claude/data/toolsheds.json'
+      example: 'frontend'
+
+    context_scope:
+      type: array
+      required: true
+      items: string
+      description: 'Permitted file paths for this agent'
+      example: ['apps/web/']
+
+    token_budget:
+      type: integer
+      required: true
+      description: 'Maximum context tokens for this agent'
+      example: 60000
+
+    skills_required:
+      type: array
+      required: false
+      items: string
+      description: 'Skills this agent must load'
+      example: ['scientific-luxury', 'react-best-practices']
+
+    inherits_from:
+      type: string
+      required: false
+      description: 'Parent agent for inheritance'
+      example: 'base-agent'
+
+skill:
+  inherits: common
+  additional_fields:
+    category:
+      type: enum
+      required: true
+      values:
+        - design
+        - architecture
+        - security
+        - testing
+        - deployment
+        - observability
+        - integration
+        - governance
+        - ai
+        - data
+      description: 'Skill category for grouping'
+
+    complexity:
+      type: enum
+      required: false
+      values:
+        - low
+        - medium
+        - high
+      default: medium
+      description: 'Implementation complexity indicator'
+
+    complements:
+      type: array
+      required: false
+      items: string
+      description: 'Skills that work well together with this one'
+      example: ['xaem-theme-ui', 'council-of-logic']
+
+    triggers:
+      type: array
+      required: false
+      items: string
+      description: 'Keywords that activate this skill'
+      example: ['design', 'UI', 'component', 'styling']
+
+    effort:
+      type: enum
+      required: false
+      values:
+        - low
+        - medium
+        - high
+      description: 'Model effort level hint (Claude Code v2.1.80+)'
+      example: 'medium'
+
+rule:
+  inherits: common
+  additional_fields:
+    authority:
+      type: enum
+      required: true
+      values:
+        - always-on
+        - conditional
+        - advisory
+      description: 'Rule enforcement level'
+
+    scope:
+      type: enum
+      required: true
+      values:
+        - global
+        - agent
+        - skill
+        - command
+        - blueprint
+      description: 'Where this rule applies'
+
+    overrides:
+      type: array
+      required: false
+      items: string
+      description: 'Rules this one supersedes'
+      example: ['default-behaviour']
+
+hook:
+  inherits: common
+  additional_fields:
+    event_type:
+      type: enum
+      required: true
+      values:
+        - PreToolUse
+        - PostToolUse
+        - SessionStart
+        - UserPromptSubmit
+        - PreCompact
+        - Stop
+      description: 'Hook trigger event'
+
+    script_path:
+      type: string
+      required: true
+      description: 'Path to hook script'
+      example: '.claude/hooks/scripts/post-file-write.ps1'
+
+    blocking:
+      type: boolean
+      required: true
+      default: true
+      description: 'Whether hook blocks execution'
+
+blueprint:
+  inherits: common
+  additional_fields:
+    triggers:
+      type: array
+      required: true
+      items: string
+      description: 'Intent patterns that activate this blueprint'
+      example: ['implement', 'create', 'add feature']
+
+    toolshed:
+      type: string
+      required: true
+      description: 'Default toolshed for blueprint execution'
+      example: 'feature'
+
+    iteration_caps:
+      type: object
+      required: true
+      properties:
+        implement:
+          type: integer
+          example: 1
+        fix_ci:
+          type: integer
+          example: 2
+        fix_lint:
+          type: integer
+          example: 1
+        total:
+          type: integer
+          example: 3
+      description: 'Hard iteration limits per node type'
+
+command:
+  inherits: common
+  additional_fields:
+    invocation:
+      type: string
+      required: true
+      description: 'Slash command syntax'
+      example: '/verify'
+
+    arguments:
+      type: array
+      required: false
+      items:
+        type: object
+        properties:
+          name: string
+          type: string
+          required: boolean
+          description: string
+      description: 'Command arguments specification'
+
+    effort:
+      type: enum
+      required: false
+      values:
+        - low
+        - medium
+        - high
+      description: 'Model effort level hint (Claude Code v2.1.80+)'
+      example: 'medium'
+
+primer:
+  inherits: common
+  additional_fields:
+    purpose:
+      type: string
+      required: true
+      description: 'What this primer teaches or documents'
+
+    audience:
+      type: enum
+      required: true
+      values:
+        - agent
+        - human
+        - both
+      description: 'Intended reader'
+
+doc:
+  inherits: common
+  additional_fields:
+    section:
+      type: string
+      required: true
+      description: 'Documentation section'
+      example: 'architecture'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WIKI-LINK RESOLUTION RULES
+# ─────────────────────────────────────────────────────────────────────────────
+
+wiki_links:
+  patterns:
+    - pattern: '[[id]]'
+      resolution: 'Search VAULT-INDEX.md for matching id field'
+      example: '[[scientific-luxury]] → .skills/custom/scientific-luxury/SKILL.md'
+
+    - pattern: '[[type/id]]'
+      resolution: 'Direct path resolution by type'
+      example: '[[agent/frontend-specialist]] → .claude/agents/frontend-specialist/agent.md'
+
+    - pattern: '[[id#section]]'
+      resolution: 'Link to heading anchor within file'
+      example: '[[scientific-luxury#banned-elements]]'
+
+    - pattern: '[[id|display]]'
+      resolution: 'Custom display text'
+      example: '[[scientific-luxury|Design System]]'
+
+  alias_resolution:
+    description: 'If id not found, search aliases array'
+    fallback: 'If still not found, emit broken-link warning'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VALIDATION RULES
+# ─────────────────────────────────────────────────────────────────────────────
+
+validation:
+  id_uniqueness:
+    description: 'All id values must be unique across the vault'
+    enforcement: 'vault:validate script'
+
+  date_format:
+    description: 'All dates must be DD/MM/YYYY (en-AU locale)'
+    regex: "^\\d{2}/\\d{2}/\\d{4}$"
+
+  broken_links:
+    description: 'All wiki-links must resolve to existing files'
+    enforcement: 'vault:validate script'
+
+  required_fields:
+    description: 'All common fields are required'
+    enforcement: 'vault:validate script'

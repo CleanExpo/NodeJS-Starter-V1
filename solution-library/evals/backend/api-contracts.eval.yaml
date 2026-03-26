@@ -1,0 +1,35 @@
+name: api-contracts
+category: backend
+description: 'Validates API contract design and implementation patterns'
+version: '1.0.0'
+
+cases:
+  - id: request-validation
+    description: 'All endpoints validate input with Pydantic models'
+    rule: pydantic_models_present
+    check: all_post_put_patch_endpoints
+
+  - id: error-response-format
+    description: 'All errors return structured JSON with code, message, details'
+    rule: error_format_matches
+    expected:
+      code: string
+      message: string
+      details: object_or_null
+
+  - id: auth-middleware-active
+    description: 'Protected endpoints have auth dependency'
+    rule: auth_dependency_present
+    applies_to: protected_routes
+    forbidden: unauthenticated_access_to_protected_routes
+
+  - id: health-check-endpoint
+    description: 'Service exposes /health with liveness and readiness'
+    rule: endpoint_exists
+    path: '/health'
+    required_fields: [status, timestamp, version]
+
+  - id: rate-limiting-on-auth
+    description: 'Auth endpoints have rate limiting applied'
+    rule: rate_limit_decorator_present
+    applies_to: ['/api/auth/login', '/api/auth/register', '/api/auth/forgot-password']

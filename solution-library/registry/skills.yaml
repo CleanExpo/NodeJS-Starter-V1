@@ -1,0 +1,500 @@
+version: '1.0.0'
+last_updated: '2026-03-18'
+
+categories:
+  governance:
+    - name: council-of-logic
+      description: 'Mathematical first principles — Turing, Von Neumann, Bezier, Shannon'
+      version: '2.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/council-of-logic/SKILL.md'
+
+    - name: genesis-orchestrator
+      description: 'Autonomous project orchestration — phase-locked execution'
+      version: '2.0.1'
+      owner: system
+      status: active
+      path: '.skills/custom/genesis-orchestrator/SKILL.md'
+
+    - name: execution-guardian
+      description: 'Risk assessment and execution safety'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/execution-guardian/SKILL.md'
+
+    - name: system-supervisor
+      description: 'System-wide supervision and drift detection'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/system-supervisor/SKILL.md'
+
+    - name: verification-before-completion
+      description: 'Run commands and read output before claiming done'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/verification-before-completion/SKILL.md'
+
+    - name: systematic-debugging
+      description: '4-phase root-cause protocol with 3-attempt circuit breaker'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/systematic-debugging/SKILL.md'
+
+    - name: tdd
+      description: 'Test-driven development — red/green/refactor cycle'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/tdd/SKILL.md'
+
+    - name: blueprint-engine
+      description: 'Blueprint-driven autonomous task execution'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/blueprint-engine/SKILL.md'
+
+    - name: idea-to-production
+      description: 'Plain-English pipeline from idea to production — routes user requests to the right phase and agent'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/idea-to-production/SKILL.md'
+
+    - name: context-protocol
+      description: 'Slop-prevention middleware — gather sources and produce Plan Mode block before touching any file'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/context-protocol/SKILL.md'
+
+    - name: outcome-translator
+      description: 'Translate end-goal language into engineering execution plans with Definition of Done and gated phases'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/outcome-translator/SKILL.md'
+
+    - name: blueprint-first
+      description: 'Generate ASCII wireframe or architecture diagram before writing any code for UI or structural components'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/blueprint-first/SKILL.md'
+
+    - name: notebooklm-second-brain
+      description: 'Notebook-first retrieval policy — query NotebookLM notebooks before web search or context dumping'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/notebooklm-second-brain/SKILL.md'
+
+    - name: skill-manager
+      description: 'Analyse project skill gaps, generate new skills, browse skill catalogues, and validate skill health'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/skill-manager/SKILL.md'
+
+    - name: dispatching-parallel-agents
+      description: 'Launch concurrent subagents for independent tasks or failures across multiple components'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/dispatching-parallel-agents/SKILL.md'
+
+    - name: finishing-branch
+      description: 'End-of-feature workflow — verify tests, generate PR description, choose merge strategy, clean up worktrees'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/finishing-branch/SKILL.md'
+
+    - name: git-worktrees
+      description: 'Create isolated git worktrees for feature development with dependency installation and baseline verification'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/git-worktrees/SKILL.md'
+
+    - name: claude-browser
+      description: 'Chrome extension tools for personal browser automation in the user actual browser session'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/claude-browser/SKILL.md'
+
+  frontend:
+    - name: scientific-luxury
+      description: 'OLED Black design system — spectral colours, sharp corners'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/scientific-luxury/SKILL.md'
+
+    - name: xaem-theme-ui
+      description: 'XAEM theme UI patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/xaem-theme-ui/SKILL.md'
+
+    - name: dashboard-patterns
+      description: 'Dashboard layout patterns for data-heavy UIs'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/dashboard-patterns/SKILL.md'
+
+    - name: i18n-patterns
+      description: 'Internationalisation patterns for Next.js'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/i18n-patterns/SKILL.md'
+
+    - name: state-machine
+      description: 'XState/Zustand state machine patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/state-machine/SKILL.md'
+
+    - name: error-boundary
+      description: 'React error boundary and fallback UI patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/error-boundary/SKILL.md'
+
+    - name: status-page
+      description: 'Public status page with incident management, uptime tracking, and dependency monitoring'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/status-page/SKILL.md'
+
+  backend:
+    - name: api-contract
+      description: 'API contract design — OpenAPI, request/response schemas'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/api-contract/SKILL.md'
+
+    - name: api-client
+      description: 'Type-safe API client generation and usage patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/api-client/SKILL.md'
+
+    - name: webhook-handler
+      description: 'Webhook ingestion, HMAC validation, idempotency'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/webhook-handler/SKILL.md'
+
+    - name: rate-limiter
+      description: 'Rate limiting patterns — sliding window, token bucket'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/rate-limiter/SKILL.md'
+
+    - name: structured-logging
+      description: 'JSON structured logging with trace correlation'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/structured-logging/SKILL.md'
+
+    - name: health-check
+      description: 'Health check endpoint patterns — liveness, readiness'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/health-check/SKILL.md'
+
+    - name: graceful-shutdown
+      description: 'Graceful shutdown with connection draining'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/graceful-shutdown/SKILL.md'
+
+    - name: cache-strategy
+      description: 'Caching strategies — Redis, in-memory, CDN'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/cache-strategy/SKILL.md'
+
+    - name: saga-pattern
+      description: 'Distributed transaction coordination via saga'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/saga-pattern/SKILL.md'
+
+    - name: resilience-patterns
+      description: 'Circuit breaker, retry, bulkhead patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/resilience-patterns/SKILL.md'
+
+    - name: retry-strategy
+      description: 'Exponential backoff, circuit breaker, and retry policy patterns for Python and TypeScript'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/retry-strategy/SKILL.md'
+
+    - name: api-versioning
+      description: 'URL and header-based API versioning with deprecation policies'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/api-versioning/SKILL.md'
+
+    - name: graphql-patterns
+      description: 'Schema design, resolver patterns, dataloader optimisation, and type-safe client integration'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/graphql-patterns/SKILL.md'
+
+    - name: cron-scheduler
+      description: 'Scheduled task management for Vercel cron jobs, Next.js API routes, and backend periodic tasks'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/cron-scheduler/SKILL.md'
+
+    - name: queue-worker
+      description: 'Background job processing with Redis-backed queues, worker lifecycle management, and concurrency control'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/queue-worker/SKILL.md'
+
+    - name: notification-system
+      description: 'Multi-channel notification orchestration with queue-backed delivery'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/notification-system/SKILL.md'
+
+    - name: email-template
+      description: 'Responsive transactional email templates using React Email and Resend with Scientific Luxury dark-theme'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/email-template/SKILL.md'
+
+    - name: slack-integration
+      description: 'Slack bot commands, webhook notifications, interactive messages, and team alerting patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/slack-integration/SKILL.md'
+
+    - name: feature-flag
+      description: 'Feature toggle patterns with gradual rollout, percentage-based targeting, and runtime configuration'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/feature-flag/SKILL.md'
+
+    - name: metrics-collector
+      description: 'Database-backed metrics instrumentation with counters, gauges, histograms, and optional OpenTelemetry'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/metrics-collector/SKILL.md'
+
+    - name: tracing-patterns
+      description: 'Distributed tracing with span context propagation across FastAPI, Next.js, and agent workflows'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/tracing-patterns/SKILL.md'
+
+    - name: workflow-engine
+      description: 'Multi-step approval workflows, business process automation, and visual workflow execution'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/workflow-engine/SKILL.md'
+
+    - name: pipeline-builder
+      description: 'Composable data and task pipeline construction with typed stages, error handling, and parallel execution'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/pipeline-builder/SKILL.md'
+
+    - name: content-moderation
+      description: 'Automated content filtering, safety checks, and toxicity detection'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/content-moderation/SKILL.md'
+
+  security:
+    - name: input-sanitisation
+      description: 'Input validation and sanitisation — OWASP Top 10'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/input-sanitisation/SKILL.md'
+
+    - name: csrf-protection
+      description: 'CSRF token generation and validation patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/csrf-protection/SKILL.md'
+
+    - name: rbac-patterns
+      description: 'Role-based access control implementation'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/rbac-patterns/SKILL.md'
+
+    - name: oauth-flow
+      description: 'OAuth 2.0 / OIDC flow implementation'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/oauth-flow/SKILL.md'
+
+    - name: audit-trail
+      description: 'Immutable audit log with tamper detection'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/audit-trail/SKILL.md'
+
+    - name: secret-management
+      description: 'Secret rotation, vault integration, env var hygiene'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/secret-management/SKILL.md'
+
+  devops:
+    - name: ci-cd-patterns
+      description: 'GitHub Actions, pipeline design, deployment gates'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/ci-cd-patterns/SKILL.md'
+
+    - name: docker-patterns
+      description: 'Multi-stage builds, compose, health checks'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/docker-patterns/SKILL.md'
+
+    - name: infrastructure-as-code
+      description: 'Terraform/Pulumi IaC patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/infrastructure-as-code/SKILL.md'
+
+  data:
+    - name: data-validation
+      description: 'Schema validation — Pydantic, Zod, JSONSchema'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/data-validation/SKILL.md'
+
+    - name: error-taxonomy
+      description: 'Error classification and structured error responses'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/error-taxonomy/SKILL.md'
+
+    - name: database-patterns
+      description: 'PostgreSQL patterns — indexing, partitioning, CTEs'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/database-patterns/SKILL.md'
+
+    - name: vector-search
+      description: 'pgvector embedding queries, similarity search, hybrid search, and multi-provider embedding generation'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/vector-search/SKILL.md'
+
+    - name: search-indexer
+      description: 'Full-text search indexing, query optimisation, and hybrid search patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/search-indexer/SKILL.md'
+
+    - name: csv-processor
+      description: 'Streaming CSV parse and generate patterns for large file support across Next.js frontend and FastAPI backend'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/csv-processor/SKILL.md'
+
+    - name: data-transform
+      description: 'ETL pipelines, data mapping, normalisation, and streaming transforms'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/data-transform/SKILL.md'
+
+    - name: report-generator
+      description: 'Data aggregation, multi-format report output, scheduled reporting, and template-driven document generation'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/report-generator/SKILL.md'
+
+    - name: pdf-generator
+      description: 'Server-side PDF generation from templates with React PDF and reportlab'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/pdf-generator/SKILL.md'
+
+    - name: markdown-processor
+      description: 'Parse, transform, and render Markdown with plugins, syntax highlighting, and custom components'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/markdown-processor/SKILL.md'
+
+    - name: changelog-generator
+      description: 'Automated changelog generation from Conventional Commits with semantic versioning and GitHub Release integration'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/changelog-generator/SKILL.md'
+
+  browser:
+    - name: playwright-browser
+      description: 'Playwright E2E automation patterns'
+      version: '1.0.0'
+      owner: system
+      status: active
+      path: '.skills/custom/playwright-browser/SKILL.md'

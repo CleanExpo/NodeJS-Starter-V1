@@ -1,8 +1,15 @@
 ---
+id: blueprint-engine
 name: blueprint-engine
+type: skill
 version: 1.0.0
-description: Hybrid DAG execution primitive combining deterministic and agentic nodes with hard iteration caps
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+description: >
+  Hybrid DAG execution primitive combining deterministic and agentic nodes with hard iteration caps
 ---
+
 
 # Blueprint Engine — Hybrid DAG Primitive
 

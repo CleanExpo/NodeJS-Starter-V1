@@ -1,0 +1,39 @@
+name: component-patterns
+category: frontend
+description: 'Validates frontend component generation follows Scientific Luxury design system'
+version: '1.0.0'
+
+cases:
+  - id: oled-background
+    description: 'Background colour must be OLED Black #050505'
+    rule: background_colour_matches
+    expected: '#050505'
+    must_not_use: ['#000000', '#111111', 'black', 'bg-black']
+
+  - id: no-rounded-full
+    description: 'No rounded-full — only rounded-sm allowed'
+    rule: css_class_absent
+    forbidden: ['rounded-full', 'rounded-lg', 'rounded-xl', 'rounded-2xl', 'rounded-3xl']
+    allowed: ['rounded-sm', 'rounded-none']
+
+  - id: framer-motion-only
+    description: 'Animations must use Framer Motion, not CSS transitions'
+    rule: animation_library_is_framer_motion
+    forbidden_patterns: ['transition-', 'animate-', 'duration-']
+    required: ['motion.div', 'motion.span', 'AnimatePresence']
+
+  - id: spectral-colours-only
+    description: 'Only spectral colours used for interactive states'
+    rule: colour_in_palette
+    palette:
+      active: '#00F5FF'
+      success: '#00FF88'
+      warning: '#FFB800'
+      error: '#FF4444'
+      escalation: '#FF00FF'
+    border_colour: 'white/[0.06]'
+
+  - id: border-opacity
+    description: 'Borders use 0.5px at white/[0.06] opacity'
+    rule: border_pattern_matches
+    expected: 'border-[0.5px] border-white/[0.06]'

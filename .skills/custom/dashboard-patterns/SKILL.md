@@ -1,16 +1,18 @@
 ---
+id: dashboard-patterns
 name: dashboard-patterns
-description: >-
-  Real-time dashboard patterns codifying the project's Status Command
-  Centre component library, timeline/orbital layout, Supabase Realtime
-  integration, and Scientific Luxury design enforcement for all data
-  visualisation surfaces.
-license: MIT
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: '1.0.0'
+  version: 1.0.0
   locale: en-AU
+description: ">-"
 ---
+
 
 # Dashboard Patterns - Real-Time Data Visualisation
 

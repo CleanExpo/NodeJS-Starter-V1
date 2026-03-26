@@ -1,3 +1,12 @@
+---
+id: queue-worker
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Queue Worker
 
 > Background job processing with Redis-backed queues, worker lifecycle management, and concurrency control for NodeJS-Starter-V1.

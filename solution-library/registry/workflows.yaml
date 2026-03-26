@@ -1,0 +1,52 @@
+version: '1.0.0'
+last_updated: '2026-03-17'
+
+existing:
+  - name: idea-to-prd
+    description: 'Transform raw idea into structured Product Requirements Document'
+    path: '.claude/workflows/idea-to-prd.md'
+    agents: [product-strategist, senior-project-manager]
+    status: active
+
+  - name: prd-to-spec
+    description: 'Convert PRD to technical specification with architecture decisions'
+    path: '.claude/workflows/prd-to-spec.md'
+    agents: [technical-architect, senior-engineer]
+    status: active
+
+  - name: spec-to-build
+    description: 'Execute technical spec through TDD implementation cycle'
+    path: '.claude/workflows/spec-to-build.md'
+    agents: [frontend-specialist, backend-specialist, test-engineer]
+    status: active
+
+  - name: build-to-release
+    description: 'QA validation, security audit, PR creation, deployment'
+    path: '.claude/workflows/build-to-release.md'
+    agents: [qa-validator, security-auditor, delivery-manager, deploy-guardian]
+    status: active
+
+library:
+  - name: library-sync
+    description: 'Pull latest library assets, validate compatibility, update local cache'
+    command: '/lib sync'
+    script: 'scripts/solution-library/sync-library.ps1'
+    status: active
+
+  - name: skill-promotion
+    description: 'Promote a proven pattern from project to library'
+    command: '/lib push'
+    script: 'scripts/solution-library/promote-pattern.ps1'
+    approvers: [senior-project-manager, senior-orchestrator]
+    status: active
+
+  - name: agent-audit
+    description: 'Audit all agents for compliance, skill limits, and documentation'
+    command: '/lib audit'
+    script: 'scripts/solution-library/validate-library.ps1'
+    status: active
+
+  - name: regression-pack
+    description: 'Run all eval packs to validate library integrity'
+    command: '/lib status'
+    status: active

@@ -1,12 +1,17 @@
 ---
+id: playwright-browser
 name: playwright-browser
 type: agent
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 role: Browser Automation Specialist
 priority: 7
-version: 1.0.0
 skills_required:
   - custom/playwright-browser/SKILL.md
 ---
+
 
 # Playwright Browser Agent
 

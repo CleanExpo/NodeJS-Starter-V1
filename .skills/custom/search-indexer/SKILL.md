@@ -1,3 +1,12 @@
+---
+id: search-indexer
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 20/03/2026
+status: active
+---
+
 # Search Indexer
 
 > Full-text search indexing, query optimisation, and hybrid search patterns for NodeJS-Starter-V1.
