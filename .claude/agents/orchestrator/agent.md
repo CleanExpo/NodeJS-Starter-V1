@@ -2,9 +2,9 @@
 id: orchestrator
 name: orchestrator
 type: agent
-version: 2.0.0
+version: 2.1.0
 created: 20/03/2026
-modified: 20/03/2026
+modified: 26/03/2026
 status: active
 role: Master Coordinator
 priority: 1
@@ -413,6 +413,146 @@ These are applied deterministically before any agentic node. They do NOT increme
 | BLUEPRINT_ESCALATION received | → Surface to human, do not retry         |
 
 The minion pathway is **additive** — it does not replace multi-turn orchestration.
+
+## Harness Convergence Loop Implementation
+
+The complete 8-phase loop, invoked via `/harness "task"` or when `is_lifecycle_task(task)` returns true.
+
+### Entry Point
+
+```python
+async def execute_harness_convergence_loop(self, task: Task):
+    """Execute the full 8-phase convergence loop."""
+
+    # Phase 1: INTAKE
+    scope = self.classify_scope(task)  # trivial / standard / complex
+    risk = self.assess_risk(task)      # LOW / MEDIUM / HIGH
+    phases = self.determine_phase_range(scope)
+
+    if risk == "HIGH":
+        self.escalate_for_confirmation(task, risk)
+
+    # Phase 2: DISCOVERY (skip for trivial)
+    if 2 in phases:
+        prd = await self.dispatch_agent('product-strategist', task)
+        prd_score = await self.dispatch_agent('qa-validator', {
+            'deliverable': prd,
+            'rubric': 'prd-rubric.md'
+        })
+        if prd_score < 70:
+            prd = await self.iterate_phase(2, prd, max_iterations=1)
+        if prd_score < 50:
+            return self.escalate('PRD quality insufficient', prd)
+
+    # Phase 3: DECOMPOSITION (skip for trivial)
+    if 3 in phases:
+        architecture = await self.dispatch_agent('technical-architect', prd)
+        arch_score = await self.dispatch_agent('qa-validator', {
+            'deliverable': architecture,
+            'rubric': 'architecture-rubric.md'
+        })
+        if arch_score < 70:
+            architecture = await self.iterate_phase(3, architecture, max_iterations=1)
+
+        impl_plan = await self.dispatch_agent('senior-engineer', architecture)
+        task_assignments = self.assign_specialists(impl_plan)
+
+    # Phase 3.5: CONTRACT (skip for trivial)
+    if 3.5 in phases:
+        contract = await self.negotiate_contract(
+            proposer='senior-engineer',
+            reviewer='qa-validator',
+            plan=impl_plan,
+            max_rounds=2
+        )
+        if not contract.agreed:
+            return self.escalate('Contract negotiation failed', contract)
+        self.write_contract('.claude/data/active-contract.json', contract)
+
+    # Phase 4: EXECUTION
+    pattern = self.select_execution_pattern(task_assignments)
+    if pattern == 'parallel':
+        results = await self.parallel_dispatch(task_assignments)
+    elif pattern == 'sequential':
+        results = await self.sequential_dispatch(task_assignments)
+    else:
+        results = await self.specialist_dispatch(task_assignments)
+
+    # Phase 5: AGGREGATION
+    integrated = await self.aggregate_results(results)
+    await self.run_integration_checks()  # pnpm turbo run type-check lint test
+
+    # Phase 6: VERIFICATION (3 parallel tracks)
+    verification = await self.parallel_verify(integrated, [
+        ('verification', 'binary'),           # PASS/FAIL
+        ('qa-validator', 'code-rubric.md'),   # 0-100
+        ('design-reviewer', 'ui-rubric.md')   # UX audit (if frontend)
+    ])
+
+    # Phase 7: ITERATION (max 2 cycles)
+    iteration_count = 0
+    while not verification.all_passed and iteration_count < 2:
+        for failure in verification.failures:
+            agent = self.route_failure_to_specialist(failure)
+            await agent.remediate(failure)
+        verification = await self.parallel_verify(integrated)
+        iteration_count += 1
+
+    if not verification.all_passed:
+        return self.escalate('Verification failed after 2 iterations', verification)
+
+    # Phase 8: PRODUCTION
+    release = await self.dispatch_agent('delivery-manager', {
+        'code': integrated,
+        'verification': verification,
+        'contract': contract,
+        'rubric': 'release-rubric.md'
+    })
+    self.delete_contract('.claude/data/active-contract.json')
+
+    return release  # PR created — human review gate
+```
+
+### Scope Classification
+
+```python
+def classify_scope(self, task: Task) -> str:
+    """Classify task scope to determine phase range."""
+    trivial_signals = ['copy change', 'config tweak', 'typo', 'rename', 'comment']
+    complex_signals = ['migration', 'new system', 'cross-cutting', 'authentication', 'database schema']
+
+    if any(signal in task.description.lower() for signal in trivial_signals):
+        return 'trivial'
+    if any(signal in task.description.lower() for signal in complex_signals):
+        return 'complex'
+    return 'standard'
+
+def determine_phase_range(self, scope: str) -> list:
+    """Determine which phases to execute based on scope."""
+    if scope == 'trivial':
+        return [4, 6, 8]
+    elif scope == 'standard':
+        return [1, 2, 3, 3.5, 4, 5, 6, 7, 8]
+    else:  # complex
+        return [1, 2, 3, 3.5, 4, 5, 6, 7, 8]  # Same phases, extended Phase 2
+```
+
+### Phase Handoff Protocol
+
+```python
+async def handoff_phase(self, from_phase: float, to_phase: float, artifact: dict):
+    """Explicit handoff between phases with validation."""
+
+    # Validate the artifact from the previous phase
+    if not self.validate_phase_output(from_phase, artifact):
+        return self.escalate(f'Phase {from_phase} output invalid', artifact)
+
+    # Log the handoff
+    self.log_handoff(from_phase, to_phase, artifact)
+
+    # Trigger the next phase
+    return await self.execute_phase(to_phase, artifact)
+```
 
 ## Never
 
