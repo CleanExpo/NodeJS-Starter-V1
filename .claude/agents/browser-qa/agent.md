@@ -2,9 +2,9 @@
 id: browser-qa
 name: browser-qa
 type: agent
-version: 1.0.0
+version: 1.1.0
 created: 20/03/2026
-modified: 20/03/2026
+modified: 26/03/2026
 status: active
 role: User Story Validation via Browser
 priority: 7
@@ -119,6 +119,46 @@ When invoked by `/ui-review run --parallel N`:
 - **Timeout**: Wait 10s max, then fail with timeout annotation
 - **Element not found**: Screenshot page, check for loading states, fail if still missing
 
+## Regression Test Generation
+
+When a step or expectation FAILS, generate a Playwright test that encodes the failing assertion. This creates a regression safety net that prevents the same failure from recurring.
+
+### Generation Protocol
+
+1. For each FAIL result, produce a `.spec.ts` file in `apps/web/tests/regression/`
+2. Test name: `{story-name}-{step-number}-regression.spec.ts`
+3. Test should reproduce the exact steps leading to the failure
+4. Include the assertion that currently fails (so the test fails until the fix is applied)
+
+### Regression Test Template
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('[Story Name] Regression', () => {
+  test('[Step Description] — regression for [failure description]', async ({ page }) => {
+    // Preconditions
+    await page.goto('[base URL]');
+
+    // Steps leading to failure
+    // [Step 1]
+    // [Step 2]
+    // ...
+
+    // Failing assertion (this test should FAIL until the bug is fixed)
+    await expect(page.[assertion]).toBe([expected]);
+  });
+});
+```
+
+### Rules
+
+- Only generate regression tests for FAIL results (not for PASS)
+- Each test must be independently runnable
+- Tests must clean up after themselves (no state leakage)
+- Include a comment referencing the story file and step number
+- Regression tests are additive — never overwrite existing tests in the directory
+
 ## Constraints
 
 - Headless mode only
@@ -126,3 +166,4 @@ When invoked by `/ui-review run --parallel N`:
 - All evidence saved to `ai-review/screenshots/{story-name}/`
 - Never modify the story files — read-only
 - Report saved to `ai-review/results/{story-name}-report.md`
+- Regression tests saved to `apps/web/tests/regression/`

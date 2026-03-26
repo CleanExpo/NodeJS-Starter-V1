@@ -2,7 +2,7 @@
 name: prd-to-spec
 type: workflow
 phases: [3]
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Workflow: PRD → Spec
@@ -43,6 +43,15 @@ A PRD has been scored ≥ 70 by qa-validator and approved in Phase 2.
 2. Mark parallelisable tasks for concurrent execution
 3. Queue sequential tasks in dependency order
 
+### Step 4: Contract Negotiation (Standard + Complex scope only)
+
+1. Senior-engineer drafts sprint contract from the implementation plan
+2. Qa-validator reviews and negotiates testable criteria
+3. Agreed contract written to `.claude/data/active-contract.json`
+4. Contract binds Phase 6 verification scoring
+
+**Workflow detail**: `.claude/workflows/contract-negotiation.md`
+
 ## Output
 
 An implementation plan with task assignments ready for Phase 4 (Execution).
@@ -50,7 +59,7 @@ An implementation plan with task assignments ready for Phase 4 (Execution).
 ## Handoff
 
 ```
-orchestrator → technical-architect → qa-validator → senior-engineer → orchestrator
+orchestrator → technical-architect → qa-validator → senior-engineer → qa-validator (contract) → orchestrator
 ```
 
 ## Integration with Existing Workflows

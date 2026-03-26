@@ -5,7 +5,7 @@ scored_by:
   - qa-validator
   - verification
 pass_threshold: 70
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Code Quality Rubric
@@ -80,3 +80,29 @@ The `verification` agent provides binary PASS/FAIL on:
 - `pnpm build` — Production build (when applicable)
 
 Both scores (rubric 0-100 + verification PASS/FAIL) must clear thresholds for Phase 6 to pass.
+
+## Calibration
+
+See `.claude/rubrics/calibration/code-examples.md` for scored examples at each level (20, 10, 0) for every dimension. Use these to anchor scoring consistency.
+
+## Quantified Thresholds
+
+These explicit thresholds eliminate subjective scoring:
+
+| Dimension | Threshold | Automatic Score Impact |
+|-----------|-----------|----------------------|
+| Module Isolation | > 3 imports from outside module directory | -5 per violation |
+| Module Isolation | Any circular dependency | Automatic 0 for dimension |
+| Module Isolation | Function > 50 lines without decomposition | -5 per instance |
+| Type Safety | Each `any` type without justification comment | -3 per instance |
+| Test Coverage | Missing test for an acceptance criterion | -5 per missing test |
+| Performance | O(n²) algorithm without justification | -10 |
+| Performance | N+1 query pattern | -10 |
+| Locale | American English in user-facing string | -5 per instance |
+
+## Sprint Contract Integration
+
+When a sprint contract exists (Phase 3.5), qa-validator ALSO scores against contract criteria:
+- Each contract criterion is PASS/FAIL
+- Any FAIL criterion caps the overall rubric score at 69 (forcing iteration)
+- Contract results appear in the score report under "Sprint Contract Results"

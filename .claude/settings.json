@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Foundation-first architecture - prevents problems before they exist",
 
-  "model": "claude-opus-4-5-20251101",
+  "model": "claude-opus-4-6-20260326",
   "maxTokens": 64000,
 
   "hooks": {
@@ -48,6 +48,16 @@
             "type": "command",
             "command": "powershell -ExecutionPolicy Bypass -File \".claude/hooks/scripts/post-edit-format.ps1\"",
             "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \".claude/hooks/scripts/guard-scope-check.ps1\"",
+            "timeout": 5
           }
         ]
       },

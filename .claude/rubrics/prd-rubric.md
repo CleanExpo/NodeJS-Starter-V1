@@ -3,7 +3,7 @@ name: prd-rubric
 type: rubric
 scored_by: qa-validator
 pass_threshold: 70
-version: 1.0.0
+version: 1.1.0
 ---
 
 # PRD Quality Rubric
@@ -74,3 +74,11 @@ Scored by `qa-validator` during Phase 2 (Discovery) and Phase 6 (Verification).
 - **70-89**: Minor revisions needed. One iteration cycle.
 - **50-69**: Significant gaps. Return to product-strategist.
 - **Below 50**: Reject. Restart discovery phase.
+
+## Calibration
+
+PRD scoring anchors:
+- **Score 20 (Problem Clarity)**: "Users on mobile devices experience 3-5 second load times on the dashboard due to unoptimised image assets, causing 40% bounce rate increase (measured via analytics)."
+- **Score 5 (Problem Clarity)**: "The dashboard needs to be faster."
+- **Score 20 (Success Metrics)**: "Dashboard LCP < 2.5s (baseline: 4.2s), measured via Lighthouse CI on each PR."
+- **Score 5 (Success Metrics)**: "Improve performance."

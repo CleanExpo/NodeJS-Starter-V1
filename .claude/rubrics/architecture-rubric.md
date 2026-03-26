@@ -3,7 +3,7 @@ name: architecture-rubric
 type: rubric
 scored_by: qa-validator
 pass_threshold: 70
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Architecture Quality Rubric
@@ -68,3 +68,23 @@ Scored by `qa-validator` during Phase 3 (Decomposition) and Phase 6 (Verificatio
 - **70-89**: Minor revisions. One iteration cycle with technical-architect.
 - **50-69**: Significant concerns. Return to technical-architect for redesign.
 - **Below 50**: Reject. Architecture does not meet safety requirements.
+
+## Calibration
+
+Refer to code and UI calibration examples for analogous patterns. Architecture scoring follows the same principle: concrete evidence over subjective assessment.
+
+## Quantified Thresholds
+
+| Dimension | Threshold | Automatic Score Impact |
+|-----------|-----------|----------------------|
+| Blast Radius | > 10 files modified outside target module | -10 |
+| Blast Radius | > 5 cross-module files changed without rollback plan | Automatic cap at 69 |
+| Pattern Adherence | Cross-layer import introduced | -5 per violation |
+| Pattern Adherence | New pattern without documented justification | -10 |
+| Migration Safety | Breaking change without rollback plan | Automatic 0 for dimension |
+| Dependency Management | Unpinned dependency version | -3 per instance |
+| Dependency Management | Circular dependency introduced | Automatic -10 |
+
+## Sprint Contract Integration
+
+When a sprint contract exists (Phase 3.5), architecture scoring includes contract-specific criteria.

@@ -3,7 +3,7 @@ name: release-rubric
 type: rubric
 scored_by: qa-validator
 pass_threshold: 70
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Release Quality Rubric
@@ -81,3 +81,18 @@ Before scoring, confirm all of the following:
 [ ] Branch naming follows convention: feature/<name> or fix/<name>
 [ ] en-AU locale enforced in all user-facing strings
 ```
+
+## Calibration
+
+Release scoring anchors:
+- **Score 20 (Evidence)**: PR includes: test output logs, rubric score screenshots, verification agent PASS report, before/after screenshots for UI changes.
+- **Score 5 (Evidence)**: PR says "tests pass" with no output attached.
+- **Score 20 (PR Quality)**: Title follows convention, summary explains what/why, test plan with checkboxes, breaking changes noted, linked to spec.
+- **Score 5 (PR Quality)**: Title only, no body text.
+
+## Sprint Contract Integration
+
+When a sprint contract was active during the build:
+- Release evidence MUST include contract criterion results (all PASS/FAIL)
+- PR body MUST include a "Contract Results" section showing each criterion and its status
+- Any unresolved contract FAIL blocks release scoring

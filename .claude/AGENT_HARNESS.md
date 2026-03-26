@@ -1,7 +1,7 @@
 ---
 name: agent-harness
 type: protocol
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Multi-Agent Coordination Harness
@@ -18,7 +18,8 @@ version: 1.0.0
 Phase 1: INTAKE          → orchestrator classifies intent, scope, risk
 Phase 2: DISCOVERY        → product-strategist creates PRD
 Phase 3: DECOMPOSITION    → technical-architect maps architecture delta
-Phase 4: EXECUTION        → senior-engineer plans, specialists implement in parallel
+Phase 3.5: CONTRACT       → senior-engineer + qa-validator negotiate success criteria
+Phase 4: EXECUTION        → specialists implement in parallel (bound by contract)
 Phase 5: AGGREGATION      → orchestrator merges results, resolves conflicts
 Phase 6: VERIFICATION     → verification (code) + qa-validator (acceptance) + design-reviewer (UX)
 Phase 7: ITERATION        → remediate failures (max 2 cycles, then escalate)
@@ -41,9 +42,9 @@ Phase 8: PRODUCTION       → delivery-manager creates PR, status, hand-off
 | 4 | Decide phase range — trivial tasks skip to Phase 4 |
 
 **Scope matrix**:
-- **Trivial** (copy change, config tweak): Phases 4 → 6 → 8
-- **Standard** (new component, endpoint, feature): Phases 1 → 8
-- **Complex** (cross-cutting, migration, new system): Phases 1 → 8 with extended discovery
+- **Trivial** (copy change, config tweak): Phases 4 → 6 → 8 (no contract)
+- **Standard** (new component, endpoint, feature): Phases 1 → 8 (contract required at 3.5)
+- **Complex** (cross-cutting, migration, new system): Phases 1 → 8 with extended discovery + contract
 
 ### Phase 2: Discovery
 
@@ -70,6 +71,24 @@ Phase 8: PRODUCTION       → delivery-manager creates PR, status, hand-off
 | 4 | Orchestrator assigns tasks to specialist agents |
 
 **Workflow**: `.claude/workflows/prd-to-spec.md`
+
+### Phase 3.5: Contract
+
+**Owners**: senior-engineer + qa-validator
+
+| Step | Action |
+|------|--------|
+| 1 | Senior-engineer proposes deliverables with testable acceptance criteria |
+| 2 | Qa-validator reviews criteria for testability — counter-proposes if vague |
+| 3 | Max 2 negotiation rounds. Agreement → write contract. No agreement → escalate |
+| 4 | Contract written to `.claude/data/active-contract.json` |
+
+**Scope matrix**:
+- **Trivial**: Skip — no contract needed for copy changes
+- **Standard**: Required — contract negotiated before execution
+- **Complex**: Required — extended negotiation with additional risk criteria
+
+**Workflow**: `.claude/workflows/contract-negotiation.md`
 
 ### Phase 4: Execution
 
@@ -177,6 +196,7 @@ All rubrics: `.claude/rubrics/`
 |----------|--------|------|
 | Idea → PRD | 1-2 | `.claude/workflows/idea-to-prd.md` |
 | PRD → Spec | 3 | `.claude/workflows/prd-to-spec.md` |
+| Contract Negotiation | 3.5 | `.claude/workflows/contract-negotiation.md` |
 | Spec → Build | 4-5 | `.claude/workflows/spec-to-build.md` |
 | Build → Release | 6-8 | `.claude/workflows/build-to-release.md` |
 
@@ -186,12 +206,12 @@ All rubrics: `.claude/rubrics/`
 
 The orchestrator retains authority to skip phases based on scope:
 
-| Scope | Phases Skipped | Rationale |
-|-------|---------------|-----------|
-| Trivial | 1-3 | Copy changes don't need PRD or architecture review |
-| Standard | None | Full loop for normal features |
-| Complex | None | Full loop with extended Phase 2 |
-| `/minion` | Compressed | Blueprint DAG compresses phases into bounded iteration |
+| Scope | Phases Skipped | Contract (3.5) | Rationale |
+|-------|---------------|----------------|-----------|
+| Trivial | 1-3, 3.5 | Skipped | Copy changes don't need PRD, architecture review, or contract |
+| Standard | None | Required | Full loop for normal features — contract binds Phase 6 scoring |
+| Complex | None | Required | Full loop with extended Phase 2 + contract with risk criteria |
+| `/minion` | Compressed | Compressed | Blueprint DAG compresses phases into bounded iteration |
 
 ---
 

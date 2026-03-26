@@ -5,7 +5,7 @@ scored_by:
   - qa-validator
   - design-reviewer
 pass_threshold: 70
-version: 1.0.0
+version: 1.1.0
 ---
 
 # UI Quality Rubric
@@ -74,3 +74,30 @@ Scored by `qa-validator` (acceptance) and `design-reviewer` (UX audit) during Ph
 - **70-89**: Minor polish needed. One iteration cycle.
 - **50-69**: Significant UX issues. Return to frontend-specialist with design-reviewer feedback.
 - **Below 50**: Reject. Major redesign required.
+
+## Calibration
+
+See `.claude/rubrics/calibration/ui-examples.md` for scored examples at each level (20, 10, 0) for every dimension. Use these to anchor scoring consistency.
+
+## Quantified Thresholds
+
+| Dimension | Threshold | Automatic Score Impact |
+|-----------|-----------|----------------------|
+| Scientific Luxury | `rounded-lg` or `rounded-xl` present | Automatic -10 |
+| Scientific Luxury | Background not `#050505` | Automatic -10 |
+| Scientific Luxury | Non-spectral accent colour used | -5 per instance |
+| Visual Hierarchy | H1 < 2x body font size | -5 |
+| Visual Hierarchy | > 3 heading levels in single view | -5 |
+| Visual Hierarchy | No geometric spacing ratio | -5 |
+| Interaction | CSS transition used instead of Framer Motion | -5 per instance |
+| Interaction | Linear easing (`ease-linear`, `duration-*` without curve) | -5 per instance |
+| Accessibility | Colour contrast < 4.5:1 | -5 per element |
+| Accessibility | Interactive element without keyboard support | -5 per element |
+| Responsive | Touch target < 44px | -3 per element |
+| Responsive | Horizontal scroll at any standard breakpoint | Automatic -10 |
+
+## Sprint Contract Integration
+
+When a sprint contract exists (Phase 3.5), qa-validator ALSO scores against contract criteria:
+- Each contract criterion is PASS/FAIL
+- Any FAIL criterion caps the overall rubric score at 69 (forcing iteration)
