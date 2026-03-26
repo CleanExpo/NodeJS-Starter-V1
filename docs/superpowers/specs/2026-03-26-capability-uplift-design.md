@@ -8,7 +8,7 @@
 
 LLMs have deeply ingrained default patterns — generic layouts, predictable colour schemes, bullet-heavy formatting, stock diagram styles, generic variable names. A **Capability Uplift Skill** overrides and replaces these baked-in defaults with superior alternatives at execution time.
 
-The NodeJS-Starter-V1 framework audit found 13/17 skills are already uplift-ready, but the agent layer lags behind and 4 critical domains lack uplift coverage entirely.
+The NodeJS-Starter-V1 framework audit sampled 17 representative skills (13 output-shaping + slop-prevention, 3 agents, 1 external reference). Of those, 13 already follow the four-step Capability Uplift pattern. The remaining 72 skills in `.skills/custom/` are domain-specific utilities (queue-worker, rate-limiter, etc.) that do not shape output quality and are not candidates for uplift retrofit. The 13 retrofitted skills are specifically those with "Banned Elements" or "Anti-Patterns" sections — they already enforce defaults and benefit from the reference asset layer.
 
 ## Approach
 
@@ -71,7 +71,9 @@ description: >
 ---
 ```
 
-**Triggers**: "document", "write", "report", "guide", "README", "specification", "proposal", "summary", "documentation", "markdown"
+**Triggers**: "write a document", "write a report", "write a guide", "format document", "README", "specification", "proposal", "documentation style", "technical writing", "formatting"
+
+> **Note**: "write" alone is intentionally excluded — too broad, conflicts with code-writing tasks. Trigger only on "write a [document type]".
 
 **Banned defaults (12)**:
 1. Wall of bullets when prose is more appropriate
@@ -170,7 +172,9 @@ description: >
 
 **Replacement standard**: Domain-specific naming. Comments only for WHY. Zero `any`. en-AU strings. Functions < 50 lines. Early returns over nesting. Named constants. Consistent conventions per language (camelCase TS, snake_case Python).
 
-**Triggers**: "write code", "implement", "create function", "build", "add endpoint", "component", "refactor", "code"
+**Triggers**: "code quality", "naming conventions", "clean code", "code style", "variable naming", "code review", "refactor for quality"
+
+> **Note**: "implement", "build", "component" intentionally excluded — conflict with `idea-to-production`, `genesis-orchestrator`, and `scientific-luxury`. This skill activates on quality/style concerns, not task initiation. Priority position: after `council-of-logic` (position 3), before `execution-guardian` (position 4) in AGENTS.md.
 
 **Reference files**:
 - `references/anti-patterns.md` — 12 banned defaults with before/after code
@@ -187,7 +191,7 @@ description: >
 
 **Current**: v1.0.0, competent but passive. Receives work, references skills, no active anti-default enforcement.
 
-**Add to existing agent.md**:
+**Add to existing agent.md** (consolidate with existing "Never" section at lines 111-118 — items 1, 3, 10 below already exist and should be deduplicated, not duplicated):
 
 ```markdown
 ## Banned Defaults (Capability Uplift)
@@ -369,7 +373,7 @@ For each skill, add `references/` and `assets/` directories. SKILL.md content un
 
 | Skill | `references/anti-patterns.md` | `references/standards.md` | `assets/templates/` |
 |-------|-------------------------------|---------------------------|---------------------|
-| execution-guardian | Extract risk operation types | Risk scoring formulas | Gate configuration templates |
+| execution-guardian | Extract risk operation types (note: `references/error-format.md` already exists — preserve it, add alongside) | Risk scoring formulas | Gate configuration templates |
 | report-generator | Extract "guessed scores" ban | Report composition rules | Report templates (3 formats) |
 | changelog-generator | Extract manual update ban | Commit type mapping | .versionrc.json + CI workflow |
 
@@ -385,6 +389,23 @@ For each skill, add `references/` and `assets/` directories. SKILL.md content un
 6. **Retrofit Batch 3** — 3 process domain skills (parallel)
 7. **Registry update** — Update `.skills/AGENTS.md` with new skills and descriptions
 
+## AGENTS.md Priority Positions (New Skills)
+
+| New Skill | Priority Position | Rationale |
+|-----------|------------------|-----------|
+| document-formatting-uplift | After #5 (system-supervisor), before #6 (skill-manager) | Document quality is a cross-cutting concern |
+| code-output-uplift | After #3 (council-of-logic), before #4 (execution-guardian) | Code quality gates run before execution governance |
+| data-visualisation-uplift | After dashboard-patterns, before vector-search | Domain-specific, activates alongside dashboard work |
+| diagram-uplift | After blueprint-first, before report-generator | Diagrams are a sub-concern of blueprints and reports |
+
+## Agent Version Numbers
+
+| Agent | Current Version | New Version |
+|-------|----------------|-------------|
+| frontend-specialist | 1.0.0 | 1.1.0 (enhancement) |
+| docs-writer | 0.1.0 (stub) | 1.0.0 (full implementation) |
+| code-reviewer | 0.1.0 (stub) | 1.0.0 (full implementation) |
+
 ## Verification
 
 - Each new skill: trigger phrase test (say the trigger, confirm activation)
@@ -392,13 +413,15 @@ For each skill, add `references/` and `assets/` directories. SKILL.md content un
 - Each retrofit: confirm `references/` and `assets/` directories exist with content
 - Final: run `/harness-review` to confirm component inventory is accurate
 
-## File Count
+## File Count (Approximate)
+
+Counts are estimates — actual totals depend on how many templates each domain requires. All counts are approximate (marked ~).
 
 | Category | New Files | Modified Files |
 |----------|-----------|----------------|
-| Golden example (Phase 1) | ~10 | 0 |
-| New uplift skills (Phase 2) | ~30 | 0 |
+| Golden example (Phase 1) | ~11 (1 SKILL.md + 3 refs + 4 templates + 1 examples + 1 dir) | 0 |
+| New uplift skills (Phase 2) | ~33 (3 skills × ~11 files each) | 0 |
 | Agent transforms (Phase 3) | 0 | 3 |
-| Retrofit directories (Phase 4) | ~80 | 0 |
+| Retrofit directories (Phase 4) | ~65-80 (13 skills × 5-6 files each) | 0 |
 | Registry update | 0 | 1 |
-| **Total** | **~120** | **4** |
+| **Total** | **~110-125** | **4** |
