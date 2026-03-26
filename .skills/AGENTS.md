@@ -23,7 +23,7 @@ Location: `.skills/custom/`
 | **idea-to-production**     | Plain-English pipeline: Intake → Plan → Build → Test → Commit → Verify → PR. Use at the start of any task.                                                                 | "let's build", "I want to add", "implement", "new feature", "let's work on"                                                          |
 | **genesis-orchestrator**   | Phase-locked execution for Next.js full-stack builds                                                                                                                       | "build", "implement", "create feature", "plan architecture"                                                                          |
 | **council-of-logic**       | Mathematical first principles validation (Turing, Von Neumann, Bezier, Shannon)                                                                                            | "optimise", "algorithm", "performance", "complexity"                                                                                 |
-| **scientific-luxury**      | Design system enforcement for Scientific Luxury tier UI                                                                                                                    | "design", "UI", "component", "styling", "animation"                                                                                  |
+| **scientific-luxury**      | Design system enforcement for Scientific Luxury tier UI. Configurable parameters (DESIGN_VARIANCE, MOTION_INTENSITY, VISUAL_DENSITY) for layout complexity, animation density, and content spacing. Includes depth layering, navigation patterns, AI tells prevention, and creative arsenal. | "design", "UI", "component", "styling", "animation"                                                                                  |
 | **skill-manager**          | Analyse skill gaps, generate new skills, browse catalogue, validate health                                                                                                 | "skill gap", "generate skill", "skill health", "missing skills"                                                                      |
 | **error-taxonomy**         | Structured error codes, categories, and user-facing messages                                                                                                               | "error handling", "error codes", "error messages", "error response"                                                                  |
 | **data-validation**        | Zod and Pydantic validation patterns for input sanitisation                                                                                                                | "validation", "Zod", "Pydantic", "schema", "sanitise", "input"                                                                       |
@@ -80,10 +80,14 @@ Location: `.skills/custom/`
 | **claude-browser**         | Claude Chrome extension tools for personal browser automation in logged-in sessions                                                                                        | "chrome", "personal browser", "form fill", "logged in", "tab management"                                                             |
 | **outcome-translator**     | Translate human end-goal language ("Finished", "Ready", "Launch it") into a full engineering plan with Definition of Done, gap analysis, gated phases, and proof artifacts | "finished", "ready", "launch it", "make it work", "production ready", "ready for clients", "ship it", "done", "go live"              |
 | **blueprint-first**        | Generate ASCII wireframe or architecture diagram before writing code for UI, dashboards, landing pages, system architecture, or database schemas                           | "build a dashboard", "create a landing page", "design the UI", "add a page", "create the database schema", "design the architecture" |
+| **document-formatting-uplift** | Override default LLM document formatting. Replaces wall-of-bullets, header spam, and AI prose tells with prose-first hierarchy, typographic rhythm, and intentional whitespace. | "write a document", "write a report", "write a guide", "format document", "README", "specification", "proposal", "technical writing" |
+| **data-visualisation-uplift** | Override default chart aesthetics. Replaces grey gridlines, rainbow palettes, and legend-heavy layouts with spectral data semantics, OLED-optimised dark themes, and annotation-first design. | "chart", "graph", "visualisation", "dashboard data", "metrics", "Recharts", "Chart.js", "plot", "data display" |
+| **diagram-uplift**         | Override default Mermaid/diagram aesthetics. Replaces grey nodes, single-colour diagrams, and cramped layouts with spectral node colouring, OLED backgrounds, and semantic visual hierarchy. | "diagram", "flowchart", "Mermaid", "architecture diagram", "sequence diagram", "ER diagram", "system diagram", "visualise" |
+| **code-output-uplift**     | Override generic LLM code output patterns. Replaces generic variable names, over-commented code, and placeholder patterns with domain-specific naming, clean architecture, and production-ready structure. | "code quality", "naming conventions", "clean code", "code style", "variable naming", "refactor for quality" |
 
 ### Identified Gaps
 
-No gaps identified. All **61 skills** are installed. Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
+No gaps identified. All **65 skills** are installed (+4 Capability Uplift skills). 13 output-shaping skills retrofitted with `references/` and `assets/` directories. Use `/skill-manager analyse` to run automated gap analysis.
 
 ## Skill Priority
 
@@ -92,9 +96,11 @@ When multiple skills could apply, use this priority order:
 1. **outcome-translator** - Translate outcome language BEFORE any action on completion claims
 2. **blueprint-first** - Generate ASCII blueprint BEFORE any UI/architecture code
 3. **council-of-logic** - Always validate code quality first
-4. **execution-guardian** - Pre-execution governance, risk/confidence scoring, validation gates
-5. **system-supervisor** - Post-execution architecture drift, silent failures, completeness audit
-6. **skill-manager** - For skill lifecycle and gap analysis
+4. **code-output-uplift** - Override generic naming, over-commenting, placeholder patterns in code output
+5. **execution-guardian** - Pre-execution governance, risk/confidence scoring, validation gates
+6. **system-supervisor** - Post-execution architecture drift, silent failures, completeness audit
+7. **document-formatting-uplift** - Override wall-of-bullets, header spam, AI prose tells in documents
+8. **skill-manager** - For skill lifecycle and gap analysis
 7. **error-taxonomy** - For structured error handling patterns
 8. **error-boundary** - For React error boundaries, fallback UI, and error.tsx
 9. **retry-strategy** - For exponential backoff, circuit breaker, and retry policies
