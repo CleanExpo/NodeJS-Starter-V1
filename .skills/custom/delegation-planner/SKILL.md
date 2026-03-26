@@ -17,6 +17,7 @@ triggers:
   - route this task
   - assign work
 description: ">"
+context: fork
 ---
 
 

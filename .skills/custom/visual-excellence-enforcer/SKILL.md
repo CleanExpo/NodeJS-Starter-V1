@@ -2,9 +2,9 @@
 id: visual-excellence-enforcer
 name: visual-excellence-enforcer
 type: Encoded Preference Workflow
-version: 1.0.0
+version: 2.0.0
 created: 20/03/2026
-modified: 20/03/2026
+modified: 26/03/2026
 status: active
 triggers:
   - check the UI
@@ -17,6 +17,7 @@ triggers:
   - UI audit
   - check the frontend
 description: ">"
+context: fork
 ---
 
 
@@ -168,3 +169,116 @@ Component screenshot shows: dark OLED background, sharp corners, cyan accent on 
 ### Fail
 
 Component screenshot shows: white card on light grey background, blue primary button, rounded-2xl corners, no animation. — REJECTED — 4 critical violations found.
+
+## Prioritised Remediation
+
+After the audit report is produced, rank all violations by impact and generate an incremental fix plan.
+
+### Step 5: Rank Fixes by Impact
+
+Classify each violation from the audit:
+
+| Priority | Category | Examples |
+|----------|----------|---------|
+| **Critical** | Background, border radius, animation engine | Non-#050505 background, `rounded-lg`, CSS transitions instead of Framer Motion |
+| **High** | Typography, colour palette, banned elements | Wrong font family, non-spectral colours, symmetrical grid, Bootstrap cards |
+| **Medium** | Spacing, opacity, interaction states | Inconsistent spacing rhythm, wrong opacity values, missing hover/active states |
+| **Low** | Minor refinements | Font weight adjustments, minor padding tweaks, icon replacements |
+
+### Step 6: Generate Incremental Fix Plan
+
+Produce an ordered list of atomic changes, starting with highest-impact violations:
+
+```markdown
+## Fix Plan (ordered by impact)
+
+### Fix 1 [Critical]: Replace background colour
+- **File**: `apps/web/app/layout.tsx`
+- **Change**: `bg-white` → `bg-[#050505]`
+- **Estimated lines**: 1
+- **Commit**: `fix(ui): enforce OLED black background`
+
+### Fix 2 [Critical]: Replace border radius
+- **File**: `apps/web/components/ui/Card.tsx`
+- **Change**: `rounded-lg` → `rounded-sm` (all instances)
+- **Estimated lines**: 3
+- **Commit**: `fix(ui): enforce rounded-sm corners`
+
+### Fix 3 [High]: Replace animation engine
+...
+```
+
+Each fix should be independently committable (atomic).
+
+## Scoring Rubric
+
+Four weighted criteria for quantitative design assessment:
+
+| Criterion | Weight | Description |
+|-----------|--------|-------------|
+| **Design Quality** | 30% | Coherent visual whole — OLED black, spectral colours, single-pixel borders, JetBrains Mono for data |
+| **Originality** | 25% | Custom layout decisions, avoidance of template defaults, unique component patterns |
+| **Craft** | 25% | Typography precision, spacing rhythm, colour harmony, contrast ratios, animation smoothness |
+| **Functionality** | 20% | Usability, task completion, loading/error/empty states, responsive behaviour |
+
+### Scoring Scale (per criterion)
+
+| Score | Description |
+|-------|-------------|
+| 5 | Scientific Luxury exemplar — museum quality, zero AI tells |
+| 4 | Strong execution with minor polish needed |
+| 3 | Competent dark theme but lacks Scientific Luxury distinction |
+| 2 | Generic template with partial design system compliance |
+| 1 | Bootstrap/Tailwind defaults — no design system applied |
+
+**Overall score** = weighted sum / 5 × 100
+
+**Weight rationale**: Design Quality and Originality are weighted higher because Claude already scores well on Craft and Functionality by default (per Anthropic's harness design research).
+
+## Design Audit Checklist
+
+Comprehensive checklist imported from the redesign-skill pattern. Run through each section during audit.
+
+### Typography
+- [ ] No Inter, Roboto, or Arial — use JetBrains Mono (data), Editorial New (headings)
+- [ ] Headlines have presence — large size, tight tracking, reduced line-height
+- [ ] Body text width limited to ~65 characters (`max-w-[65ch]`)
+- [ ] Medium (500) and SemiBold (600) weights used for hierarchy (not just 400/700)
+- [ ] Numbers use monospace font or `font-variant-numeric: tabular-nums`
+- [ ] No orphaned words on last line (`text-wrap: balance`)
+
+### Colour & Surfaces
+- [ ] Background is OLED Black `#050505` (not `#000000`)
+- [ ] Max 1 accent colour family (spectral colours)
+- [ ] Shadows tinted to match background hue (not pure black)
+- [ ] Consistent warm OR cool grays (not mixed)
+- [ ] No purple/blue "AI gradient" aesthetic
+
+### Layout
+- [ ] No symmetrical grids — use asymmetric splits
+- [ ] No 3-column equal card rows — use zig-zag, masonry, or horizontal scroll
+- [ ] `min-h-[100dvh]` instead of `h-screen` for full-height sections
+- [ ] CSS Grid over complex flexbox percentage math
+- [ ] Max-width container (1200-1440px) with auto margins
+- [ ] Optical alignment adjustments where mathematical centering looks wrong
+
+### Interactivity & States
+- [ ] Hover states on all interactive elements
+- [ ] Active/pressed feedback (`scale-[0.98]` or `translateY(1px)`)
+- [ ] Visible focus ring for keyboard navigation
+- [ ] Loading states (skeleton loaders, not spinners)
+- [ ] Empty states (composed onboarding view)
+- [ ] Error states (inline, not `window.alert()`)
+
+### Content
+- [ ] No generic names ("John Doe"), numbers (`99.99%`), or company names ("Acme")
+- [ ] No AI copywriting cliches ("Elevate", "Seamless", "Unleash")
+- [ ] No Lorem Ipsum — use real draft copy in en-AU
+- [ ] Sentence case for headers (not Title Case)
+
+### Code Quality
+- [ ] Semantic HTML (`<nav>`, `<main>`, `<article>`, `<aside>`)
+- [ ] No inline styles mixed with Tailwind classes
+- [ ] No arbitrary z-index values — follow depth layering scale
+- [ ] All images have meaningful `alt` text
+- [ ] Proper meta tags (`<title>`, `description`, `og:image`)

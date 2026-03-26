@@ -13,6 +13,7 @@ description: >
   Override default LLM document formatting. Replaces wall-of-bullets, header spam,
   and AI prose tells with prose-first hierarchy, typographic rhythm, and intentional
   whitespace. Triggers on document creation, reports, guides, specs, and READMEs.
+context: fork
 ---
 
 # Document formatting uplift

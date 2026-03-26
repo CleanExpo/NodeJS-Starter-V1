@@ -2,16 +2,17 @@
 id: scientific-luxury
 name: scientific-luxury
 type: skill
-version: 2.0.1
+version: 3.0.0
 created: 20/03/2026
-modified: 20/03/2026
+modified: 26/03/2026
 status: active
 metadata:
   author: NodeJS-Starter-V1
-  version: 2.0.1
+  version: 3.0.0
   locale: en-AU
 description: >
-  Design system enforcement for Scientific Luxury tier UI. Triggers on \"design\", \"UI\", \"component\", \"styling\", \"animation\", or when creating React components. Enforces OLED black backgrounds, spectral colours, single-pixel borders, physics-based animations, and timeline layouts.
+  Design system enforcement for Scientific Luxury tier UI. Triggers on \"design\", \"UI\", \"component\", \"styling\", \"animation\", or when creating React components. Enforces OLED black backgrounds, spectral colours, single-pixel borders, physics-based animations, and timeline layouts. Configurable design parameters (DESIGN_VARIANCE, MOTION_INTENSITY, VISUAL_DENSITY) for layout complexity, animation density, and content spacing.
+context: fork
 ---
 
 
@@ -57,6 +58,147 @@ These patterns are explicitly **PROHIBITED**:
 | Linear transitions                                    | Mechanical, lifeless   | Physics-based easing curves        |
 | White/light backgrounds                               | Generic SaaS look      | OLED Black (#050505)               |
 | `text-muted-foreground`                               | Semantic but generic   | Explicit opacity (`text-white/40`) |
+
+## Design Parameters
+
+Three configurable dials that control layout complexity, animation density, and content spacing. These parameters COMPLEMENT the immutable constraints (OLED Black, rounded-sm, spectral colours, single-pixel borders, Framer Motion). Immutable constraints are NEVER overridden by parameter values.
+
+**Defaults**: `DESIGN_VARIANCE=5`, `MOTION_INTENSITY=5`, `VISUAL_DENSITY=3`
+
+Adapt these values dynamically based on what the user explicitly requests. Use defaults when no preference is stated.
+
+### DESIGN_VARIANCE (1-10): Layout Complexity
+
+| Range | Behaviour | Scientific Luxury Mapping |
+|-------|-----------|--------------------------|
+| 1-3 | Structured asymmetric layouts. 40/60 or 30/70 splits. Clean editorial grids. | Asymmetric splits (symmetric grids still banned) |
+| 4-7 | Timeline layers, overlapping elements, varied aspect ratios. Offset headers. | Default — timeline layout patterns |
+| 8-10 | Orbital/radial layouts, masonry grids, fractional CSS Grid (`2fr 1fr 1fr`), massive whitespace zones. | Advanced — orbital grid, staggered masonry |
+
+**Mobile Override**: For levels 4-10, any asymmetric layout above `md:` MUST fall back to single-column (`w-full`, `px-4`, `py-8`) on viewports < 768px.
+
+### MOTION_INTENSITY (1-10): Animation Density
+
+| Range | Behaviour | Scientific Luxury Mapping |
+|-------|-----------|--------------------------|
+| 1-3 | Entry-only animations. No perpetual motion. CSS `:hover`/`:active` states only. | Breathing animations disabled. `DURATIONS.fast` ceiling. |
+| 4-7 | Standard Framer Motion transitions. Stagger children on mount. Hover/tap feedback. | Default — `DURATIONS.normal`, breathing enabled |
+| 8-10 | Advanced choreography: spring physics (`stiffness: 100, damping: 20`), scroll-triggered reveals, parallax, magnetic hover, staggered cascades. | Premium — `useSpring` presets, `useMotionValue`/`useTransform` |
+
+**Performance Rule**: Perpetual motion (levels 7+) MUST be isolated in microscopic `'use client'` leaf components. Never trigger parent re-renders. Use `React.memo` and `useMotionValue` outside the React render cycle.
+
+### VISUAL_DENSITY (1-10): Content Spacing
+
+| Range | Behaviour | Scientific Luxury Mapping |
+|-------|-----------|--------------------------|
+| 1-3 | Luxury spacing. Generous `space-y-8`, `p-8`+. Art gallery feel. Everything breathes. | Default — matches existing Scientific Luxury aesthetic |
+| 4-7 | Standard app spacing. `space-y-4`, `p-4`-`p-6`. Balanced for daily-use interfaces. | Standard — tighter padding, more content per view |
+| 8-10 | Cockpit mode. Minimal padding. Data-dense. 1px line separators instead of cards. `font-mono` for all numbers. | Dashboard — cross-reference `dashboard-patterns` skill |
+
+**Rule**: Even at VISUAL_DENSITY=10, OLED Black background and spectral colours remain mandatory.
+
+## Depth Layering
+
+Z-index scale and backdrop blur hierarchy for consistent depth management.
+
+### Z-Index Scale
+
+| Layer | z-index | Usage |
+|-------|---------|-------|
+| Base | 0 | Default content |
+| Elevated | 10 | Cards with elevation, floating elements |
+| Overlay | 20 | Dropdowns, popovers, tooltips |
+| Modal | 30 | Modal dialogs, drawers |
+| Toast | 40 | Toast notifications |
+| Tooltip | 50 | Tooltip overlays (highest) |
+
+**Rule**: Never use arbitrary z-index values (`z-[9999]`). Use the scale above.
+
+### Backdrop Blur Tokens
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `blur-sm` | `backdrop-blur-[4px]` | Subtle depth hint |
+| `blur-md` | `backdrop-blur-[8px]` | Overlay panels |
+| `blur-lg` | `backdrop-blur-[12px]` | Modal backgrounds |
+
+**Rule**: Apply backdrop blur only to fixed/sticky elements. Never on scrolling containers (causes GPU repaint storms on mobile).
+
+## Navigation Patterns
+
+Responsive navigation behaviour across breakpoints.
+
+| Breakpoint | Pattern | Details |
+|-----------|---------|---------|
+| Desktop (≥1024px) | Fixed sidebar | 240px width, collapsible to 64px icon-only |
+| Tablet (768-1023px) | Overlay sidebar | Slides in from left, backdrop blur behind |
+| Mobile (<768px) | Bottom navigation bar | 4-5 items max, icon + label, min-h-[60px] |
+
+**Rules**:
+- Sidebar always uses OLED Black background with single-pixel right border
+- Active nav item uses spectral Cyan `#00F5FF` indicator (2px left border or bottom border on mobile)
+- Navigation transitions use Framer Motion `AnimatePresence` for mount/unmount
+
+## AI Tells — Forbidden Patterns
+
+Common AI-generated design signatures that MUST be avoided. These patterns betray generic AI output and violate Scientific Luxury standards.
+
+### Visual & CSS Tells
+- **NO neon outer glows**: No default `box-shadow` glows. Use inner borders or tinted shadows.
+- **NO pure `#000000`**: Use OLED Black `#050505` (already enforced by design system).
+- **NO oversaturated accents**: Spectral colours are pre-defined. Do not invent new saturated accents.
+- **NO gradient text on headers**: Excessive `bg-clip-text` gradients are a top AI tell.
+- **NO 3-column equal card layouts**: The "three cards horizontally" feature row is the most generic AI pattern. Use asymmetric grids, zig-zag layouts, or horizontal scroll instead.
+
+### Typography Tells
+- **NO Inter font**: Banned. Use JetBrains Mono (data), Editorial New (headings), or system sans-serif (body).
+- **NO oversized H1**: Control hierarchy with weight and colour, not just massive scale.
+- **NO "Elevate", "Seamless", "Unleash", "Next-Gen"**: AI copywriting cliches. Use concrete, specific language.
+
+### Content Tells
+- **NO "John Doe" or "Jane Smith"**: Use diverse, creative, realistic-sounding names.
+- **NO round numbers**: `99.99%`, `50%`, `$100.00` are AI tells. Use organic data: `47.2%`, `$87.50`.
+- **NO "Acme Corp"**: Invent contextual, premium brand names.
+- **NO Lorem Ipsum**: Write real draft copy in en-AU.
+
+### Component Tells
+- **NO generic avatars**: No SVG egg icons. Use styled initials, photo placeholders, or `squircle` shapes.
+- **NO pill badges for "New"/"Beta"**: Use square badges or plain text labels.
+- **NO accordion FAQ sections**: Use side-by-side lists, searchable help, or progressive disclosure.
+
+## Creative Arsenal
+
+High-end component concepts to pull from when building interfaces. These replace generic patterns with premium alternatives.
+
+### Navigation Concepts
+- **Mac OS Dock Magnification**: Icons scale fluidly on hover proximity
+- **Magnetic Button**: Buttons that physically pull toward the cursor (use `useMotionValue`/`useTransform`)
+- **Dynamic Island**: Pill-shaped component that morphs to show status/alerts
+- **Contextual Radial Menu**: Circular menu expanding at click coordinates
+
+### Layout Concepts
+- **Bento Grid**: Asymmetric tile-based grouping (NOT equal columns)
+- **Sticky Scroll Stack**: Cards that stick and physically stack on scroll
+- **Split Screen Scroll**: Two halves sliding in opposite directions
+- **Horizontal Scroll Hijack**: Vertical scroll translates to horizontal pan
+
+### Card Concepts
+- **Parallax Tilt Card**: 3D-tilting card tracking mouse coordinates
+- **Spotlight Border Card**: Borders illuminate dynamically under cursor
+- **Glassmorphism Panel**: True frosted glass with inner refraction (`border-white/10` + `shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`)
+- **Morphing Modal**: Button that seamlessly expands into full-screen dialog
+
+### Micro-Interactions
+- **Staggered Orchestration**: Lists/grids reveal with `staggerChildren` — never mount everything at once
+- **Skeleton Shimmer**: Shifting light reflections across placeholder boxes (not generic spinners)
+- **Directional Hover**: Fill enters from the exact side the mouse entered
+- **Ripple Click**: Visual waves from click coordinates
+
+### Performance Rules for Arsenal
+- Never mix GSAP/ThreeJS with Framer Motion in the same component tree
+- Perpetual animations MUST be `React.memo` isolated in leaf `'use client'` components
+- Animate only `transform` and `opacity` — never `top`, `left`, `width`, `height`
+- Grain/noise overlays must be `fixed inset-0 z-50 pointer-events-none`
 
 ## Colour System
 

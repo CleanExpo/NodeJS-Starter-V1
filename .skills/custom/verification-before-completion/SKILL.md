@@ -4,8 +4,10 @@ description: Hard gate before any "Done", "Complete", or "✅" claim. Must execu
 license: MIT
 metadata:
   author: NodeJS-Starter-V1 — adapted from obra/superpowers (MIT)
-  version: '1.0.0'
+  version: '2.0.0'
+  modified: 26/03/2026
   locale: en-AU
+context: fork
 ---
 
 # Verification Before Completion
@@ -188,6 +190,45 @@ This applies to:
 - Any positive assertion about the state of the work
 
 **No shortcuts. Run the command. Read the output. Then claim the result.**
+
+---
+
+## Code Completeness Scan
+
+Before claiming work is complete, scan for placeholder patterns that indicate incomplete implementation. This check is MANDATORY and runs alongside other verification commands.
+
+### Banned Placeholder Patterns
+
+| Pattern | Language | Meaning |
+|---------|----------|---------|
+| `// TODO` | TypeScript/JavaScript | Unfinished work marker |
+| `// FIXME` | TypeScript/JavaScript | Known bug marker |
+| `// Add .* here` | TypeScript/JavaScript | Implementation placeholder |
+| `// implement` | TypeScript/JavaScript | Stub function |
+| `/* ... */` | TypeScript/JavaScript | Collapsed/elided code |
+| `{/* placeholder */}` | JSX/TSX | Template placeholder |
+| `pass  # TODO` | Python | Stub function |
+| `raise NotImplementedError` | Python | Unimplemented method |
+| `...` (Ellipsis as statement) | Python | Stub body |
+
+### Verification Command
+
+Run this grep before any completion claim:
+
+```bash
+rg --glob '*.{ts,tsx,py}' -n '(TODO|FIXME|Add .* here|implement|placeholder|NotImplementedError)' apps/
+```
+
+### Gate Rule
+
+- If ANY placeholder pattern matches in files modified during this task → **VERIFICATION FAILS**
+- Output: `INCOMPLETE: Placeholder code detected at {file}:{line}`
+- This check cannot be overridden — placeholders MUST be resolved before completion
+
+### Exceptions
+
+- `TODO` in test files describing future test cases (not current deliverables) — allowed if explicitly documented
+- `TODO` in comments referencing a tracked issue number (e.g., `// TODO(#123): implement after auth PR merges`) — allowed
 
 ---
 

@@ -13,6 +13,7 @@ triggers:
   - new feature
   - full pipeline
   - end to end
+context: fork
 ---
 
 # Idea to Production — Plain-English Pipeline

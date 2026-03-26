@@ -1,3 +1,14 @@
+---
+id: ceo-board
+name: ceo-board
+type: skill
+version: 1.0.0
+created: 20/03/2026
+modified: 26/03/2026
+status: active
+context: fork
+---
+
 # CEO Board Deliberation Skill
 
 ## Overview

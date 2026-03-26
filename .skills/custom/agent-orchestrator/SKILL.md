@@ -10,6 +10,7 @@ description: >
   Triggers on: multi-step requests, cross-domain tasks, "coordinate", "plan this out",
   "I need help with multiple things", or any complex request that touches more than one
   specialist area. Also triggers when the user seems unsure which tool or approach to use.
+context: fork
 ---
 
 # Agent Orchestrator

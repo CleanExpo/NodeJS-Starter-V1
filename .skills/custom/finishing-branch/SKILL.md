@@ -6,6 +6,7 @@ metadata:
   author: NodeJS-Starter-V1 — adapted from obra/superpowers (MIT)
   version: '1.0.0'
   locale: en-AU
+context: fork
 ---
 
 # Finishing a Development Branch

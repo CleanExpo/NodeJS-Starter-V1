@@ -8,6 +8,7 @@ modified: 20/03/2026
 status: active
 description: >
   Hybrid DAG execution primitive combining deterministic and agentic nodes with hard iteration caps
+context: fork
 ---
 
 

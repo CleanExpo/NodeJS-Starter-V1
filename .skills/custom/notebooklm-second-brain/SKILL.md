@@ -20,6 +20,7 @@ triggers:
   - post-build
 description: >
   Notebook First retrieval policy — query NotebookLM notebooks before web search or context dumping
+context: fork
 ---
 
 

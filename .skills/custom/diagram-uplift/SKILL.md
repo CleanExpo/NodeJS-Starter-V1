@@ -14,6 +14,7 @@ description: >
   diagrams, and cramped layouts with spectral node colouring, OLED-optimised
   backgrounds, and semantic visual hierarchy. Triggers on diagram creation,
   flowcharts, architecture diagrams, sequence diagrams, and ER diagrams.
+context: fork
 ---
 
 # Diagram uplift

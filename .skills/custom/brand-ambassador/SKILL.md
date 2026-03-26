@@ -11,6 +11,7 @@ description: >
   or when someone wants social media content that sounds like a real person recommending a
   brand rather than corporate marketing copy. Even if the user just says "help me promote
   [brand]" or "I need content for [brand]'s social channels" — use this skill.
+context: fork
 ---
 
 # Brand Ambassador

@@ -12,6 +12,7 @@ metadata:
   locale: en-AU
 description: >
   Mathematical first principles validation for code quality. Triggers on \"optimise\", \"algorithm\", \"performance\", \"complexity\", \"O(n)\", or when reviewing code for efficiency. Enforces Turing (algorithmic), Von Neumann (architecture), Bezier (animation), and Shannon (compression) principles.
+context: fork
 ---
 
 

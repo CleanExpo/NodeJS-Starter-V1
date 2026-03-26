@@ -14,6 +14,7 @@ description: >
   and legend-heavy layouts with spectral data semantics, OLED-optimised dark
   themes, and annotation-first design. Triggers on chart creation, dashboard
   data displays, metrics visualisation, and any Recharts or Chart.js usage.
+context: fork
 ---
 
 # Data visualisation uplift

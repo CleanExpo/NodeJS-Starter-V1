@@ -16,6 +16,7 @@ triggers:
   - what criteria
   - acceptance criteria
 description: ">"
+context: fork
 ---
 
 

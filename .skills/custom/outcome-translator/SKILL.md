@@ -21,6 +21,7 @@ triggers:
   - we're done
   - release it
 description: ">"
+context: fork
 ---
 
 

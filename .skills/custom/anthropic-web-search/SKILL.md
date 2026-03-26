@@ -5,6 +5,7 @@ version: 1.0.0
 created: 20/03/2026
 modified: 20/03/2026
 status: active
+context: fork
 ---
 
 # Anthropic Web Search Tool v2 — Integration Guide

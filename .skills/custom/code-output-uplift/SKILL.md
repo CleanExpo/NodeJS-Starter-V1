@@ -13,6 +13,7 @@ description: >
   Override generic LLM code output patterns. Replaces generic variable names,
   over-commented code, and placeholder patterns with domain-specific naming,
   clean architecture, and production-ready structure.
+context: fork
 ---
 
 # Code output uplift

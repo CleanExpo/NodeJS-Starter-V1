@@ -15,6 +15,7 @@ triggers:
   - confirm the proof
   - check artifacts
 description: ">"
+context: fork
 ---
 
 

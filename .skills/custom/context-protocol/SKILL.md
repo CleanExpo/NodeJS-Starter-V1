@@ -5,6 +5,7 @@ triggers:
   - any /new-feature invocation
   - any /discuss invocation
   - any task involving UI, components, or code modification
+context: fork
 ---
 
 # Context Protocol — Slop Prevention Middleware

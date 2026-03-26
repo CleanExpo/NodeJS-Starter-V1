@@ -12,6 +12,7 @@ metadata:
   locale: en-AU
 description: >
   Autonomous project orchestration protocol for Next.js full-stack builds. Triggers on \"build\", \"implement\", \"create feature\", \"plan\", \"architecture\", or when starting new phases. Enforces phase-locked execution, token economy, and sectional verification gates.
+context: fork
 ---
 
 

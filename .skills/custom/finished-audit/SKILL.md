@@ -16,6 +16,7 @@ triggers:
   - can we ship
   - can we close this
 description: ">"
+context: fork
 ---
 
 
