@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import asyncio
 import time
-import uuid
 from typing import Any
 
 from src.utils import get_logger

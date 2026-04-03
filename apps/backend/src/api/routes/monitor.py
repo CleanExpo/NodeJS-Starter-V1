@@ -103,7 +103,6 @@ def _build_snapshot() -> SystemSnapshot:
     agents = [AgentMetrics(**m) for m in _agent_metrics.values()]
     active = sum(1 for a in agents if a.status == "working")
     completed = sum(a.tasks_completed for a in agents)
-    failed = sum(a.tasks_failed for a in agents)
 
     return SystemSnapshot(
         agents=agents,
