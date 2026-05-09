@@ -24,10 +24,13 @@ from .routes import (
     discovery,
     documents,
     health,
+    monitor,
     prd,
     rag,
+    research,
     search,
     task_queue,
+    team,
     webhooks,
     workflow_builder,
     workflows,
@@ -111,6 +114,9 @@ app.include_router(search.router, tags=["Search"])
 app.include_router(documents.router, tags=["Documents"])
 app.include_router(workflow_builder.router, prefix="/api", tags=["Workflow Builder"])
 app.include_router(discovery.router, prefix="/api", tags=["Discovery"])
+app.include_router(team.router, tags=["Team Execution"])
+app.include_router(research.router, tags=["Autoresearch"])
+app.include_router(monitor.router, tags=["Monitor"])
 
 
 @app.get("/")

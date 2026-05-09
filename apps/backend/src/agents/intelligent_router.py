@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from src.memory.models import MemoryDomain
 from src.memory.store import MemoryStore
 from src.utils import get_logger
+from src.agents.routing import KeywordDetector, TaskSizeDetector
 
 logger = get_logger(__name__)
 
@@ -68,6 +69,8 @@ class IntelligentRouter:
             memory_store: Optional memory store
         """
         self.memory_store = memory_store or MemoryStore()
+        self._keyword_detector = KeywordDetector()
+        self._size_detector = TaskSizeDetector()
 
     async def analyze_task(
         self,
@@ -118,9 +121,13 @@ class IntelligentRouter:
         return analysis
 
     def _categorize_task(self, description: str) -> str:
-        """Categorize task by primary domain."""
-        desc_lower = description.lower()
+        """Categorise task by primary domain using keyword detection."""
+        signal = self._keyword_detector.detect(description)
+        if signal.confidence > 0.0:
+            return signal.primary_domain
 
+        # Fallback to original simple keyword matching for legacy compatibility
+        desc_lower = description.lower()
         categories_keywords = {
             "frontend": ["ui", "component", "page", "react", "nextjs", "tailwind"],
             "backend": ["api", "endpoint", "service", "fastapi", "agent"],
@@ -128,37 +135,17 @@ class IntelligentRouter:
             "testing": ["test", "coverage", "e2e"],
             "documentation": ["docs", "readme", "documentation"],
             "refactoring": ["refactor", "improve", "cleanup", "optimize"],
-            "bug": ["fix", "bug", "error", "issue", "crash"]
+            "bug": ["fix", "bug", "error", "issue", "crash"],
         }
-
         for category, keywords in categories_keywords.items():
             if any(kw in desc_lower for kw in keywords):
                 return category
-
         return "general"
 
     async def _estimate_complexity(self, description: str) -> str:
-        """Estimate task complexity."""
-        desc_lower = description.lower()
-
-        # Simple indicators
-        simple_indicators = ["add button", "fix typo", "update text", "change color"]
-        complex_indicators = ["implement", "design", "architect", "migrate", "refactor entire"]
-
-        if any(ind in desc_lower for ind in simple_indicators):
-            return Complexity.SIMPLE
-
-        if any(ind in desc_lower for ind in complex_indicators):
-            return Complexity.COMPLEX
-
-        # Check word count as proxy for complexity
-        word_count = len(description.split())
-        if word_count < 10:
-            return Complexity.SIMPLE
-        elif word_count > 30:
-            return Complexity.COMPLEX
-
-        return Complexity.MODERATE
+        """Estimate task complexity using the TaskSizeDetector."""
+        assessment = self._size_detector.assess(description)
+        return assessment.size
 
     async def _find_similar_tasks(self, description: str) -> list[dict[str, Any]]:
         """Find similar past tasks using vector search."""
