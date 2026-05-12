@@ -7,6 +7,16 @@ on:
 
 jobs:
   autoresearch:
+    # RA-3056 — skip the entire job unless explicitly enabled. The
+    # autoresearch loop is a code-quality nice-to-have that requires
+    # ANTHROPIC_API_KEY (per-call billed); failing CI every 2h on a
+    # missing secret floods Linear with WorkOrder tickets (RA-2511 /
+    # RA-2517 / RA-2583 / RA-2613 / RA-3048 all auto-filed for this).
+    #
+    # To re-enable, set BOTH:
+    #   - repository variable  ENABLE_AUTORESEARCH = "true"
+    #   - repository secret    ANTHROPIC_API_KEY   = <key>
+    if: ${{ vars.ENABLE_AUTORESEARCH == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
