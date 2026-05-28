@@ -135,14 +135,42 @@ def calculate_score(lint: int, ts: int, ruff: int, mypy: int) -> int:
 # Claude hypothesis
 # ---------------------------------------------------------------------------
 
+SKIPPED_HYPOTHESIS_REASON = (
+    "skipped — ANTHROPIC_API_KEY not configured (set the secret to enable Claude hypotheses)"
+)
+
+
+def _placeholder_hypothesis() -> dict[str, str]:
+    """Return the placeholder hypothesis used when Claude cannot be called.
+
+    Metrics are still valuable on their own — the loop should record the row,
+    persist learnings, and exit cleanly so the scheduled CI job stays green
+    while the absence of the API key remains visible in logs and the queue.
+    """
+    return {
+        "HYPOTHESIS": SKIPPED_HYPOTHESIS_REASON,
+        "TARGET_FILE": "N/A",
+        "EXPECTED_IMPROVEMENT": "N/A",
+        "CONFIDENCE": "N/A",
+        "RATIONALE": "N/A",
+    }
+
+
 def get_hypothesis(lint: int, ts: int, ruff: int, mypy: int, score: int) -> dict[str, str]:
-    """Call claude-sonnet-4-6 and return a structured improvement hypothesis."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    """Call claude-sonnet-4-6 and return a structured improvement hypothesis.
+
+    When ``ANTHROPIC_API_KEY`` is missing or empty, return a placeholder so
+    metric collection still completes and CI does not fail on a missing
+    optional secret.
+    """
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not api_key:
-        raise RuntimeError(
-            "ANTHROPIC_API_KEY environment variable is not set. "
-            "Add it to your GitHub Actions secrets or local environment."
+        print(
+            "  WARNING: ANTHROPIC_API_KEY not set — skipping Claude hypothesis. "
+            "Metrics will still be recorded.",
+            flush=True,
         )
+        return _placeholder_hypothesis()
 
     client = anthropic.Anthropic(api_key=api_key)
 
