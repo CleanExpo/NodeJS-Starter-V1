@@ -11,7 +11,6 @@ from uuid import UUID, uuid4
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
-    Column,
     DateTime,
     Enum,
     ForeignKey,
@@ -21,7 +20,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
-from sqlalchemy.orm import DeclarativeBase, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -61,19 +60,19 @@ class Contractor(Base):
 
     __tablename__ = "contractors"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_id: UUID | None = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    user_id: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
-    name: str = Column(String(100), nullable=False)
-    mobile: str = Column(String(20), nullable=False, index=True)
-    abn: str | None = Column(String(20), nullable=True, index=True)
-    email: str | None = Column(String(255), nullable=True)
-    specialisation: str | None = Column(String(100), nullable=True)
-    created_at: datetime = Column(
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    mobile: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    abn: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
+    email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    specialisation: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
     )
-    updated_at: datetime = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
@@ -82,9 +81,7 @@ class Contractor(Base):
 
     # Relationships
     user = relationship("User", back_populates="contractors")
-    availability_slots = relationship(
-        "AvailabilitySlot", back_populates="contractor", cascade="all, delete-orphan"
-    )
+    availability_slots = relationship("AvailabilitySlot", back_populates="contractor", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<Contractor(id={self.id}, name={self.name})>"
@@ -99,34 +96,34 @@ class AvailabilitySlot(Base):
 
     __tablename__ = "availability_slots"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    contractor_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    contractor_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("contractors.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    date: datetime = Column(DateTime(timezone=True), nullable=False, index=True)
-    start_time: datetime = Column(Time, nullable=False)
-    end_time: datetime = Column(Time, nullable=False)
-    suburb: str = Column(String(100), nullable=False, index=True)
-    state: AustralianState = Column(
+    date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    start_time: Mapped[datetime] = mapped_column(Time, nullable=False)
+    end_time: Mapped[datetime] = mapped_column(Time, nullable=False)
+    suburb: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    state: Mapped[AustralianState] = mapped_column(
         Enum(AustralianState, name="australian_state"),
         nullable=False,
         default=AustralianState.QLD,
         index=True,
     )
-    postcode: str | None = Column(String(10), nullable=True)
-    status: AvailabilityStatus = Column(
+    postcode: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    status: Mapped[AvailabilityStatus] = mapped_column(
         Enum(AvailabilityStatus, name="availability_status"),
         default=AvailabilityStatus.AVAILABLE,
         index=True,
     )
-    notes: str | None = Column(Text, nullable=True)
-    created_at: datetime = Column(
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
     )
-    updated_at: datetime = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
@@ -149,19 +146,19 @@ class Document(Base):
 
     __tablename__ = "documents"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_id: UUID | None = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    user_id: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True
     )
-    title: str = Column(String(255), nullable=False)
-    content: str = Column(Text, nullable=False)
-    embedding: list[float] | None = Column(Vector(1536), nullable=True)  # OpenAI/Anthropic dimension
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    embedding: Mapped[list[float] | None] = mapped_column(Vector(1536), nullable=True)  # OpenAI/Anthropic dimension
     # Renamed from 'metadata' to avoid SQLAlchemy reserved name
-    doc_metadata: dict = Column("metadata", JSONB, default=dict, nullable=False)
-    created_at: datetime = Column(
+    doc_metadata: Mapped[dict] = mapped_column("metadata", JSONB, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
     )
-    updated_at: datetime = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
