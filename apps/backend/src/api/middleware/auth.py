@@ -1,10 +1,9 @@
 """Authentication middleware for JWT validation."""
 
 import hmac
-from collections.abc import Callable
 
 from fastapi import Request, Response
-from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from src.auth.jwt import decode_access_token
 from src.config import get_settings
@@ -35,7 +34,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self,
         request: Request,
-        call_next: Callable[[Request], Response],
+        call_next: RequestResponseEndpoint,
     ) -> Response:
         """Process the request and validate authentication."""
         # Skip auth for public paths

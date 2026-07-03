@@ -5,7 +5,7 @@ from collections import defaultdict
 from collections.abc import Callable
 
 from fastapi import Request, Response
-from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from src.config import get_settings
 from src.utils import get_logger
@@ -54,7 +54,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self,
         request: Request,
-        call_next: Callable[[Request], Response],
+        call_next: RequestResponseEndpoint,
     ) -> Response:
         """Process the request and apply rate limiting."""
         # Skip rate limiting for health checks
