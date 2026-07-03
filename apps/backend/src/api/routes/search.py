@@ -6,6 +6,7 @@ Uses SQLAlchemy ORM for type-safe queries and async/await pattern.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -95,7 +96,7 @@ async def search_documents(
     search_request: SearchRequest,
     authorization: str | None = Query(None, description="Authorization header with JWT token"),
     db: AsyncSession = Depends(get_async_db),
-) -> SearchResponse:
+) -> SearchResponse | JSONResponse:
     """
     Search documents using PostgreSQL full-text search (tsvector).
 

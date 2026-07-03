@@ -2,6 +2,7 @@
 
 
 from fastapi import APIRouter, HTTPException, Request, status
+from fastapi.responses import JSONResponse
 
 from src.api.error_handling import create_error_response
 from src.utils import get_logger
@@ -25,7 +26,7 @@ async def create_workflow(
     request: Request,
     workflow: WorkflowDefinition,
     user_id: str | None = None,
-) -> WorkflowDefinition:
+) -> WorkflowDefinition | JSONResponse:
     """Create a new workflow definition."""
     try:
         created = await storage.create_workflow(workflow, user_id=user_id)
