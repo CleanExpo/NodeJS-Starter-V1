@@ -307,7 +307,7 @@ class ContextManager:
         Returns:
             Relevant context ready to load
         """
-        context = {
+        context: dict[str, Any] = {
             "agent_type": agent_type,
             "task_id": task.get("id"),
             "skills_metadata": [],  # Just metadata, full skills loaded on-demand
