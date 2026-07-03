@@ -319,7 +319,7 @@ class ProgrammaticToolCaller:
                 return_exceptions=True,
             )
             for call, result in zip(parallel_calls, parallel_results):
-                if isinstance(result, Exception):
+                if isinstance(result, BaseException):
                     context.complete_call(call.id, error=str(result))
                     results.append({"id": call.id, "error": str(result)})
                 else:

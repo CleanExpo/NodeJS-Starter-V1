@@ -201,7 +201,7 @@ class AutoresearchRuntime:
 
         processed: list[ResearchResult] = []
         for task, result in zip(plan.tasks, results):
-            if isinstance(result, Exception):
+            if isinstance(result, BaseException):
                 processed.append(
                     ResearchResult(
                         task_id=task.id,
