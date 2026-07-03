@@ -547,6 +547,7 @@ Return ONLY the JSON, no additional text."""
                 "database": "PostgreSQL via Supabase",
             },
             existing_stack_integration=["Manual integration planning required"],
+            integration_points=["Manual integration planning required"],
             security_considerations=["Security audit required"],
             authentication_approach="To be determined",
             authorization_model="To be determined",
