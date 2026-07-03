@@ -2,7 +2,30 @@
  * E2E tests for PRD generation flow
  */
 
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+/**
+ * Mock the /api/prd/generate endpoint so the optimistic "generating" state
+ * persists during the test. No backend runs in the E2E CI job, so the real
+ * fetch to localhost:8000 rejects instantly and `isGenerating` flips back to
+ * false before assertions can see the progress view. The agent-run poll is
+ * left unmocked — it fails silently and keeps `isGenerating` true at 0%.
+ */
+async function mockGenerateStarted(page: Page): Promise<void> {
+  await page.route("**/api/prd/generate", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        prd_id: "prd_test",
+        task_id: "prd_test",
+        run_id: "run_test",
+        status: "pending",
+        message: "PRD generation started",
+      }),
+    })
+  );
+}
 
 test.describe("PRD Generation Flow", () => {
   test.beforeEach(async ({ page }) => {
@@ -48,6 +71,8 @@ test.describe("PRD Generation Flow", () => {
   });
 
   test("should submit form with valid data", async ({ page }) => {
+    await mockGenerateStarted(page);
+
     // Fill in requirements
     await page.getByLabel(/Project Description/i).fill(
       "Build a task management app for remote teams with Kanban boards, real-time notifications, and project tracking"
@@ -68,6 +93,8 @@ test.describe("PRD Generation Flow", () => {
   });
 
   test("should display progress during generation", async ({ page }) => {
+    await mockGenerateStarted(page);
+
     // Fill and submit form
     await page.getByLabel(/Project Description/i).fill(
       "Build a simple todo application with user authentication and task management features for students"
@@ -119,6 +146,8 @@ test.describe("PRD Generation Flow", () => {
   });
 
   test("should disable form inputs during generation", async ({ page }) => {
+    await mockGenerateStarted(page);
+
     // Fill and submit
     await page.getByLabel(/Project Description/i).fill(
       "Build a comprehensive application with many features for testing purposes"
@@ -128,18 +157,21 @@ test.describe("PRD Generation Flow", () => {
     // Wait for generation state
     await expect(page.locator("text=/Generating/i")).toBeVisible({ timeout: 5000 });
 
-    // All inputs should be disabled (checking for disabled attribute)
-    const textarea = page.getByLabel(/Project Description/i);
-    await expect(textarea).toBeDisabled();
+    // During generation the page replaces the form entirely with the progress
+    // view, so the inputs are unmounted (a stronger guarantee than disabling):
+    // the user cannot modify them because they are no longer on the page.
+    await expect(page.getByLabel(/Project Description/i)).toHaveCount(0);
   });
 
   test("should show How It Works section", async ({ page }) => {
     await expect(page.locator("text=/How It Works/i")).toBeVisible();
 
-    // Check steps are displayed
-    await expect(page.locator("text=/Describe Your Project/i")).toBeVisible();
-    await expect(page.locator("text=/AI Analysis/i")).toBeVisible();
-    await expect(page.locator("text=/Ready to Build/i")).toBeVisible();
+    // Check step headings are displayed. Scope to the heading role — the plain
+    // text "Describe Your Project" also appears in the step's body copy, which
+    // makes a bare text locator match two elements (strict-mode violation).
+    await expect(page.getByRole("heading", { name: "Describe Your Project" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "AI Analysis" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ready to Build" })).toBeVisible();
   });
 });
 
