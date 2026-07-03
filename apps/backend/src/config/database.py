@@ -6,7 +6,7 @@ Includes slow-query detection via SQLAlchemy event listeners.
 """
 
 import time
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Generator
 from contextlib import asynccontextmanager
 
 from sqlalchemy import create_engine, event
@@ -101,7 +101,7 @@ def _after_cursor_execute(conn, cursor, statement, parameters, context, executem
         )
 
 
-def get_sync_db() -> Session:
+def get_sync_db() -> Generator[Session, None, None]:
     """
     Get synchronous database session.
 
