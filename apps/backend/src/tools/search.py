@@ -307,7 +307,7 @@ class ToolSearcher:
         k1 = 1.5
         b = 0.75
 
-        if tool.name not in self._bm25_index:
+        if self._bm25_index is None or tool.name not in self._bm25_index:
             return 0.0
 
         term_freq = self._bm25_index[tool.name]
