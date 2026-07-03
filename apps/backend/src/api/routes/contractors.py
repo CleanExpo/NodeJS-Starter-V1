@@ -5,7 +5,7 @@ Currently returns 503 — Supabase was removed in the JWT migration.
 Requires PostgreSQL migration to restore functionality.
 """
 
-from typing import Annotated
+from typing import Annotated, NoReturn
 
 from fastapi import APIRouter, HTTPException, Query, status
 
@@ -37,7 +37,7 @@ router = APIRouter(
 )
 
 
-def _raise_unavailable() -> None:
+def _raise_unavailable() -> NoReturn:
     raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=_SERVICE_MSG)
 
 
