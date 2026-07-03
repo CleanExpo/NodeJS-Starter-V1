@@ -119,13 +119,16 @@ class BaseAgent(ABC):
     @abstractmethod
     async def execute(
         self,
-        task_description: str,
+        task_description: Any,
         context: dict[str, Any] | None = None,
     ) -> Any:
         """Execute a task.
 
         Args:
-            task_description: Description of the task to execute
+            task_description: The task to execute. Most agents take a
+                description string; specialized agents (e.g. the PRD agents)
+                accept a structured input such as a Pydantic model, so the
+                base contract is intentionally permissive.
             context: Additional context for the task
 
         Returns:
