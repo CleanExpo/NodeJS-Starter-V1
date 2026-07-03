@@ -136,12 +136,8 @@ class SubagentManager:
         Returns:
             Spawned agent instance
         """
-        # Get agent from registry
+        # Get agent from registry (default agents are pre-registered by name)
         agent = self.registry.get_agent(config.agent_type)
-
-        if not agent:
-            # Create new agent if not in registry
-            agent = self.registry.create_agent(config.agent_type)
 
         if not agent:
             raise ValueError(f"Cannot create agent of type: {config.agent_type}")
@@ -192,7 +188,7 @@ class SubagentManager:
 
             # Process results
             for i, result in enumerate(wave_results):
-                if isinstance(result, Exception):
+                if isinstance(result, BaseException):
                     # Handle exception
                     logger.error(
                         "Subagent failed with exception",
@@ -238,11 +234,8 @@ class SubagentManager:
             self._active_subagents[config.task.subtask_id]["status"] = SubagentStatus.RUNNING
 
         try:
-            # Get agent
+            # Get agent (default agents are pre-registered by name)
             agent = self.registry.get_agent(config.agent_type)
-            if not agent:
-                agent = self.registry.create_agent(config.agent_type)
-
             if not agent:
                 raise ValueError(f"Cannot get/create agent: {config.agent_type}")
 
@@ -434,7 +427,7 @@ class SubagentManager:
         Returns:
             Dict with failure analysis and suggestions
         """
-        analysis = {
+        analysis: dict[str, Any] = {
             "total_failures": len(failed_results),
             "failures_by_type": {},
             "suggestions": []
@@ -582,8 +575,8 @@ class SubagentManager:
         Returns:
             Statistics dict
         """
-        by_status = {}
-        by_type = {}
+        by_status: dict[Any, int] = {}
+        by_type: dict[Any, int] = {}
 
         for tracking in self._active_subagents.values():
             status = tracking["status"]
