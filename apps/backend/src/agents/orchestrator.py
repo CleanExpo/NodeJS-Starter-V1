@@ -242,11 +242,11 @@ class OrchestratorAgent(BaseAgent):
 
         # Track searched tools
         for result in results:
-            self.tool_registry.record_usage(result.name)
+            self.tool_registry.record_usage(result.tool_name)
 
         return [
             {
-                "name": r.name,
+                "name": r.tool_name,
                 "description": r.description,
                 "score": r.score,
                 "categories": r.categories,
@@ -267,7 +267,7 @@ class OrchestratorAgent(BaseAgent):
         Returns:
             Full tool definition or None if not found
         """
-        tool = self.tool_registry.load(name)
+        tool = self.tool_registry.load_tool(name)
         if tool:
             return tool.to_api_format()
         return None
@@ -498,7 +498,7 @@ class OrchestratorAgent(BaseAgent):
         Returns:
             Merged result combining all subagent outputs
         """
-        merged = {
+        merged: dict[str, Any] = {
             "subtask_results": [],
             "combined_outputs": [],
             "all_completion_criteria": [],
@@ -549,7 +549,7 @@ class OrchestratorAgent(BaseAgent):
         Returns:
             Resolution with chosen approach
         """
-        resolution = {
+        resolution: dict[str, Any] = {
             "conflicts_detected": len(conflicting_results),
             "resolved_by": "priority",  # Could be: priority, merge, manual, etc.
             "chosen_result": None,
@@ -746,10 +746,10 @@ class OrchestratorAgent(BaseAgent):
 
     async def _execute_task(self, state: OrchestratorState) -> OrchestratorState:
         """Execute the task using assigned agent."""
-        if not state.current_task or not state.current_task.assigned_agent:
+        task = state.current_task
+        if not task or not task.assigned_agent:
             return state
 
-        task = state.current_task
         task.attempts += 1
 
         agent = self.registry.get_agent(task.assigned_agent)
@@ -843,20 +843,20 @@ class OrchestratorAgent(BaseAgent):
 
         # If no criteria specified, add default file checks for any claimed outputs
         if not completion_criteria and claimed_outputs:
-            for output in claimed_outputs:
-                if output.type == "file":
+            for claimed in claimed_outputs:
+                if claimed.type == "file":
                     completion_criteria.extend([
                         CompletionCriterion(
                             type=VerificationType.FILE_EXISTS,
-                            target=output.path,
+                            target=claimed.path,
                         ),
                         CompletionCriterion(
                             type=VerificationType.FILE_NOT_EMPTY,
-                            target=output.path,
+                            target=claimed.path,
                         ),
                         CompletionCriterion(
                             type=VerificationType.NO_PLACEHOLDERS,
-                            target=output.path,
+                            target=claimed.path,
                         ),
                     ])
 
