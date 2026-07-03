@@ -6,10 +6,9 @@ for end-to-end correlation.
 """
 
 import uuid
-from collections.abc import Callable
 
 from fastapi import Request, Response
-from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 
 class RequestIdMiddleware(BaseHTTPMiddleware):
@@ -18,7 +17,7 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self,
         request: Request,
-        call_next: Callable[[Request], Response],
+        call_next: RequestResponseEndpoint,
     ) -> Response:
         """Attach request ID to state and response header."""
         # Honour an incoming X-Request-ID if present, otherwise generate one
