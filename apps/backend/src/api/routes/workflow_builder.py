@@ -949,13 +949,13 @@ async def _get_workflow_with_access(
 
     if not is_owner:
         # Check collaboration
-        result = await db.execute(
+        collab_result = await db.execute(
             select(WorkflowCollaborator).where(
                 WorkflowCollaborator.workflow_id == workflow_id,
                 WorkflowCollaborator.user_id == user.id,
             )
         )
-        collaborator = result.scalar_one_or_none()
+        collaborator = collab_result.scalar_one_or_none()
 
         if not collaborator:
             raise HTTPException(
