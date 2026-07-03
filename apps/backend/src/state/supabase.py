@@ -10,12 +10,22 @@ Import pattern (12+ modules keep this import path):
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, cast
 from uuid import uuid4
 
 from src.utils import get_logger
 
 logger = get_logger(__name__)
+
+
+def _as_row(data: Any) -> dict[str, Any] | None:
+    """First row of a Supabase result, narrowed from the client's JSON union."""
+    return cast("dict[str, Any]", data[0]) if data else None
+
+
+def _as_rows(data: Any) -> list[dict[str, Any]]:
+    """All rows of a Supabase result, narrowed from the client's JSON union."""
+    return cast("list[dict[str, Any]]", data) if data else []
 
 
 class SupabaseStateStore:
@@ -96,7 +106,7 @@ class SupabaseStateStore:
         if not self._real:
             return await self._delegate.load_conversation(conversation_id)
         result = self._sb.table("conversations").select("*").eq("id", conversation_id).execute()
-        return result.data[0] if result.data else None
+        return _as_row(result.data)
 
     async def get_user_conversations(self, user_id: str, limit: int = 50) -> list[dict[str, Any]]:
         if not self._real:
@@ -109,7 +119,7 @@ class SupabaseStateStore:
             .limit(limit)
             .execute()
         )
-        return result.data or []
+        return _as_rows(result.data)
 
     # ── Tasks ──────────────────────────────────────────────────────
 
@@ -138,7 +148,7 @@ class SupabaseStateStore:
         if not self._real:
             return await self._delegate.load_task(task_id)
         result = self._sb.table("tasks").select("*").eq("id", task_id).execute()
-        return result.data[0] if result.data else None
+        return _as_row(result.data)
 
     async def get_conversation_tasks(self, conversation_id: str) -> list[dict[str, Any]]:
         if not self._real:
@@ -150,7 +160,7 @@ class SupabaseStateStore:
             .order("created_at", desc=True)
             .execute()
         )
-        return result.data or []
+        return _as_rows(result.data)
 
     # ── Agent Runs ─────────────────────────────────────────────────
 
@@ -216,13 +226,13 @@ class SupabaseStateStore:
         if metadata is not None:
             updates["metadata"] = metadata
         res = self._sb.table("agent_runs").update(updates).eq("id", run_id).execute()
-        return res.data[0] if res.data else None
+        return _as_row(res.data)
 
     async def get_agent_run(self, run_id: str) -> dict[str, Any] | None:
         if not self._real:
             return await self._delegate.get_agent_run(run_id)
         result = self._sb.table("agent_runs").select("*").eq("id", run_id).execute()
-        return result.data[0] if result.data else None
+        return _as_row(result.data)
 
     async def get_task_agent_runs(self, task_id: str, limit: int = 10) -> list[dict[str, Any]]:
         if not self._real:
@@ -235,7 +245,7 @@ class SupabaseStateStore:
             .limit(limit)
             .execute()
         )
-        return result.data or []
+        return _as_rows(result.data)
 
     async def get_active_agent_runs(self, user_id: str) -> list[dict[str, Any]]:
         if not self._real:
@@ -247,7 +257,7 @@ class SupabaseStateStore:
             .in_("status", ["pending", "in_progress"])
             .execute()
         )
-        return result.data or []
+        return _as_rows(result.data)
 
     # ── Domain Memory ──────────────────────────────────────────────
 
@@ -277,19 +287,19 @@ class SupabaseStateStore:
         if embedding:
             row["embedding"] = embedding
         res = self._sb.table("domain_memories").insert(row).execute()
-        return res.data[0] if res.data else row
+        return _as_row(res.data) or row
 
     async def get_memory(self, memory_id: str) -> dict[str, Any] | None:
         if not self._real:
             return await self._delegate.get_memory(memory_id)
         result = self._sb.table("domain_memories").select("*").eq("id", memory_id).execute()
-        return result.data[0] if result.data else None
+        return _as_row(result.data)
 
     async def update_memory(self, memory_id: str, updates: dict[str, Any]) -> dict[str, Any] | None:
         if not self._real:
             return await self._delegate.update_memory(memory_id, updates)
         res = self._sb.table("domain_memories").update(updates).eq("id", memory_id).execute()
-        return res.data[0] if res.data else None
+        return _as_row(res.data)
 
     async def delete_memory(self, memory_id: str) -> bool:
         if not self._real:
@@ -316,7 +326,7 @@ class SupabaseStateStore:
         if user_id:
             q = q.eq("user_id", user_id)
         result = q.range(offset, offset + limit - 1).execute()
-        return result.data or []
+        return _as_rows(result.data)
 
     async def find_similar_memories(
         self,
@@ -341,4 +351,4 @@ class SupabaseStateStore:
         if user_id:
             params["filter_user_id"] = user_id
         result = self._sb.rpc("match_domain_memories", params).execute()
-        return result.data or []
+        return _as_rows(result.data)
