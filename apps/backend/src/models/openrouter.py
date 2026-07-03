@@ -1,6 +1,9 @@
 """OpenRouter API client for multi-model access."""
 
+from typing import cast
+
 from openai import AsyncOpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 from src.config import get_settings
 from src.utils import get_logger
@@ -54,7 +57,7 @@ class OpenRouterClient:
                 model=self.model,
                 max_tokens=max_tokens or self.max_tokens,
                 temperature=temperature or self.temperature,
-                messages=messages,
+                messages=cast("list[ChatCompletionMessageParam]", messages),
             )
 
             return response.choices[0].message.content or ""
@@ -87,7 +90,7 @@ class OpenRouterClient:
                 model=self.model,
                 max_tokens=self.max_tokens,
                 temperature=self.temperature,
-                messages=full_messages,
+                messages=cast("list[ChatCompletionMessageParam]", full_messages),
             )
 
             return response.choices[0].message.content or ""
