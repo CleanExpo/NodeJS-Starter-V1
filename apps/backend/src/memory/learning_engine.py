@@ -66,7 +66,7 @@ class LearningEngine:
         """
         logger.info("Extracting patterns from success", task_id=task_id)
 
-        insights = []
+        insights: list[LearningInsight] = []
 
         # Get task details from memory/database
         task_details = await self._get_task_details(task_id)
@@ -133,7 +133,7 @@ class LearningEngine:
         """
         logger.info("Analyzing failure causes", task_id=task_id)
 
-        insights = []
+        insights: list[LearningInsight] = []
 
         # Get failure details
         task_details = await self._get_task_details(task_id)
@@ -262,7 +262,7 @@ class LearningEngine:
                 criteria_effectiveness[criterion]["false_positives"] += 1
 
         # Recommend keeping criteria with high catch rate, low false positive rate
-        recommendations = {
+        recommendations: dict[str, list[Any]] = {
             "keep_criteria": [],
             "remove_criteria": [],
             "add_criteria": []
