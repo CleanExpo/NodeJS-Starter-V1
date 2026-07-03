@@ -6,9 +6,9 @@ SQLAlchemy models for JWT-based authentication
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.models import Base
 
@@ -23,24 +23,24 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    email: str = Column(String(255), unique=True, nullable=False, index=True)
-    password_hash: str = Column(String(255), nullable=False)
-    full_name: str | None = Column(String(255), nullable=True)
-    is_active: bool = Column(Boolean, default=True, nullable=False, index=True)
-    is_admin: bool = Column(Boolean, default=False, nullable=False)
-    failed_login_attempts: int = Column(Integer, default=0, nullable=False, server_default="0")
-    locked_until: datetime | None = Column(DateTime(timezone=True), nullable=True)
-    created_at: datetime = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    full_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, index=True)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False, server_default="0")
+    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
     )
-    updated_at: datetime = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
         nullable=False,
     )
-    last_login_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships (back-populated from db.models)
     contractors = relationship("Contractor", back_populates="user")
@@ -63,6 +63,7 @@ class User(Base):
     def record_failed_login(self) -> None:
         """Increment failed attempts and lock if threshold reached."""
         from datetime import timedelta
+
         self.failed_login_attempts = (self.failed_login_attempts or 0) + 1
         if self.failed_login_attempts >= _MAX_FAILED_ATTEMPTS:
             self.locked_until = datetime.now(UTC) + timedelta(minutes=_LOCKOUT_MINUTES)
@@ -94,17 +95,17 @@ class PasswordResetToken(Base):
 
     __tablename__ = "password_reset_tokens"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    token_hash: str = Column(String(255), nullable=False, index=True)
-    expires_at: datetime = Column(DateTime(timezone=True), nullable=False)
-    used_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
-    created_at: datetime = Column(
+    token_hash: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
     )
 

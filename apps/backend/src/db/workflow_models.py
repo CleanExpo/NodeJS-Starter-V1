@@ -12,7 +12,6 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import (
     Boolean,
-    Column,
     DateTime,
     Enum,
     ForeignKey,
@@ -24,7 +23,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .models import Base
 
@@ -98,34 +97,34 @@ class Workflow(Base):
 
     __tablename__ = "workflows"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_id: UUID | None = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    user_id: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=True,
         index=True,
     )
-    name: str = Column(String(255), nullable=False)
-    description: str | None = Column(Text, nullable=True)
-    version: str = Column(String(50), default="1.0.0", nullable=False)
-    is_published: bool = Column(Boolean, default=False, nullable=False, index=True)
-    is_template: bool = Column(Boolean, default=False, nullable=False)
-    tags: list[str] = Column(ARRAY(Text), default=list, nullable=False)
-    variables: dict = Column(JSONB, default=dict, nullable=False)
-    skill_compatibility: list[str] = Column(ARRAY(Text), default=list, nullable=False)
-    workflow_metadata: dict = Column("metadata", JSONB, default=dict, nullable=False)
-    created_at: datetime = Column(
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    version: Mapped[str] = mapped_column(String(50), default="1.0.0", nullable=False)
+    is_published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, index=True)
+    is_template: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    tags: Mapped[list[str]] = mapped_column(ARRAY(Text), default=list, nullable=False)
+    variables: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    skill_compatibility: Mapped[list[str]] = mapped_column(ARRAY(Text), default=list, nullable=False)
+    workflow_metadata: Mapped[dict] = mapped_column("metadata", JSONB, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
     )
-    updated_at: datetime = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
         nullable=False,
     )
-    published_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     user = relationship("User", backref="workflows")
@@ -165,32 +164,32 @@ class WorkflowNode(Base):
 
     __tablename__ = "workflow_nodes"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    workflow_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    workflow_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflows.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    type: WorkflowNodeType = Column(
+    type: Mapped[WorkflowNodeType] = mapped_column(
         Enum(WorkflowNodeType, name="workflow_node_type"),
         nullable=False,
         index=True,
     )
-    label: str = Column(String(255), nullable=False)
-    description: str | None = Column(Text, nullable=True)
-    position_x: Decimal = Column(Numeric(10, 2), default=0, nullable=False)
-    position_y: Decimal = Column(Numeric(10, 2), default=0, nullable=False)
-    config: dict = Column(JSONB, default=dict, nullable=False)
-    inputs: dict = Column(JSONB, default=dict, nullable=False)
-    outputs: dict = Column(JSONB, default=dict, nullable=False)
-    node_metadata: dict = Column("metadata", JSONB, default=dict, nullable=False)
-    created_at: datetime = Column(
+    label: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    position_x: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0, nullable=False)
+    position_y: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0, nullable=False)
+    config: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    inputs: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    outputs: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    node_metadata: Mapped[dict] = mapped_column("metadata", JSONB, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
     )
-    updated_at: datetime = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
@@ -235,35 +234,35 @@ class WorkflowEdge(Base):
 
     __tablename__ = "workflow_edges"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    workflow_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    workflow_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflows.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    source_node_id: UUID = Column(
+    source_node_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflow_nodes.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    target_node_id: UUID = Column(
+    target_node_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflow_nodes.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    source_handle: str | None = Column(String(100), nullable=True)
-    target_handle: str | None = Column(String(100), nullable=True)
-    type: WorkflowEdgeType = Column(
+    source_handle: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    target_handle: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    type: Mapped[WorkflowEdgeType] = mapped_column(
         Enum(WorkflowEdgeType, name="workflow_edge_type"),
         default=WorkflowEdgeType.DEFAULT,
         nullable=False,
     )
-    condition: str | None = Column(Text, nullable=True)
-    edge_metadata: dict = Column("metadata", JSONB, default=dict, nullable=False)
-    created_at: datetime = Column(
+    condition: Mapped[str | None] = mapped_column(Text, nullable=True)
+    edge_metadata: Mapped[dict] = mapped_column("metadata", JSONB, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
@@ -295,37 +294,37 @@ class WorkflowExecution(Base):
 
     __tablename__ = "workflow_executions"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    workflow_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    workflow_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflows.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    user_id: UUID | None = Column(
+    user_id: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )
-    status: WorkflowExecutionStatus = Column(
+    status: Mapped[WorkflowExecutionStatus] = mapped_column(
         Enum(WorkflowExecutionStatus, name="workflow_execution_status"),
         default=WorkflowExecutionStatus.PENDING,
         nullable=False,
         index=True,
     )
-    current_node_id: UUID | None = Column(
+    current_node_id: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflow_nodes.id", ondelete="SET NULL"),
         nullable=True,
     )
-    variables: dict = Column(JSONB, default=dict, nullable=False)
-    input_data: dict = Column(JSONB, default=dict, nullable=False)
-    output_data: dict | None = Column(JSONB, nullable=True)
-    error_message: str | None = Column(Text, nullable=True)
-    started_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
-    completed_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
-    created_at: datetime = Column(
+    variables: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    input_data: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    output_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
@@ -364,31 +363,31 @@ class WorkflowExecutionLog(Base):
 
     __tablename__ = "workflow_execution_logs"
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    execution_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    execution_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflow_executions.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    node_id: UUID = Column(
+    node_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflow_nodes.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    status: WorkflowExecutionStatus = Column(
+    status: Mapped[WorkflowExecutionStatus] = mapped_column(
         Enum(WorkflowExecutionStatus, name="workflow_execution_status"),
         nullable=False,
         index=True,
     )
-    input_data: dict | None = Column(JSONB, nullable=True)
-    output_data: dict | None = Column(JSONB, nullable=True)
-    error_message: str | None = Column(Text, nullable=True)
-    started_at: datetime = Column(DateTime(timezone=True), nullable=False)
-    completed_at: datetime | None = Column(DateTime(timezone=True), nullable=True)
-    duration_ms: int | None = Column(Integer, nullable=True)
-    created_at: datetime = Column(
+    input_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    output_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    duration_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
@@ -410,35 +409,33 @@ class WorkflowCollaborator(Base):
     """
 
     __tablename__ = "workflow_collaborators"
-    __table_args__ = (
-        UniqueConstraint("workflow_id", "user_id", name="uq_workflow_collaborator"),
-    )
+    __table_args__ = (UniqueConstraint("workflow_id", "user_id", name="uq_workflow_collaborator"),)
 
-    id: UUID = Column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
-    workflow_id: UUID = Column(
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    workflow_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("workflows.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    user_id: UUID = Column(
+    user_id: Mapped[UUID] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    role: str = Column(String(50), default="editor", nullable=False)
-    joined_at: datetime = Column(
+    role: Mapped[str] = mapped_column(String(50), default="editor", nullable=False)
+    joined_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
     )
-    last_active_at: datetime | None = Column(
+    last_active_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=True,
     )
-    cursor_position: dict | None = Column(JSONB, nullable=True)
+    cursor_position: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
     # Relationships
     workflow = relationship("Workflow", back_populates="collaborators")
