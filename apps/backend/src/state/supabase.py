@@ -9,7 +9,6 @@ Import pattern (12+ modules keep this import path):
 
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from typing import Any
 from uuid import uuid4

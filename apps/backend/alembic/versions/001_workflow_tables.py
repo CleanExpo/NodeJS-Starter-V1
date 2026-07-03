@@ -26,6 +26,7 @@ from typing import Sequence, Union
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.dialects.postgresql import ENUM as PGEnum
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 
 revision: str = "001"
@@ -79,7 +80,7 @@ def upgrade() -> None:
         "workflow_nodes",
         sa.Column("id", PGUUID(as_uuid=True), primary_key=True),
         sa.Column("workflow_id", PGUUID(as_uuid=True), sa.ForeignKey("workflows.id", ondelete="CASCADE"), nullable=False, index=True),
-        sa.Column("type", sa.Enum(name="workflow_node_type"), nullable=False),
+        sa.Column("type", PGEnum(name="workflow_node_type", create_type=False), nullable=False),
         sa.Column("label", sa.String(255), nullable=False),
         sa.Column("description", sa.Text, nullable=True),
         sa.Column("position_x", sa.Numeric(10, 2), nullable=False, server_default="0"),
@@ -102,7 +103,7 @@ def upgrade() -> None:
         sa.Column("target_node_id", PGUUID(as_uuid=True), sa.ForeignKey("workflow_nodes.id", ondelete="CASCADE"), nullable=False, index=True),
         sa.Column("source_handle", sa.String(100), nullable=True),
         sa.Column("target_handle", sa.String(100), nullable=True),
-        sa.Column("type", sa.Enum(name="workflow_edge_type"), nullable=False, server_default="default"),
+        sa.Column("type", PGEnum(name="workflow_edge_type", create_type=False), nullable=False, server_default="default"),
         sa.Column("condition", sa.Text, nullable=True),
         sa.Column("metadata", JSONB, nullable=False, server_default="{}"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
@@ -114,7 +115,7 @@ def upgrade() -> None:
         sa.Column("id", PGUUID(as_uuid=True), primary_key=True),
         sa.Column("workflow_id", PGUUID(as_uuid=True), sa.ForeignKey("workflows.id", ondelete="CASCADE"), nullable=False, index=True),
         sa.Column("user_id", PGUUID(as_uuid=True), sa.ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True),
-        sa.Column("status", sa.Enum(name="workflow_execution_status"), nullable=False, server_default="pending"),
+        sa.Column("status", PGEnum(name="workflow_execution_status", create_type=False), nullable=False, server_default="pending"),
         sa.Column("current_node_id", PGUUID(as_uuid=True), sa.ForeignKey("workflow_nodes.id", ondelete="SET NULL"), nullable=True),
         sa.Column("variables", JSONB, nullable=False, server_default="{}"),
         sa.Column("input_data", JSONB, nullable=False, server_default="{}"),
@@ -132,7 +133,7 @@ def upgrade() -> None:
         sa.Column("id", PGUUID(as_uuid=True), primary_key=True),
         sa.Column("execution_id", PGUUID(as_uuid=True), sa.ForeignKey("workflow_executions.id", ondelete="CASCADE"), nullable=False, index=True),
         sa.Column("node_id", PGUUID(as_uuid=True), sa.ForeignKey("workflow_nodes.id", ondelete="CASCADE"), nullable=False, index=True),
-        sa.Column("status", sa.Enum(name="workflow_execution_status"), nullable=False),
+        sa.Column("status", PGEnum(name="workflow_execution_status", create_type=False), nullable=False),
         sa.Column("input_data", JSONB, nullable=True),
         sa.Column("output_data", JSONB, nullable=True),
         sa.Column("error_message", sa.Text, nullable=True),

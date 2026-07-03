@@ -165,7 +165,7 @@ class TeamOrchestrator:
                 timeout=self.task_timeout,
             )
             runtime.complete_task(task_id, token, result)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             runtime.fail_task(task_id, token, f"Task timed out after {self.task_timeout}s")
         except Exception as exc:
             runtime.fail_task(task_id, token, str(exc))

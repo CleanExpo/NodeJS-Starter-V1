@@ -129,7 +129,7 @@ async def execute_agent_with_events(
                 error=f"Task failed or blocked. Result: {result}",
             )
 
-    except asyncio.TimeoutError:
+    except TimeoutError:
         await publisher.fail_run(run_id=run_id, error="Agent execution timed out after 300s")
         logger.error("Agent execution timed out", run_id=run_id, task=task_description[:100])
     except Exception as e:

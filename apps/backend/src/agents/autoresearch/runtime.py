@@ -237,7 +237,7 @@ class AutoresearchRuntime:
                     timeout=self.task_timeout,
                 )
                 return result
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 return ResearchResult(
                     task_id=task.id,
                     query=task.query,

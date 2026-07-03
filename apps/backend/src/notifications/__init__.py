@@ -7,7 +7,7 @@ Usage:
     await dispatcher.notify("agent.failed", agent_name="BackendAgent", error="Timeout")
 """
 
-from .cooldown import CooldownManager, CooldownEntry
+from .cooldown import CooldownEntry, CooldownManager
 from .dispatcher import NotificationDispatcher
 from .templates import NotificationMessage, TemplateEngine
 

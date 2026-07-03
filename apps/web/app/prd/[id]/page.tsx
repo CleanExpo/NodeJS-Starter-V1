@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import { usePRDResult } from '@/hooks/use-prd-generation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,8 +12,9 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import type { Epic, UserStory, DatabaseTable, APIEndpoint, Sprint, Milestone } from '@/types/prd';
 
-export default function PRDViewPage({ params }: { params: { id: string } }) {
-  const { result, loading, error } = usePRDResult(params.id);
+export default function PRDViewPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const { result, loading, error } = usePRDResult(id);
 
   if (loading) {
     return (

@@ -11,10 +11,10 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from src.agents.routing import KeywordDetector, TaskSizeDetector
 from src.memory.models import MemoryDomain
 from src.memory.store import MemoryStore
 from src.utils import get_logger
-from src.agents.routing import KeywordDetector, TaskSizeDetector
 
 logger = get_logger(__name__)
 
