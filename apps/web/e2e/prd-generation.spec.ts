@@ -113,10 +113,13 @@ test.describe("PRD Generation Flow", () => {
     await expect(page.locator("text=/Decomposing features/i")).toBeVisible();
     await expect(page.locator("text=/Generating technical specification/i")).toBeVisible();
 
-    // Check "What's Being Generated" section
-    await expect(page.locator("text=/PRD Document/i")).toBeVisible();
-    await expect(page.locator("text=/User Stories/i")).toBeVisible();
-    await expect(page.locator("text=/Technical Spec/i")).toBeVisible();
+    // Check "What's Being Generated" section. Scope to headings — the phase
+    // list on the same view contains overlapping copy ("Decomposing features
+    // into user stories", "Generating technical specification") that makes a
+    // bare text locator match multiple elements (strict-mode violation).
+    await expect(page.getByRole("heading", { name: /PRD Document/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /User Stories/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Technical Spec/i })).toBeVisible();
   });
 
   test("should show success state after completion", async ({ page }) => {
@@ -154,8 +157,12 @@ test.describe("PRD Generation Flow", () => {
     );
     await page.getByRole("button", { name: /Generate PRD/i }).click();
 
-    // Wait for generation state
-    await expect(page.locator("text=/Generating/i")).toBeVisible({ timeout: 5000 });
+    // Wait for generation state. Use the heading — a bare /Generating/i matches
+    // the h1, the intro paragraph, and the "Generating technical specification"
+    // phase span (strict-mode violation).
+    await expect(page.getByRole("heading", { name: "Generating Your PRD" })).toBeVisible({
+      timeout: 5000,
+    });
 
     // During generation the page replaces the form entirely with the progress
     // view, so the inputs are unmounted (a stronger guarantee than disabling):
