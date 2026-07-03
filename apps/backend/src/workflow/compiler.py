@@ -188,8 +188,8 @@ class WorkflowCompiler:
             if current in reachable:
                 continue
             reachable.add(current)
-            for edge in adjacency.get(current, []):
-                target = str(edge.target_id)
+            for out_edge in adjacency.get(current, []):
+                target = str(out_edge.target_id)
                 if target not in reachable:
                     queue.append(target)
 
@@ -211,8 +211,8 @@ class WorkflowCompiler:
 
         loop_back_edges: set[tuple[str, str]] = set()
         for nid in reachable:
-            for edge in adjacency.get(nid, []):
-                target = str(edge.target_id)
+            for out_edge in adjacency.get(nid, []):
+                target = str(out_edge.target_id)
                 if target in reachable:
                     # Detect loop back-edges: edges from within loop body back to loop node
                     if target in loop_nodes:
@@ -230,8 +230,8 @@ class WorkflowCompiler:
             current = topo_queue.popleft()
             execution_order.append(current)
 
-            for edge in adjacency.get(current, []):
-                target = str(edge.target_id)
+            for out_edge in adjacency.get(current, []):
+                target = str(out_edge.target_id)
                 if target in reachable and (current, target) not in loop_back_edges:
                     in_degree[target] -= 1
                     if in_degree[target] == 0:
