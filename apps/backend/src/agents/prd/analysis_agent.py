@@ -238,7 +238,7 @@ Return ONLY the JSON, no additional text."""
         # This is a simple fallback - in production, you'd want more robust parsing
         lines = content.split("\n")
 
-        analysis_data = {
+        analysis_data: dict[str, Any] = {
             "executive_summary": "Analysis pending - manual review required",
             "problem_statement": "See raw output for details",
             "target_users": ["Users to be defined"],
@@ -251,7 +251,7 @@ Return ONLY the JSON, no additional text."""
         }
 
         current_section = None
-        current_list = []
+        current_list: list[str] = []
 
         for line in lines:
             line = line.strip()
