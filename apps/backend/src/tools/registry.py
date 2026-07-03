@@ -49,7 +49,7 @@ class ToolExample:
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to API-compatible format."""
-        result = {"input": self.input}
+        result: dict[str, Any] = {"input": self.input}
         if self.expected_behavior:
             result["description"] = f"{self.description} - {self.expected_behavior}"
         else:
@@ -82,7 +82,7 @@ class ToolConfig:
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to API-compatible format."""
-        result = {}
+        result: dict[str, Any] = {}
         if self.defer_loading:
             result["defer_loading"] = True
         if self.allowed_callers:
