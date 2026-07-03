@@ -199,6 +199,10 @@ class ProgressTracker:
         if not self._current_session:
             raise ValueError("No active session. Call start_session first.")
 
+        # start_session sets _progress before _current_session, so an active
+        # session guarantees _progress is present.
+        assert self._progress is not None
+
         if feature_id not in self._current_session.features_worked_on:
             self._current_session.features_worked_on.append(feature_id)
             self._progress.current_focus = feature_id
