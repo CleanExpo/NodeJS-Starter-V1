@@ -1,6 +1,6 @@
 """Model selection logic for choosing the appropriate AI model."""
 
-from typing import Literal
+from typing import Literal, cast
 
 from src.config import get_settings
 
@@ -87,11 +87,13 @@ class ModelSelector:
                 return AnthropicClient(model=model)
 
             case "google":
-                return GoogleClient()
+                # GoogleClient / OpenRouterClient implement complete()/chat() but
+                # are not BaseLLMProvider subclasses; cast the duck-typed provider.
+                return cast(BaseLLMProvider, GoogleClient())
 
             case "openrouter":
                 model = self._get_openrouter_model(tier)
-                return OpenRouterClient(model=model)
+                return cast(BaseLLMProvider, OpenRouterClient(model=model))
 
             case _:
                 # Default to Ollama (self-contained)
