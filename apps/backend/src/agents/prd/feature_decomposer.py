@@ -16,6 +16,7 @@ from typing import Any
 from anthropic import AsyncAnthropic
 from pydantic import BaseModel, Field
 
+from src.agents.prd._llm import first_text
 from src.config import get_settings
 from src.utils import get_logger
 
@@ -195,7 +196,7 @@ class FeatureDecomposer(BaseAgent):
         )
 
         # Extract and parse the response
-        content = response.content[0].text
+        content = first_text(response)
 
         # Claude should return JSON, but wrap in try/catch
         try:

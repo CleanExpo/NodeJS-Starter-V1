@@ -17,6 +17,7 @@ from typing import Any
 from anthropic import AsyncAnthropic
 from pydantic import BaseModel, Field
 
+from src.agents.prd._llm import first_text
 from src.config import get_settings
 from src.utils import get_logger
 
@@ -173,7 +174,7 @@ class TestScenarioGenerator(BaseAgent):
         )
         self.client = AsyncAnthropic(api_key=settings.anthropic_api_key)
 
-    async def execute(
+    async def execute(  # type: ignore[override]  # domain-specific multi-arg signature; called directly by PRDOrchestrator, not polymorphically
         self,
         prd_analysis: PRDAnalysis | dict[str, Any],
         feature_decomposition: FeatureDecomposition | dict[str, Any],
@@ -280,7 +281,7 @@ class TestScenarioGenerator(BaseAgent):
         )
 
         # Extract and parse the response
-        content = response.content[0].text
+        content = first_text(response)
 
         # Claude should return JSON, but wrap in try/catch
         try:
