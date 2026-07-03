@@ -686,21 +686,29 @@ class OrchestratorAgent(BaseAgent):
             ):
                 # Execute the task
                 state = await self._execute_task(state)
+                # _execute_task never clears current_task; the loop guard entered
+                # with it set, so it remains non-None here.
+                assert state.current_task is not None
 
                 # If execution succeeded, run independent verification
                 if state.current_task.status == TaskStatus.AWAITING_VERIFICATION:
                     state = await self._verify_task_independently(state)
+                    # Verification mutates status in place, never clears the task.
+                    assert state.current_task is not None
+                    verified_task = state.current_task
 
-                    if state.current_task.status == TaskStatus.VERIFICATION_PASSED:
+                    if verified_task.status == TaskStatus.VERIFICATION_PASSED:
                         # Verification passed - task is complete
-                        state.current_task.status = TaskStatus.COMPLETED
-                        state.current_task.completed_at = datetime.now().isoformat()
+                        verified_task.status = TaskStatus.COMPLETED
+                        verified_task.completed_at = datetime.now().isoformat()
                         state = self._complete_task(state)
                         break
 
-                    elif state.current_task.status == TaskStatus.VERIFICATION_FAILED:
+                    elif verified_task.status == TaskStatus.VERIFICATION_FAILED:
                         # Verification failed - handle failure and potentially retry
                         state = await self._handle_verification_failure(state)
+                        # Failure handling retries in place, never clears the task.
+                        assert state.current_task is not None
 
                         # Check if we should escalate
                         if state.current_task.attempts >= state.current_task.max_attempts:
