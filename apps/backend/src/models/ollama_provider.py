@@ -5,6 +5,7 @@ Local LLM provider using Ollama.
 Runs models locally without requiring API keys.
 """
 
+from typing import Any
 
 import httpx
 
@@ -44,10 +45,18 @@ class OllamaProvider(BaseLLMProvider):
             model: Model name for generation (default: llama3.1:8b)
             embedding_model: Model for embeddings (default: nomic-embed-text)
         """
-        self.base_url = base_url or getattr(settings, "ollama_base_url", "http://localhost:11434")
-        self.model = model or getattr(settings, "ollama_model", self.DEFAULT_MODEL)
-        self.embedding_model = embedding_model or getattr(
-            settings, "ollama_embedding_model", self.DEFAULT_EMBEDDING_MODEL
+        self.base_url: str = (
+            base_url
+            or getattr(settings, "ollama_base_url", None)
+            or "http://localhost:11434"
+        )
+        self.model: str = (
+            model or getattr(settings, "ollama_model", None) or self.DEFAULT_MODEL
+        )
+        self.embedding_model: str = (
+            embedding_model
+            or getattr(settings, "ollama_embedding_model", None)
+            or self.DEFAULT_EMBEDDING_MODEL
         )
         self.max_tokens = settings.max_tokens
         self.temperature = settings.temperature
@@ -132,7 +141,7 @@ class OllamaProvider(BaseLLMProvider):
                         "content": msg["content"],
                     })
 
-                payload = {
+                payload: dict[str, Any] = {
                     "model": self.model,
                     "messages": ollama_messages,
                     "stream": False,
