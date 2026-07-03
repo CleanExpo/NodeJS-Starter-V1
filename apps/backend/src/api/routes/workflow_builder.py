@@ -45,9 +45,9 @@ from src.api.schemas import (
     WorkflowResponse,
     WorkflowUpdate,
 )
+from src.auth.models import User
 from src.config.database import get_async_db
 from src.db import (
-    User,
     Workflow,
     WorkflowCollaborator,
     WorkflowEdge,
