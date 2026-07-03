@@ -135,6 +135,10 @@ class DbWorkflowExecutor:
         """Walk the compiled graph, executing nodes in order."""
         executed: set[str] = set()
 
+        # A compiled workflow always has exactly one start node (the compiler
+        # raises CompilationError otherwise), so start_node_id is non-None here.
+        assert compiled.start_node_id is not None
+
         # Start from the start node and follow edges
         await self._execute_from(
             node_id=compiled.start_node_id,

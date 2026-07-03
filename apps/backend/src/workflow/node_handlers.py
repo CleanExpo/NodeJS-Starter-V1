@@ -13,11 +13,11 @@ from __future__ import annotations
 import ast
 import operator
 import time
-from typing import Any
+from typing import Any, cast
 
 import httpx
 
-from src.models.selector import ModelSelector
+from src.models.selector import ModelProvider, ModelSelector, ModelTier
 from src.utils import get_logger
 from src.workflow.state import ExecutionState
 
@@ -100,12 +100,14 @@ async def handle_llm(
 
     # Select model provider
     model_spec = config.get("model", "")
-    provider = None
-    tier = "default"
+    provider: ModelProvider | None = None
+    tier: ModelTier = "default"
     if ":" in str(model_spec):
         parts = model_spec.split(":", 1)
-        provider = parts[0] if parts[0] else None
-        tier = parts[1] if len(parts) > 1 else "default"
+        # Values are parsed from arbitrary workflow config; ModelSelector
+        # falls back to a default for any unrecognised provider/tier.
+        provider = cast(ModelProvider, parts[0]) if parts[0] else None
+        tier = cast(ModelTier, parts[1]) if len(parts) > 1 else "default"
 
     try:
         client = _model_selector.get_client(provider=provider, tier=tier)
