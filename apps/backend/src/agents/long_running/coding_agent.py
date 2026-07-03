@@ -294,6 +294,9 @@ class CodingAgent(BaseAgent):
         """
         self.logger.info("Getting bearings on project state")
 
+        # _progress/_features are initialised at run start before bearings are taken.
+        assert self._progress is not None and self._features is not None
+
         # Read progress summary
         progress_summary = self._progress.get_summary_for_context()
         self.logger.debug("Progress summary", summary=progress_summary[:500])
@@ -599,7 +602,7 @@ class SessionRunner:
             if not specification:
                 raise ValueError("Specification required for first run")
 
-            agent = InitializerAgent()
+            agent: InitializerAgent | CodingAgent = InitializerAgent()
             return await agent.execute(specification, ctx)
         else:
             agent = CodingAgent()
