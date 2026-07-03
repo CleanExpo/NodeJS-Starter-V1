@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from fastapi import APIRouter, Query, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.api.error_handling import create_error_response
@@ -74,7 +75,7 @@ class TaskHistoryItem(BaseModel):
 async def get_agent_statistics(
     request: Request,
     time_range: int = Query(7, ge=1, le=90, description="Days of history to include"),
-) -> AgentStatsResponse:
+) -> AgentStatsResponse | JSONResponse:
     """Get overall agent statistics.
 
     Args:
@@ -136,7 +137,7 @@ async def get_agent_statistics(
 async def list_agents(
     request: Request,
     agent_type: str | None = Query(None, description="Filter by agent type"),
-) -> list[AgentListItem]:
+) -> list[AgentListItem] | JSONResponse:
     """List all agents with their statistics.
 
     Args:
@@ -196,7 +197,7 @@ async def list_agents(
 
 
 @router.get("/{agent_id}/health", response_model=AgentHealthReport)
-async def get_agent_health(request: Request, agent_id: str) -> AgentHealthReport:
+async def get_agent_health(request: Request, agent_id: str) -> AgentHealthReport | JSONResponse:
     """Get health report for a specific agent.
 
     Args:
@@ -236,7 +237,7 @@ async def get_recent_tasks(
     limit: int = Query(20, ge=1, le=100, description="Max tasks to return"),
     agent_type: str | None = Query(None, description="Filter by agent type"),
     status: str | None = Query(None, description="Filter by status"),
-) -> list[TaskHistoryItem]:
+) -> list[TaskHistoryItem] | JSONResponse:
     """Get recent task history.
 
     Args:
@@ -316,7 +317,7 @@ async def get_recent_tasks(
 async def get_performance_trends(
     request: Request,
     days: int = Query(7, ge=1, le=90, description="Days of data to analyze"),
-) -> dict[str, Any]:
+) -> dict[str, Any] | JSONResponse:
     """Get performance trends over time.
 
     Args:
