@@ -2,6 +2,7 @@
 
 import hashlib
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from typing import Any
 
 from src.rag.models import ChunkingStrategy
@@ -173,7 +174,7 @@ class FixedSizeChunker(Chunker):
 
 def get_chunker(strategy: ChunkingStrategy) -> Chunker:
     """Get chunker for strategy."""
-    chunkers = {
+    chunkers: dict[ChunkingStrategy, Callable[[], Chunker]] = {
         ChunkingStrategy.FIXED_SIZE: FixedSizeChunker,
         ChunkingStrategy.PARENT_CHILD: ParentChildChunker,
         ChunkingStrategy.SEMANTIC: FixedSizeChunker,  # Fallback to fixed size
@@ -181,5 +182,5 @@ def get_chunker(strategy: ChunkingStrategy) -> Chunker:
         ChunkingStrategy.RECURSIVE: FixedSizeChunker,  # Fallback to fixed size
     }
 
-    chunker_class = chunkers.get(strategy, ParentChildChunker)
-    return chunker_class()
+    chunker_factory = chunkers.get(strategy, ParentChildChunker)
+    return chunker_factory()
