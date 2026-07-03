@@ -11,6 +11,7 @@ from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from src.api.error_handling import create_error_response
@@ -86,7 +87,7 @@ async def create_task(
     request: Request,
     task_data: CreateTaskRequest,
     user_id: str | None = None,  # Would come from auth middleware
-) -> TaskResponse:
+) -> TaskResponse | JSONResponse:
     """Submit a new task to the agentic layer.
 
     Args:
@@ -166,7 +167,7 @@ async def list_tasks(
     task_type: str | None = Query(None, description="Filter by task type"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
-) -> TaskListResponse:
+) -> TaskListResponse | JSONResponse:
     """List tasks with pagination and filtering.
 
     Args:
@@ -259,7 +260,7 @@ async def list_tasks(
 
 
 @router.get("/{task_id}", response_model=TaskResponse)
-async def get_task(request: Request, task_id: str) -> TaskResponse:
+async def get_task(request: Request, task_id: str) -> TaskResponse | JSONResponse:
     """Get a specific task by ID.
 
     Args:
@@ -322,7 +323,7 @@ async def update_task(
     request: Request,
     task_id: str,
     update_data: UpdateTaskRequest,
-) -> TaskResponse:
+) -> TaskResponse | JSONResponse:
     """Update a task.
 
     Args:
@@ -340,7 +341,7 @@ async def update_task(
         store = SupabaseStateStore()
 
         # Build update fields
-        fields = {}
+        fields: dict[str, Any] = {}
         if update_data.status:
             fields["status"] = update_data.status
         if update_data.assigned_agent_id:
@@ -451,7 +452,9 @@ async def cancel_task(request: Request, task_id: str) -> None:
         raise
     except Exception as e:
         logger.error(f"Failed to cancel task: {e}")
-        return create_error_response(
+        # 204 route can't declare a body, but the error path returns a
+        # sanitized 500 JSONResponse (which carries its own status).
+        return create_error_response(  # type: ignore[return-value]
             request=request,
             exc=e,
             public_message="Failed to cancel task",
@@ -460,7 +463,7 @@ async def cancel_task(request: Request, task_id: str) -> None:
 
 
 @router.post("/{task_id}/execute", response_model=dict[str, Any])
-async def execute_task(request: Request, task_id: str) -> dict[str, Any]:
+async def execute_task(request: Request, task_id: str) -> dict[str, Any] | JSONResponse:
     """Execute a task using the orchestrator.
 
     Args:
@@ -530,7 +533,7 @@ async def execute_task(request: Request, task_id: str) -> dict[str, Any]:
 
 
 @router.get("/stats/summary", response_model=dict[str, Any])
-async def get_queue_stats(request: Request) -> dict[str, Any]:
+async def get_queue_stats(request: Request) -> dict[str, Any] | JSONResponse:
     """Get queue statistics.
 
     Returns:
@@ -545,8 +548,8 @@ async def get_queue_stats(request: Request) -> dict[str, Any]:
         result = store.client.table("agent_task_queue").select("status, task_type").execute()
 
         # Count by status
-        by_status = {}
-        by_type = {}
+        by_status: dict[str, int] = {}
+        by_type: dict[str, int] = {}
 
         for task in result.data:
             status_val = task["status"]
