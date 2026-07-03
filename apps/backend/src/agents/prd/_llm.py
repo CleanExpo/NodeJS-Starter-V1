@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
-from anthropic.types import Message, TextBlock
+from anthropic.types import Message
 
 
 def first_text(response: Message) -> str:
-    """Return the text of the first content block, or '' if it isn't text.
+    """Return the text of the first content block, or '' if it has none.
 
     ``Message.content`` is a union of block types and only ``TextBlock``
-    exposes ``.text``; the PRD agents always prompt for a text/JSON reply,
-    so a non-text first block means an empty response to parse.
+    exposes ``.text``; read it defensively so a non-text first block (or a
+    test double) yields an empty string for the caller to parse.
     """
-    if response.content:
-        block = response.content[0]
-        if isinstance(block, TextBlock):
-            return block.text
-    return ""
+    if not response.content:
+        return ""
+    text = getattr(response.content[0], "text", "")
+    return text if isinstance(text, str) else ""
