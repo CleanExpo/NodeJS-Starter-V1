@@ -275,7 +275,7 @@ class ContinuousImprovement:
             count=len(opportunities)
         )
 
-        pr_urls = []
+        pr_urls: list[str] = []
 
         for opportunity in opportunities:
             # Group by type and create themed PRs

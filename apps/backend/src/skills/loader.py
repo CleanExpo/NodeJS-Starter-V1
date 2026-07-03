@@ -60,7 +60,7 @@ class SkillLoader:
         Returns:
             List of parsed skill data
         """
-        skills = []
+        skills: list[dict[str, Any]] = []
 
         if not self.skills_dir.exists():
             logger.warning("Skills directory not found", path=str(self.skills_dir))
