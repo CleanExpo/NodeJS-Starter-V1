@@ -53,6 +53,20 @@ class Settings(BaseSettings):
         description="HMAC secret for verifying webhook signatures"
     )
 
+    # Email (Resend) — used by password-reset flow
+    app_url: str = Field(
+        default="http://localhost:3000",
+        description="Public frontend base URL for links in outbound email"
+    )
+    resend_api_key: str = Field(
+        default="",
+        description="Resend API key; when empty, reset emails are logged instead of sent"
+    )
+    email_from: str = Field(
+        default="noreply@example.com",
+        description="From address for outbound email"
+    )
+
     @model_validator(mode="after")
     def _reject_unsafe_defaults_in_production(self) -> "Settings":
         """Reject insecure default secrets when running in production."""
