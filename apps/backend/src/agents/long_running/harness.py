@@ -205,15 +205,16 @@ class LongRunningAgentHarness:
                     should_continue=False,
                 )
 
-            agent = InitializerAgent()
+            agent: InitializerAgent | CodingAgent = InitializerAgent()
             result = await agent.execute(self.specification, ctx)
 
+            initial_commit = result.get("initial_commit")
             return SessionResult(
                 success=result.get("success", False),
                 session_id=result.get("session_id", "init"),
                 session_type="initializer",
                 features_completed=0,
-                commits_made=[result.get("initial_commit")] if result.get("initial_commit") else [],
+                commits_made=[initial_commit] if initial_commit else [],
                 error=result.get("error"),
                 should_continue=result.get("success", False),
                 summary=f"Initialized with {result.get('features_generated', 0)} features",
