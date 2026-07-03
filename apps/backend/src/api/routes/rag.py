@@ -3,6 +3,7 @@
 import time
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import JSONResponse
 
 from src.api.error_handling import create_error_response
 from src.rag.models import (
@@ -42,14 +43,14 @@ async def get_store() -> RAGStore:
     return _store
 
 
-@router.post("/upload")
+@router.post("/upload", response_model=None)
 async def upload_document(
     request: Request,
     file: UploadFile = File(...),
     project_id: str = Form(...),
     config: str | None = Form(None),
     user_id: str | None = Form(None),
-) -> dict:
+) -> dict | JSONResponse:
     """Upload and process a document."""
     try:
         # Read file
@@ -92,7 +93,7 @@ async def upload_document(
 
 
 @router.post("/search", response_model=SearchResponse)
-async def search_documents(request: Request, search_request: SearchRequest) -> SearchResponse:
+async def search_documents(request: Request, search_request: SearchRequest) -> SearchResponse | JSONResponse:
     """Search documents using vector, keyword, or hybrid search."""
     try:
         start_time = time.time()

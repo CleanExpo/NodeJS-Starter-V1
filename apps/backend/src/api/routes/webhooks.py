@@ -5,6 +5,7 @@ import hmac
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.api.error_handling import create_error_response
@@ -54,7 +55,7 @@ def _verify_webhook_signature(payload_body: bytes, signature: str | None) -> boo
 async def handle_webhook(
     request: Request,
     payload: WebhookPayload,
-) -> WebhookResponse:
+) -> WebhookResponse | JSONResponse:
     """Handle incoming webhooks."""
     # Verify signature
     raw_body = await request.body()
