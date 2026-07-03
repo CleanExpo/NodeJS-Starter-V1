@@ -9,6 +9,7 @@ from datetime import datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import and_, asc, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -126,7 +127,7 @@ async def list_documents(
     limit: int = Query(20, ge=1, le=100, description="Results per page"),
     offset: int = Query(0, ge=0, description="Pagination offset"),
     db: AsyncSession = Depends(get_async_db),
-) -> DocumentListResponse:
+) -> DocumentListResponse | JSONResponse:
     """
     List documents with optional filtering and sorting.
 
@@ -277,7 +278,7 @@ async def create_document(
     document: DocumentCreateRequest,
     authorization: str | None = Query(None, description="Authorization header with JWT token"),
     db: AsyncSession = Depends(get_async_db),
-) -> DocumentItem:
+) -> DocumentItem | JSONResponse:
     """
     Create a new document.
 
@@ -316,7 +317,7 @@ async def create_document(
             user_id=user_id,
             title=document.title,
             content=document.content,
-            metadata=document.doc_metadata or {},
+            doc_metadata=document.metadata or {},
         )
 
         db.add(new_doc)
@@ -359,7 +360,7 @@ async def get_document(
     document_id: str,
     authorization: str | None = Query(None, description="Authorization header with JWT token"),
     db: AsyncSession = Depends(get_async_db),
-) -> DocumentItem:
+) -> DocumentItem | JSONResponse:
     """
     Get a single document by ID.
 
@@ -446,7 +447,7 @@ async def update_document(
     updates: DocumentUpdateRequest,
     authorization: str | None = Query(None, description="Authorization header with JWT token"),
     db: AsyncSession = Depends(get_async_db),
-) -> DocumentItem:
+) -> DocumentItem | JSONResponse:
     """
     Update a document (partial update).
 
@@ -598,7 +599,9 @@ async def delete_document(
     except Exception as e:
         logger.error("Failed to delete document", error=str(e))
         await db.rollback()
-        return create_error_response(
+        # 204 route can't declare a body, but the error path returns a
+        # sanitized 500 JSONResponse (which carries its own status).
+        return create_error_response(  # type: ignore[return-value]
             request=request,
             exc=e,
             public_message="Failed to delete document",
