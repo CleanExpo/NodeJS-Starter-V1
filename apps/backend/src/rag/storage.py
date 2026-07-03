@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Any
 
-from src.memory.embeddings import get_embedding_provider
+from src.memory.embeddings import EmbeddingProvider, get_embedding_provider
 from src.rag.models import DocumentChunk, DocumentSource, ProcessingStatus
 from src.state.supabase import SupabaseStateStore
 from src.utils import get_logger
@@ -17,13 +17,11 @@ class RAGStore:
     def __init__(self) -> None:
         self.supabase = SupabaseStateStore()
         self.client = self.supabase.client
-        self.embedding_provider = None
+        self.embedding_provider: EmbeddingProvider | None = None
 
     async def initialize(self) -> None:
         """Initialize store and embedding provider."""
-        from src.memory.embeddings import EmbeddingProvider
-
-        self.embedding_provider: EmbeddingProvider = get_embedding_provider()
+        self.embedding_provider = get_embedding_provider()
         logger.info("RAG store initialized")
 
     # Document Sources
