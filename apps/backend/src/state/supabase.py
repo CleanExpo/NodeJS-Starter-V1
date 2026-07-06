@@ -14,7 +14,7 @@ from datetime import datetime
 from typing import Any, cast
 from uuid import uuid4
 
-from src.db.errors import ConnectionError, QueryTimeoutError, DatabaseUnavailableError
+from src.db.errors import ConnectionError
 from src.utils import get_logger
 
 logger = get_logger(__name__)
@@ -113,8 +113,8 @@ class SupabaseStateStore:
                     operation="save_conversation",
                 )
                 raise ConnectionError(
-                    f"Failed to save conversation: {str(e)}", 
-                    "save_conversation", 
+                    f"Failed to save conversation: {str(e)}",
+                    "save_conversation",
                     {"conversation_id": conversation_id}
                 )
             else:
@@ -141,8 +141,8 @@ class SupabaseStateStore:
                     operation="load_conversation",
                 )
                 raise ConnectionError(
-                    f"Failed to load conversation: {str(e)}", 
-                    "load_conversation", 
+                    f"Failed to load conversation: {str(e)}",
+                    "load_conversation",
                     {"conversation_id": conversation_id}
                 )
             else:
@@ -176,8 +176,8 @@ class SupabaseStateStore:
                     operation="get_user_conversations",
                 )
                 raise ConnectionError(
-                    f"Failed to get user conversations: {str(e)}", 
-                    "get_user_conversations", 
+                    f"Failed to get user conversations: {str(e)}",
+                    "get_user_conversations",
                     {"user_id": user_id}
                 )
             else:
@@ -221,8 +221,8 @@ class SupabaseStateStore:
                     operation="save_task",
                 )
                 raise ConnectionError(
-                    f"Failed to save task: {str(e)}", 
-                    "save_task", 
+                    f"Failed to save task: {str(e)}",
+                    "save_task",
                     {"task_id": task_id}
                 )
             else:
@@ -249,8 +249,8 @@ class SupabaseStateStore:
                     operation="load_task",
                 )
                 raise ConnectionError(
-                    f"Failed to load task: {str(e)}", 
-                    "load_task", 
+                    f"Failed to load task: {str(e)}",
+                    "load_task",
                     {"task_id": task_id}
                 )
             else:
@@ -283,8 +283,8 @@ class SupabaseStateStore:
                     operation="get_conversation_tasks",
                 )
                 raise ConnectionError(
-                    f"Failed to get conversation tasks: {str(e)}", 
-                    "get_conversation_tasks", 
+                    f"Failed to get conversation tasks: {str(e)}",
+                    "get_conversation_tasks",
                     {"conversation_id": conversation_id}
                 )
             else:
@@ -333,8 +333,8 @@ class SupabaseStateStore:
                     operation="create_agent_run",
                 )
                 raise ConnectionError(
-                    f"Failed to create agent run: {str(e)}", 
-                    "create_agent_run", 
+                    f"Failed to create agent run: {str(e)}",
+                    "create_agent_run",
                     {"task_id": task_id, "agent_name": agent_name}
                 )
             else:
@@ -395,8 +395,8 @@ class SupabaseStateStore:
                     operation="update_agent_run",
                 )
                 raise ConnectionError(
-                    f"Failed to update agent run: {str(e)}", 
-                    "update_agent_run", 
+                    f"Failed to update agent run: {str(e)}",
+                    "update_agent_run",
                     {"run_id": run_id}
                 )
             else:
@@ -423,8 +423,8 @@ class SupabaseStateStore:
                     operation="get_agent_run",
                 )
                 raise ConnectionError(
-                    f"Failed to get agent run: {str(e)}", 
-                    "get_agent_run", 
+                    f"Failed to get agent run: {str(e)}",
+                    "get_agent_run",
                     {"run_id": run_id}
                 )
             else:
@@ -458,8 +458,8 @@ class SupabaseStateStore:
                     operation="get_task_agent_runs",
                 )
                 raise ConnectionError(
-                    f"Failed to get task agent runs: {str(e)}", 
-                    "get_task_agent_runs", 
+                    f"Failed to get task agent runs: {str(e)}",
+                    "get_task_agent_runs",
                     {"task_id": task_id}
                 )
             else:
@@ -492,8 +492,8 @@ class SupabaseStateStore:
                     operation="get_active_agent_runs",
                 )
                 raise ConnectionError(
-                    f"Failed to get active agent runs: {str(e)}", 
-                    "get_active_agent_runs", 
+                    f"Failed to get active agent runs: {str(e)}",
+                    "get_active_agent_runs",
                     {"user_id": user_id}
                 )
             else:
@@ -546,8 +546,8 @@ class SupabaseStateStore:
                     operation="create_memory",
                 )
                 raise ConnectionError(
-                    f"Failed to create memory: {str(e)}", 
-                    "create_memory", 
+                    f"Failed to create memory: {str(e)}",
+                    "create_memory",
                     {"domain": domain, "category": category, "key": key}
                 )
             else:
@@ -576,8 +576,8 @@ class SupabaseStateStore:
                     operation="get_memory",
                 )
                 raise ConnectionError(
-                    f"Failed to get memory: {str(e)}", 
-                    "get_memory", 
+                    f"Failed to get memory: {str(e)}",
+                    "get_memory",
                     {"memory_id": memory_id}
                 )
             else:
@@ -604,8 +604,8 @@ class SupabaseStateStore:
                     operation="update_memory",
                 )
                 raise ConnectionError(
-                    f"Failed to update memory: {str(e)}", 
-                    "update_memory", 
+                    f"Failed to update memory: {str(e)}",
+                    "update_memory",
                     {"memory_id": memory_id}
                 )
             else:
@@ -632,8 +632,8 @@ class SupabaseStateStore:
                     operation="delete_memory",
                 )
                 raise ConnectionError(
-                    f"Failed to delete memory: {str(e)}", 
-                    "delete_memory", 
+                    f"Failed to delete memory: {str(e)}",
+                    "delete_memory",
                     {"memory_id": memory_id}
                 )
             else:
@@ -677,8 +677,8 @@ class SupabaseStateStore:
                     operation="query_memories",
                 )
                 raise ConnectionError(
-                    f"Failed to query memories: {str(e)}", 
-                    "query_memories", 
+                    f"Failed to query memories: {str(e)}",
+                    "query_memories",
                     {"domain": domain, "category": category, "user_id": user_id}
                 )
             else:
@@ -727,8 +727,8 @@ class SupabaseStateStore:
                     operation="find_similar_memories",
                 )
                 raise ConnectionError(
-                    f"Failed to find similar memories: {str(e)}", 
-                    "find_similar_memories", 
+                    f"Failed to find similar memories: {str(e)}",
+                    "find_similar_memories",
                     {"domain": domain, "user_id": user_id}
                 )
             else:

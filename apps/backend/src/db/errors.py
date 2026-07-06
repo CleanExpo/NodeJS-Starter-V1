@@ -5,13 +5,13 @@ Defines custom exceptions for database operations to provide consistent,
 structured error handling across the application.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class DatabaseError(Exception):
     """Base exception for all database errors."""
 
-    def __init__(self, message: str, operation: str, details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, message: str, operation: str, details: dict[str, Any] | None = None) -> None:
         super().__init__(message)
         self.message = message
         self.operation = operation  # e.g., "SELECT", "INSERT", "connect"
