@@ -13,9 +13,15 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from src.db.errors import ConnectionError, DatabaseUnavailableError, QueryTimeoutError
+from src.db.health import HealthChecker
+
 from .settings import get_settings
 
 _SLOW_QUERY_THRESHOLD_MS = 500
+
+# Initialize health checker
+db_health_checker = HealthChecker()
 
 
 def get_database_url(async_mode: bool = False) -> str:
@@ -136,9 +142,34 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
             return result.scalars().all()
         ```
     """
+    # Check health before allowing connection
+    health = await db_health_checker.check_db_health()
+
+    if not health["healthy"]:
+        raise DatabaseUnavailableError(
+            "Database is unavailable",
+            "connect",
+            {"details": health}
+        )
+
     async with AsyncSessionLocal() as session:
         try:
             yield session
+        except Exception as e:
+            if "timeout" in str(e).lower() or "deadline" in str(e).lower():
+                raise QueryTimeoutError(
+                    f"Query timeout: {str(e)}",
+                    "query",
+                    {"error": str(e)}
+                )
+            elif "connection" in str(e).lower() or "refused" in str(e).lower():
+                raise ConnectionError(
+                    f"Database connection failed: {str(e)}",
+                    "connect",
+                    {"error": str(e)}
+                )
+            else:
+                raise
         finally:
             await session.close()
 
@@ -155,12 +186,37 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
             users = result.scalars().all()
         ```
     """
+    # Check health before allowing connection
+    health = await db_health_checker.check_db_health()
+
+    if not health["healthy"]:
+        raise DatabaseUnavailableError(
+            "Database is unavailable",
+            "connect",
+            {"details": health}
+        )
+
     async with AsyncSessionLocal() as session:
         try:
             yield session
             await session.commit()
-        except Exception:
+        except Exception as e:
             await session.rollback()
-            raise
+
+            # Convert specific errors
+            if "timeout" in str(e).lower() or "deadline" in str(e).lower():
+                raise QueryTimeoutError(
+                    f"Query timeout: {str(e)}",
+                    "query",
+                    {"error": str(e)}
+                )
+            elif "connection" in str(e).lower() or "refused" in str(e).lower():
+                raise ConnectionError(
+                    f"Database connection failed: {str(e)}",
+                    "connect",
+                    {"error": str(e)}
+                )
+            else:
+                raise
         finally:
             await session.close()
