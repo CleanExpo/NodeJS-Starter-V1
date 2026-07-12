@@ -112,6 +112,25 @@ class Settings(BaseSettings):
     supabase_url: str = Field(default="", description="Supabase project URL")
     supabase_anon_key: str = Field(default="", description="Supabase anon/public API key")
     supabase_service_role_key: str = Field(default="", description="Supabase service role key (admin ops)")
+    
+    # Supabase JWT — must match the JWT secret configured in Supabase dashboard
+    # (Project Settings → API → JWT Secret) for shared auth to work.
+    supabase_jwt_secret: str = Field(
+        default="",
+        description="Supabase JWT secret (must match app JWT_SECRET_KEY for shared auth)"
+    )
+
+    @model_validator(mode="after")
+    def _validate_supabase_jwt_alignment(self) -> "Settings":
+        """Validate that Supabase JWT secret matches app JWT secret when Supabase is configured."""
+        if self.supabase_url and self.supabase_anon_key and self.supabase_jwt_secret:
+            if self.supabase_jwt_secret != self.jwt_secret_key:
+                raise ValueError(
+                    "SUPABASE_JWT_SECRET must match JWT_SECRET_KEY for shared authentication "
+                    "between application and Supabase. Either set both to the same value, "
+                    "or leave SUPABASE_JWT_SECRET empty to disable shared auth."
+                )
+        return self
 
     # MCP Tools
     exa_api_key: str = Field(default="")

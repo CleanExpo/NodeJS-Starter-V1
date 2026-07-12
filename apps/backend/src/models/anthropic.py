@@ -190,7 +190,12 @@ class AnthropicClient(BaseLLMProvider):
         self.model = model or self.SONNET
         self.max_tokens = settings.max_tokens
         self.temperature = settings.temperature
-        self.features = features or BetaFeatureConfig()
+        if features is None:
+            features = BetaFeatureConfig(
+                extended_thinking=settings.thinking_enabled,
+                thinking_budget_tokens=settings.thinking_budget_tokens,
+            )
+        self.features = features
 
     # ========================================================================
     # Beta Header Building
