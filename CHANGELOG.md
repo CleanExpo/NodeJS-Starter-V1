@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 12 API routers (agents, chat, webhooks, PRD, workflows, RAG, analytics, contractors, search, documents, health, jobs)
 - Frontend Vitest + Playwright suites and a backend pytest suite (430+ test functions) with coverage thresholds
 - CI/CD pipeline with GitHub Actions
-- Security scanning (Snyk, Trivy, dependency audit)
+- Security scanning (Trivy, npm audit, dependency review; opt-in Snyk)
 - Multi-agent coordination harness (8-phase convergence loop)
 - Rate limiting and auth middleware
 - Docker Compose for local development (PostgreSQL + Redis)

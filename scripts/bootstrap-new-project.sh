@@ -36,10 +36,13 @@ EOF
 fi
 
 echo "==> 2/4 Checking env hygiene"
-if grep -RInE "eyJ[A-Za-z0-9_-]{40,}|sk-ant-api[0-9]+-[A-Za-z0-9_-]{20,}" .env.example apps/*/.env.example 2>/dev/null; then
-  echo "    ERROR: live-looking credentials found in env examples — fix before continuing." >&2
-  exit 1
-fi
+for envfile in .env.example apps/web/.env.example apps/backend/.env.example; do
+  [ -f "$envfile" ] || continue
+  if grep -InE "eyJ[A-Za-z0-9_-]{40,}|sk-ant-api[0-9]+-[A-Za-z0-9_-]{20,}" "$envfile"; then
+    echo "    ERROR: live-looking credentials found in $envfile — fix before continuing." >&2
+    exit 1
+  fi
+done
 echo "    env examples are placeholder-only."
 for f in .env .env.local apps/web/.env.local apps/backend/.env; do
   [ -f "$f" ] && echo "    NOTE: local env file '$f' exists — review it manually (not template content)."
@@ -48,12 +51,12 @@ done
 echo "==> 3/4 Applying repo settings via gh (skipped if repo not on GitHub yet)"
 if [ -n "$REPO_SLUG" ]; then
   gh api -X PATCH "repos/${REPO_SLUG}" \
-    -f allow_auto_merge=true \
-    -f delete_branch_on_merge=true \
-    -f allow_update_branch=true \
-    -f allow_squash_merge=true \
-    -f allow_merge_commit=false \
-    -f allow_rebase_merge=false >/dev/null
+    -F allow_auto_merge=true \
+    -F delete_branch_on_merge=true \
+    -F allow_update_branch=true \
+    -F allow_squash_merge=true \
+    -F allow_merge_commit=false \
+    -F allow_rebase_merge=false >/dev/null
   echo "    repo settings: auto-merge on, squash-only, delete-branch-on-merge on."
 
   gh api -X PUT "repos/${REPO_SLUG}/branches/main/protection" \
@@ -66,8 +69,11 @@ if [ -n "$REPO_SLUG" ]; then
       "Backend Tests",
       "Frontend Tests",
       "Build Check",
+      "E2E Tests",
+      "Accessibility Tests",
       "Secret Scan (gitleaks)",
-      "Prettier Format Check"
+      "Prettier Format Check",
+      "Conventional Commits (PR title)"
     ]
   },
   "enforce_admins": true,

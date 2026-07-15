@@ -1,22 +1,26 @@
 /**
- * Schema-validated environment access (zod).
+ * Schema-validated environment access (zod). SERVER-SIDE ONLY.
  *
  * Two tiers:
  * - `env` — always-required vars, parsed once at server startup (fail fast).
  * - `requireSupabaseEnv()` — feature-scoped vars, validated at first use so
  *   deployments that don't enable the feature still boot.
  *
- * Never read `process.env` directly in app code; add the var here instead so
- * a missing value fails with a named error, not `undefined` at runtime.
+ * Server code adds its vars here so a missing value fails with a named error.
+ * CLIENT components are the exception: NEXT_PUBLIC_* values are inlined at
+ * build time only when read as literal `process.env.NEXT_PUBLIC_X` — do not
+ * import `env` from client code (its fields are undefined in the browser).
  */
 
 import { z } from 'zod';
 
 const serverEnvSchema = z.object({
-  NEXT_PUBLIC_BACKEND_URL: z.string().url({
-    message: 'NEXT_PUBLIC_BACKEND_URL must be a valid URL (e.g. http://localhost:8000)',
+  // Presence-only (matches the pre-zod contract): existing deployments may
+  // use scheme-less or relative values.
+  NEXT_PUBLIC_BACKEND_URL: z.string().min(1, {
+    message: 'NEXT_PUBLIC_BACKEND_URL is required (e.g. http://localhost:8000)',
   }),
-  NEXT_PUBLIC_FRONTEND_URL: z.string().url().default('http://localhost:3000'),
+  NEXT_PUBLIC_FRONTEND_URL: z.string().min(1).default('http://localhost:3000'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
 });
 

@@ -169,8 +169,8 @@ See the detailed Quick Start below for full prerequisites and verification steps
 ### Start a NEW project from this template
 
 This repo is a template: every new project inherits the full engineering standard
-(strict types with zero exclusions, CI gates incl. secret scan + format + Conventional
-Commits, agent harness, ADRs) on day one — the standard itself is recorded in
+(strict types with no source-file exclusions, CI gates incl. secret scan + format +
+Conventional Commits, agent harness, ADRs) on day one — the standard itself is recorded in
 [docs/adr/0001-starter-pack-standard.md](docs/adr/0001-starter-pack-standard.md).
 
 ```bash
