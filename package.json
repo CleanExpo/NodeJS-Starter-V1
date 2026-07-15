@@ -40,7 +40,7 @@
     "vault:adopt:dry": "node scripts/adopt-vault.mjs --dry-run"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
+    "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^19.8.0",
     "@eslint/eslintrc": "^3.3.3",
     "@rushstack/eslint-patch": "1.16.1",
