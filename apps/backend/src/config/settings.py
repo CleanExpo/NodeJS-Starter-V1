@@ -112,7 +112,7 @@ class Settings(BaseSettings):
     supabase_url: str = Field(default="", description="Supabase project URL")
     supabase_anon_key: str = Field(default="", description="Supabase anon/public API key")
     supabase_service_role_key: str = Field(default="", description="Supabase service role key (admin ops)")
-    
+
     # Supabase JWT — must match the JWT secret configured in Supabase dashboard
     # (Project Settings → API → JWT Secret) for shared auth to work.
     supabase_jwt_secret: str = Field(

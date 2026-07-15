@@ -63,11 +63,15 @@ check_dependency_sync() {
         return 1
     fi
 
-    # Use Node.js to parse package.json and verify installations
-    local node_script=$(cat << 'NODEJS_SCRIPT'
+    # Use Node.js to parse package.json and verify installations.
+    # Written to a temp file rather than $(cat <<HEREDOC) — macOS bash 3.2
+    # mis-parses quotes inside heredocs nested in command substitution.
+    local node_script_file
+    node_script_file=$(mktemp)
+    cat > "$node_script_file" << 'NODEJS_SCRIPT'
 const fs = require('fs');
 const path = require('path');
-const workspace = process.argv[1];
+const workspace = process.env.DEP_CHECK_WORKSPACE || '.';
 const cwd = process.cwd();
 
 try {
@@ -146,11 +150,12 @@ try {
     process.exit(1);
 }
 NODEJS_SCRIPT
-)
 
     # Run Node.js script
-    node -e "$node_script" "$workspace"
-    return $?
+    DEP_CHECK_WORKSPACE="$workspace" node "$node_script_file"
+    local rc=$?
+    rm -f "$node_script_file"
+    return $rc
 }
 
 # ============================================================================
@@ -171,11 +176,13 @@ check_orphaned_dependencies() {
         return 1
     fi
 
-    # Use Node.js to find orphans
-    local node_script=$(cat << 'NODEJS_SCRIPT'
+    # Use Node.js to find orphans (temp file — see bash 3.2 note above)
+    local node_script_file
+    node_script_file=$(mktemp)
+    cat > "$node_script_file" << 'NODEJS_SCRIPT'
 const fs = require('fs');
 const path = require('path');
-const workspace = process.argv[1];
+const workspace = process.env.DEP_CHECK_WORKSPACE || '.';
 
 try {
     const pkgPath = path.join(workspace, 'package.json');
@@ -250,11 +257,12 @@ try {
     process.exit(1);
 }
 NODEJS_SCRIPT
-)
 
     # Run Node.js script
-    node -e "$node_script" "$workspace"
-    return $?
+    DEP_CHECK_WORKSPACE="$workspace" node "$node_script_file"
+    local rc=$?
+    rm -f "$node_script_file"
+    return $rc
 }
 
 # ============================================================================
@@ -262,7 +270,10 @@ NODEJS_SCRIPT
 # Detects version conflicts for same package across different workspaces
 # ============================================================================
 check_workspace_consistency() {
-    local node_script=$(cat << 'NODEJS_SCRIPT'
+    # Temp file — see bash 3.2 note in check_dependency_sync
+    local node_script_file
+    node_script_file=$(mktemp)
+    cat > "$node_script_file" << 'NODEJS_SCRIPT'
 const fs = require('fs');
 const path = require('path');
 
@@ -339,11 +350,12 @@ try {
     process.exit(1);
 }
 NODEJS_SCRIPT
-)
 
     # Run Node.js script
-    node -e "$node_script"
-    return $?
+    node "$node_script_file"
+    local rc=$?
+    rm -f "$node_script_file"
+    return $rc
 }
 
 # ============================================================================

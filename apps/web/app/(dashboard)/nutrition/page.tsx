@@ -12,6 +12,10 @@ export const metadata = {
   description: 'FND nutrition tracking, recipes, and meal planning',
 };
 
+// Reads the signed-in user's data on every request — never prerenderable,
+// and template CI builds have no Supabase credentials.
+export const dynamic = 'force-dynamic';
+
 export default async function NutritionPage() {
   const supabase = await createClient();
   const {

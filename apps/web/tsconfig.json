@@ -31,14 +31,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "tests/**/*",
-    "src/app/demo/**/*",
-    "src/components/JobCard.tsx",
-    "lib/image-generation/*",
-    "lib/image-generation/**/*",
-    "app/api/generate-image/*",
-    "hooks/use-image-generation.ts"
-  ]
+  "exclude": ["node_modules", "tests/**/*"]
 }

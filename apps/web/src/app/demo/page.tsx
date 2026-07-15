@@ -1,4 +1,4 @@
-import { JobCardExample } from '@/components/JobCard';
+import { JobCardExample } from '../../components/JobCard';
 
 /**
  * Demo Page

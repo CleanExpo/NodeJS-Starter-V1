@@ -2,17 +2,13 @@
   "mcpServers": {
     "supabase": {
       "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=pwwwhoaxxtkmowifpuwf",
+      "url": "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF",
       "enabled": true,
       "description": "Supabase MCP server for database operations"
     },
     "filesystem": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "D:\\Node JS Starter V1"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "D:\\Node JS Starter V1"],
       "enabled": true,
       "description": "File system operations (read, write, list)"
     },
@@ -33,11 +29,7 @@
     },
     "postgres": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "${DATABASE_URL}"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "${DATABASE_URL}"],
       "enabled": false,
       "description": "PostgreSQL database queries (requires DATABASE_URL env var)"
     },

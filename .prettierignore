@@ -10,3 +10,18 @@ uv.lock
 # Shell and Python scripts — prettier corrupts quotes in these files
 *.ps1
 *.py
+
+# Agent/knowledge trees — content, not code; formatting adds churn, not safety
+.skills
+.claude
+.pi
+.beads
+.planning
+.zap
+skills
+solution-library
+audit-reports
+ai-review
+docs/archive
+.playwright-mcp
+supabase/migrations

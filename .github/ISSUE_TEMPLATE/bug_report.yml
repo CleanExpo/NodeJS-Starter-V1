@@ -1,0 +1,34 @@
+name: Bug report
+description: Something behaves differently from what the code promises
+labels: [bug, needs-triage]
+body:
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What should happen, stated precisely enough that a fix is verifiable.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happens instead — include real output, logs, or a screenshot.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: surface
+    attributes:
+      label: Where the user meets it
+      placeholder: browser page / API route / CLI command
+    validations:
+      required: true

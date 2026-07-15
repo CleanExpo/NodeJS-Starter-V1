@@ -1,43 +1,11 @@
 /**
  * Environment configuration with validation
- * Ensures all required environment variables are present at startup
+ * Ensures all required environment variables are present at startup.
+ * Schema + validation live in ./env (zod); this module is the typed surface
+ * the app imports.
  */
 
-// Required environment variables
-const REQUIRED_ENV_VARS = ['NEXT_PUBLIC_BACKEND_URL'] as const;
-
-// Optional environment variables with defaults
-const OPTIONAL_ENV_VARS = {
-  NEXT_PUBLIC_FRONTEND_URL: 'http://localhost:3000',
-  LOG_LEVEL: 'info',
-} as const;
-
-/**
- * Validates that all required environment variables are present
- * Throws an error if any are missing
- */
-function validateEnv(): void {
-  const missing: string[] = [];
-
-  for (const key of REQUIRED_ENV_VARS) {
-    if (!process.env[key]) {
-      missing.push(key);
-    }
-  }
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Missing required environment variables:\n${missing.map((key) => `  - ${key}`).join('\n')}\n\n` +
-        `Please add these to your .env.local file or environment configuration.`
-    );
-  }
-}
-
-// Validate on module load (fail fast)
-if (typeof window === 'undefined') {
-  // Only validate on server-side (Next.js edge runtime, API routes, etc.)
-  validateEnv();
-}
+import { env } from './env';
 
 /**
  * Type-safe application configuration
@@ -45,14 +13,16 @@ if (typeof window === 'undefined') {
  */
 export const config = {
   backend: {
+    // NEXT_PUBLIC_ vars are inlined into client bundles at build time, so read
+    // process.env directly for the value; zod (lib/env.ts) enforces presence
+    // and shape server-side at startup.
     url: process.env.NEXT_PUBLIC_BACKEND_URL!,
   },
   frontend: {
-    url: process.env.NEXT_PUBLIC_FRONTEND_URL || OPTIONAL_ENV_VARS.NEXT_PUBLIC_FRONTEND_URL,
+    url: process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000',
   },
   logging: {
-    level:
-      (process.env.LOG_LEVEL as 'debug' | 'info' | 'warn' | 'error') || OPTIONAL_ENV_VARS.LOG_LEVEL,
+    level: env.LOG_LEVEL ?? 'info',
   },
   isDevelopment: process.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',

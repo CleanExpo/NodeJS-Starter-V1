@@ -41,6 +41,9 @@ export function MealSlotPicker({
 
   useEffect(() => {
     if (!open) return;
+    // Spinner state must flip on synchronously before the awaited fetch;
+    // the rule can't see that this render is the loading state itself.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchRecipes(search);
   }, [open, search, fetchRecipes]);
 
