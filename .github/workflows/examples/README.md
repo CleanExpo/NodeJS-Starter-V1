@@ -5,18 +5,22 @@ This directory contains example workflow templates for optional deployment and a
 ## Available Templates
 
 ### `deploy-backend.yml.example`
+
 Example workflow for deploying the FastAPI backend to DigitalOcean App Platform.
 
 **To use:**
+
 1. Copy to `.github/workflows/deploy-backend.yml`
 2. Add required secrets to your repository:
    - `DIGITALOCEAN_ACCESS_TOKEN`
 3. Customize the workflow for your deployment target
 
 ### `deploy-frontend.yml.example`
+
 Example workflow for deploying the Next.js frontend to Vercel.
 
 **To use:**
+
 1. Copy to `.github/workflows/deploy-frontend.yml`
 2. Add required secrets to your repository:
    - `VERCEL_TOKEN`
@@ -29,6 +33,7 @@ Example workflow for deploying the Next.js frontend to Vercel.
 The starter template is self-contained and can be deployed to various platforms:
 
 ### Backend Deployment Options
+
 - **DigitalOcean** - App Platform (example provided)
 - **Railway** - https://railway.app
 - **Fly.io** - https://fly.io
@@ -38,6 +43,7 @@ The starter template is self-contained and can be deployed to various platforms:
 - **Azure** - App Service
 
 ### Frontend Deployment Options
+
 - **Vercel** - https://vercel.com (example provided)
 - **Netlify** - https://netlify.com
 - **Cloudflare Pages** - https://pages.cloudflare.com

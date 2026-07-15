@@ -5,6 +5,7 @@
 ### Step 1: Open Repository Secrets Page
 
 Click this link (or copy to browser):
+
 ```
 https://github.com/CleanExpo/NodeJS-Starter-V1/settings/secrets/actions
 ```
@@ -22,6 +23,7 @@ Click "New repository secret" for each secret below:
 **Name**: `PERCY_TOKEN`
 
 **How to get**:
+
 1. Go to https://percy.io/signup
 2. Sign up (free tier available)
 3. Create new project: "NodeJS-Starter-V1"
@@ -37,6 +39,7 @@ Click "New repository secret" for each secret below:
 **Name**: `PACT_BROKER_BASE_URL`
 
 **How to get**:
+
 1. Go to https://pactflow.io/try-for-free/
 2. Sign up (free tier available)
 3. Create your organization
@@ -51,6 +54,7 @@ Click "New repository secret" for each secret below:
 **Name**: `PACT_BROKER_TOKEN`
 
 **How to get**:
+
 1. In Pactflow, go to Settings → API Tokens
 2. Click "Create API Token"
 3. Name: "GitHub Actions"
@@ -66,6 +70,7 @@ Click "New repository secret" for each secret below:
 **Name**: `CODECOV_TOKEN`
 
 **How to get**:
+
 1. Go to https://codecov.io/signup
 2. Sign in with GitHub
 3. Add repository: CleanExpo/NodeJS-Starter-V1
@@ -82,6 +87,7 @@ Click "New repository secret" for each secret below:
 **Name**: `SNYK_TOKEN`
 
 **How to get**:
+
 1. Go to https://snyk.io/signup
 2. Sign in with GitHub
 3. Go to Account Settings → General
@@ -152,6 +158,7 @@ Verification:
    - Check token has correct permissions
 
 **Still stuck?**
+
 - See full documentation: `.github/SECRETS.md`
 - Check workflow logs: https://github.com/CleanExpo/NodeJS-Starter-V1/actions
 
@@ -168,6 +175,7 @@ All services offer free tiers perfect for this project!
 ---
 
 **Quick Links**:
+
 - Repository Secrets: https://github.com/CleanExpo/NodeJS-Starter-V1/settings/secrets/actions
 - GitHub Actions: https://github.com/CleanExpo/NodeJS-Starter-V1/actions
 - Full Documentation: `.github/SECRETS.md`

@@ -14,29 +14,29 @@ interface Agent {
 
 async function fetchAgents(): Promise<Agent[]> {
   try {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000'
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
     const res = await fetch(`${backendUrl}/api/agents/list`, {
       cache: 'no-store',
-      next: { revalidate: 0 }
-    })
+      next: { revalidate: 0 },
+    });
 
     if (!res.ok) {
-      return []
+      return [];
     }
 
-    return res.json()
+    return res.json();
   } catch {
-    return []
+    return [];
   }
 }
 
 export async function AgentList() {
-  const agents = await fetchAgents()
+  const agents = await fetchAgents();
 
   if (agents.length === 0) {
     return (
-      <div className="bg-white p-8 rounded-lg shadow text-center" role="status">
-        <div className="text-gray-400 mb-2">
+      <div className="rounded-lg bg-white p-8 text-center shadow" role="status">
+        <div className="mb-2 text-gray-400">
           <svg
             className="mx-auto h-12 w-12"
             fill="none"
@@ -52,39 +52,37 @@ export async function AgentList() {
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-1">No agents yet</h3>
+        <h3 className="mb-1 text-lg font-medium text-gray-900">No agents yet</h3>
         <p className="text-gray-600">Agents will appear once tasks are executed</p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-3" role="list" aria-label="Agent list">
       {agents.map((agent: Agent) => {
         const statusColor =
-          agent.status === 'active'
-            ? 'bg-green-100 text-green-800'
-            : 'bg-gray-100 text-gray-800'
+          agent.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
 
         const successRateColor =
           agent.success_rate > 0.85
             ? 'text-green-600'
             : agent.success_rate > 0.7
               ? 'text-yellow-600'
-              : 'text-red-600'
+              : 'text-red-600';
 
         return (
           <div
             key={agent.agent_id}
-            className="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+            className="rounded-lg bg-white p-4 shadow transition hover:shadow-md"
             role="listitem"
             tabIndex={0}
             aria-label={`Agent ${agent.agent_type}, status: ${agent.status}`}
           >
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <span className="text-blue-600 font-semibold text-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-sm font-semibold text-blue-600">
                     {agent.agent_type.substring(0, 2).toUpperCase()}
                   </span>
                 </div>
@@ -93,12 +91,12 @@ export async function AgentList() {
                   <p className="text-sm text-gray-500">{agent.agent_id.substring(0, 12)}</p>
                 </div>
               </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
+              <span className={`rounded-full px-2 py-1 text-xs font-medium ${statusColor}`}>
                 {agent.status}
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t">
+            <div className="mt-3 grid grid-cols-2 gap-4 border-t pt-3">
               <div>
                 <div className="text-xs text-gray-500">Tasks</div>
                 <div className="text-lg font-semibold">{agent.task_count}</div>
@@ -111,8 +109,8 @@ export async function AgentList() {
               </div>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

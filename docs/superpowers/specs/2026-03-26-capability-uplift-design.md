@@ -45,6 +45,7 @@ Every uplift skill follows this structure:
 **Problem**: Wall of bullets, header spam, AI prose tells, flat structure, no typographic hierarchy.
 
 **SKILL.md sections**:
+
 1. Banned Defaults (12 anti-patterns)
 2. Replacement Standards (prose-first hierarchy, intentional whitespace)
 3. Document Archetypes (5 templates: Technical Spec, User Guide, Report, Proposal, README)
@@ -52,6 +53,7 @@ Every uplift skill follows this structure:
 5. Eval Criteria (PASS/FAIL checklist)
 
 **Frontmatter**:
+
 ```yaml
 ---
 id: document-formatting-uplift
@@ -76,6 +78,7 @@ description: >
 > **Note**: "write" alone is intentionally excluded — too broad, conflicts with code-writing tasks. Trigger only on "write a [document type]".
 
 **Banned defaults (12)**:
+
 1. Wall of bullets when prose is more appropriate
 2. H2 → H3 → H4 nesting for things that should be one paragraph
 3. Starting every section with a summary sentence that restates the heading
@@ -90,6 +93,7 @@ description: >
 12. Code blocks for non-code content (using backticks for emphasis instead of proper formatting)
 
 **Reference files**:
+
 - `references/anti-patterns.md` — Full catalogue with before/after for each of the 12 patterns
 - `references/standards.md` — Scientific Luxury document style: OLED-themed code blocks, spectral colour for status annotations, JetBrains Mono for data/metrics, Editorial New for titles
 - `references/standards-generic.md` — Professional style: clean typography, prose-first, system fonts, works in any project
@@ -108,6 +112,7 @@ description: >
 **Problem**: Default Chart.js/Recharts — grey gridlines, oversized legends, rainbow palettes, unlabelled axes, poor OLED contrast.
 
 **Banned defaults (8)**:
+
 1. Default grey gridlines on white background
 2. Pie charts for > 4 segments
 3. Rainbow/categorical colour palettes
@@ -122,6 +127,7 @@ description: >
 **Triggers**: "chart", "graph", "visualisation", "dashboard data", "metrics", "Recharts", "Chart.js", "plot", "data display"
 
 **Reference files**:
+
 - `references/anti-patterns.md` — 8 bad defaults with screenshots/code
 - `references/standards.md` — SL chart tokens (spectral palette, OLED backgrounds, JetBrains Mono axes)
 - `references/standards-generic.md` — Publication-quality palette (6 colours, WCAG AA contrast, dark + light variants)
@@ -133,6 +139,7 @@ description: >
 **Problem**: Default Mermaid — tiny text, no colour coding, cramped layouts, default arrows, no visual hierarchy.
 
 **Banned defaults (8)**:
+
 1. Default Mermaid `%%{init: {'theme': 'default'}}%%`
 2. Grey nodes with black text
 3. Single-colour diagrams (all nodes same colour)
@@ -147,6 +154,7 @@ description: >
 **Triggers**: "diagram", "flowchart", "Mermaid", "architecture diagram", "sequence diagram", "ER diagram", "system diagram", "visualise"
 
 **Reference files**:
+
 - `references/anti-patterns.md` — 8 bad defaults
 - `references/standards.md` — SL Mermaid theme init config + node colour mapping
 - `references/standards-generic.md` — Professional dark-mode diagram palette
@@ -157,6 +165,7 @@ description: >
 **Problem**: Generic variable names, over-commented obvious code, flat structures, placeholder patterns, American English.
 
 **Banned defaults (12)**:
+
 1. Generic names: `data`, `result`, `response`, `item`, `temp`, `val`, `obj`, `arr`, `str`, `num`
 2. Commenting obvious code: `// increment counter`, `// return the value`
 3. `console.log` left in production code
@@ -177,6 +186,7 @@ description: >
 > **Note**: "implement", "build", "component" intentionally excluded — conflict with `idea-to-production`, `genesis-orchestrator`, and `scientific-luxury`. This skill activates on quality/style concerns, not task initiation. Priority position: after `council-of-logic` (position 3), before `execution-guardian` (position 4) in AGENTS.md.
 
 **Reference files**:
+
 - `references/anti-patterns.md` — 12 banned defaults with before/after code
 - `references/standards.md` — SL naming conventions (project-specific patterns from apps/web and apps/backend)
 - `references/standards-generic.md` — Universal clean-code patterns
@@ -198,22 +208,23 @@ description: >
 
 Before producing ANY frontend code, verify output does not contain:
 
-| # | Banned Pattern | Replacement |
-|---|---------------|-------------|
-| 1 | `rounded-lg`, `rounded-xl`, `rounded-full` | `rounded-sm` only |
-| 2 | `bg-white`, `bg-gray-*` backgrounds | `bg-[#050505]` (OLED Black) |
-| 3 | CSS transitions (`transition-*`) | Framer Motion with physics easing |
-| 4 | Inter, Roboto, Arial fonts | JetBrains Mono (data), system sans (body) |
-| 5 | `text-blue-500`, `text-purple-*` | Spectral colours only |
-| 6 | Symmetrical grid (`grid-cols-2`, `grid-cols-4`) | Asymmetric splits |
-| 7 | Generic card styling (`shadow-lg`, `border`) | Single-pixel border, no shadow |
-| 8 | Lucide icons for status | Breathing orbs, pulse indicators |
-| 9 | Static hover states | `whileHover`/`whileTap` with spring physics |
-| 10 | `h-screen` | `min-h-[100dvh]` |
+| #   | Banned Pattern                                  | Replacement                                 |
+| --- | ----------------------------------------------- | ------------------------------------------- |
+| 1   | `rounded-lg`, `rounded-xl`, `rounded-full`      | `rounded-sm` only                           |
+| 2   | `bg-white`, `bg-gray-*` backgrounds             | `bg-[#050505]` (OLED Black)                 |
+| 3   | CSS transitions (`transition-*`)                | Framer Motion with physics easing           |
+| 4   | Inter, Roboto, Arial fonts                      | JetBrains Mono (data), system sans (body)   |
+| 5   | `text-blue-500`, `text-purple-*`                | Spectral colours only                       |
+| 6   | Symmetrical grid (`grid-cols-2`, `grid-cols-4`) | Asymmetric splits                           |
+| 7   | Generic card styling (`shadow-lg`, `border`)    | Single-pixel border, no shadow              |
+| 8   | Lucide icons for status                         | Breathing orbs, pulse indicators            |
+| 9   | Static hover states                             | `whileHover`/`whileTap` with spring physics |
+| 10  | `h-screen`                                      | `min-h-[100dvh]`                            |
 
 ## Reference Components
 
 5 production-ready components following Scientific Luxury:
+
 1. **SpectralButton** — Framer Motion tap/hover, spectral colour variants, `rounded-sm`
 2. **DataCard** — OLED black, single-pixel border, JetBrains Mono metrics, breathing status orb
 3. **DataTable** — Asymmetric columns, spectral row highlights, skeleton loading
@@ -223,6 +234,7 @@ Before producing ANY frontend code, verify output does not contain:
 ## Self-Verification Gate
 
 Before reporting task complete, verify:
+
 - [ ] Zero banned patterns in output
 - [ ] All interactive elements have Framer Motion animations
 - [ ] OLED black background on all new components
@@ -253,16 +265,16 @@ no generic formatting.
 
 ## Banned Defaults
 
-| # | Banned | Replacement |
-|---|--------|-------------|
-| 1 | Wall of bullets | Prose-first paragraphs |
-| 2 | Header spam (H2→H3→H4 for one idea) | Appropriate heading depth |
-| 3 | "Let's dive in", "comprehensive overview" | Direct opening sentence |
-| 4 | Lorem Ipsum or placeholder text | Real draft copy in en-AU |
-| 5 | Generic section ordering | Content-appropriate structure |
-| 6 | Exclamation marks in technical docs | Period or no punctuation |
-| 7 | Title Case On Every Header | Sentence case |
-| 8 | Every list item bold+dash | Mixed formatting as appropriate |
+| #   | Banned                                    | Replacement                     |
+| --- | ----------------------------------------- | ------------------------------- |
+| 1   | Wall of bullets                           | Prose-first paragraphs          |
+| 2   | Header spam (H2→H3→H4 for one idea)       | Appropriate heading depth       |
+| 3   | "Let's dive in", "comprehensive overview" | Direct opening sentence         |
+| 4   | Lorem Ipsum or placeholder text           | Real draft copy in en-AU        |
+| 5   | Generic section ordering                  | Content-appropriate structure   |
+| 6   | Exclamation marks in technical docs       | Period or no punctuation        |
+| 7   | Title Case On Every Header                | Sentence case                   |
+| 8   | Every list item bold+dash                 | Mixed formatting as appropriate |
 
 ## Document Archetypes
 
@@ -271,6 +283,7 @@ References document-formatting-uplift skill templates.
 ## Verification Gate
 
 Before submitting documentation:
+
 - [ ] No AI prose tells detected
 - [ ] en-AU spelling throughout
 - [ ] DD/MM/YYYY date format
@@ -302,6 +315,7 @@ to detect and reject generic LLM output patterns in code.
 ## Review Checklist (20 items)
 
 ### TypeScript (10)
+
 1. No `any` types without justification comment
 2. No generic variable names (data, result, item, temp)
 3. No console.log in production code
@@ -310,33 +324,35 @@ to detect and reject generic LLM output patterns in code.
 6. No functions > 50 lines
 7. No deeply nested conditionals (> 3 levels)
 8. No magic numbers without named constants
-9. No import-all patterns (import *)
+9. No import-all patterns (import \*)
 10. No cross-layer imports (components/ ← server/)
 
 ### Python (10)
+
 1. Type hints on all public functions
 2. No bare except clauses
 3. No mutable default arguments
 4. No print() statements (use structlog)
 5. No American English in user-facing strings
 6. No functions > 50 lines
-7. No star imports (from module import *)
+7. No star imports (from module import \*)
 8. No unused imports
 9. No hardcoded credentials or secrets
 10. Docstrings on public classes and functions
 
 ## Severity Classification
 
-| Severity | Blocking? | Examples |
-|----------|-----------|---------|
-| Critical | Yes | Security vulnerability, data leak, `any` in public API |
-| High | Yes | Cross-layer import, American English, no error handling |
-| Medium | No | Generic variable name, missing type hint, long function |
-| Low | No | Minor naming inconsistency, optional optimisation |
+| Severity | Blocking? | Examples                                                |
+| -------- | --------- | ------------------------------------------------------- |
+| Critical | Yes       | Security vulnerability, data leak, `any` in public API  |
+| High     | Yes       | Cross-layer import, American English, no error handling |
+| Medium   | No        | Generic variable name, missing type hint, long function |
+| Low      | No        | Minor naming inconsistency, optional optimisation       |
 
 ## Verification Gate
 
 Before submitting review:
+
 - [ ] Each finding has file:line reference
 - [ ] Each finding has severity classification
 - [ ] No false positives on project-approved patterns
@@ -351,31 +367,31 @@ For each skill, add `references/` and `assets/` directories. SKILL.md content un
 
 ### Batch 1 — Design Domain (5 skills)
 
-| Skill | `references/anti-patterns.md` | `references/standards.md` | `assets/templates/` |
-|-------|-------------------------------|---------------------------|---------------------|
-| scientific-luxury | Extract from "Banned Elements" table | Already comprehensive — reference self | SL component starters (Button, Card, Layout) |
-| visual-excellence-enforcer | Extract from "Design Audit Checklist" | Scoring rubric criteria definitions | Audit report template (SL + generic) |
-| xaem-theme-ui | Extract from banned patterns | Theme preset configs | Theme generation starter (4 presets) |
-| blueprint-first | Extract "skeleton-code-generator" anti-pattern | ASCII standards reference | ASCII template library (6 layout types) |
-| dashboard-patterns | Extract "grid layouts, CSS transitions" bans | Component library reference | Dashboard page templates (SL + generic) |
+| Skill                      | `references/anti-patterns.md`                  | `references/standards.md`              | `assets/templates/`                          |
+| -------------------------- | ---------------------------------------------- | -------------------------------------- | -------------------------------------------- |
+| scientific-luxury          | Extract from "Banned Elements" table           | Already comprehensive — reference self | SL component starters (Button, Card, Layout) |
+| visual-excellence-enforcer | Extract from "Design Audit Checklist"          | Scoring rubric criteria definitions    | Audit report template (SL + generic)         |
+| xaem-theme-ui              | Extract from banned patterns                   | Theme preset configs                   | Theme generation starter (4 presets)         |
+| blueprint-first            | Extract "skeleton-code-generator" anti-pattern | ASCII standards reference              | ASCII template library (6 layout types)      |
+| dashboard-patterns         | Extract "grid layouts, CSS transitions" bans   | Component library reference            | Dashboard page templates (SL + generic)      |
 
 ### Batch 2 — Infrastructure Domain (5 skills)
 
-| Skill | `references/anti-patterns.md` | `references/standards.md` | `assets/templates/` |
-|-------|-------------------------------|---------------------------|---------------------|
-| structured-logging | Extract 5 banned patterns | Log format standards | Logger setup templates (Python + TS) |
-| error-taxonomy | Extract 4 banned patterns | Error code registry | Error handling templates |
-| health-check | Extract 6 banned patterns | Three-tier architecture | Health endpoint templates |
-| status-page | Extract 6 anti-patterns | Status model standards | Status page component templates |
-| email-template | Extract 6 banned patterns | Email layout standards | Email templates (5 types) |
+| Skill              | `references/anti-patterns.md` | `references/standards.md` | `assets/templates/`                  |
+| ------------------ | ----------------------------- | ------------------------- | ------------------------------------ |
+| structured-logging | Extract 5 banned patterns     | Log format standards      | Logger setup templates (Python + TS) |
+| error-taxonomy     | Extract 4 banned patterns     | Error code registry       | Error handling templates             |
+| health-check       | Extract 6 banned patterns     | Three-tier architecture   | Health endpoint templates            |
+| status-page        | Extract 6 anti-patterns       | Status model standards    | Status page component templates      |
+| email-template     | Extract 6 banned patterns     | Email layout standards    | Email templates (5 types)            |
 
 ### Batch 3 — Process Domain (3 skills)
 
-| Skill | `references/anti-patterns.md` | `references/standards.md` | `assets/templates/` |
-|-------|-------------------------------|---------------------------|---------------------|
-| execution-guardian | Extract risk operation types (note: `references/error-format.md` already exists — preserve it, add alongside) | Risk scoring formulas | Gate configuration templates |
-| report-generator | Extract "guessed scores" ban | Report composition rules | Report templates (3 formats) |
-| changelog-generator | Extract manual update ban | Commit type mapping | .versionrc.json + CI workflow |
+| Skill               | `references/anti-patterns.md`                                                                                 | `references/standards.md` | `assets/templates/`           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------- | ----------------------------- |
+| execution-guardian  | Extract risk operation types (note: `references/error-format.md` already exists — preserve it, add alongside) | Risk scoring formulas     | Gate configuration templates  |
+| report-generator    | Extract "guessed scores" ban                                                                                  | Report composition rules  | Report templates (3 formats)  |
+| changelog-generator | Extract manual update ban                                                                                     | Commit type mapping       | .versionrc.json + CI workflow |
 
 ---
 
@@ -391,20 +407,20 @@ For each skill, add `references/` and `assets/` directories. SKILL.md content un
 
 ## AGENTS.md Priority Positions (New Skills)
 
-| New Skill | Priority Position | Rationale |
-|-----------|------------------|-----------|
-| document-formatting-uplift | After #5 (system-supervisor), before #6 (skill-manager) | Document quality is a cross-cutting concern |
-| code-output-uplift | After #3 (council-of-logic), before #4 (execution-guardian) | Code quality gates run before execution governance |
-| data-visualisation-uplift | After dashboard-patterns, before vector-search | Domain-specific, activates alongside dashboard work |
-| diagram-uplift | After blueprint-first, before report-generator | Diagrams are a sub-concern of blueprints and reports |
+| New Skill                  | Priority Position                                           | Rationale                                            |
+| -------------------------- | ----------------------------------------------------------- | ---------------------------------------------------- |
+| document-formatting-uplift | After #5 (system-supervisor), before #6 (skill-manager)     | Document quality is a cross-cutting concern          |
+| code-output-uplift         | After #3 (council-of-logic), before #4 (execution-guardian) | Code quality gates run before execution governance   |
+| data-visualisation-uplift  | After dashboard-patterns, before vector-search              | Domain-specific, activates alongside dashboard work  |
+| diagram-uplift             | After blueprint-first, before report-generator              | Diagrams are a sub-concern of blueprints and reports |
 
 ## Agent Version Numbers
 
-| Agent | Current Version | New Version |
-|-------|----------------|-------------|
-| frontend-specialist | 1.0.0 | 1.1.0 (enhancement) |
-| docs-writer | 0.1.0 (stub) | 1.0.0 (full implementation) |
-| code-reviewer | 0.1.0 (stub) | 1.0.0 (full implementation) |
+| Agent               | Current Version | New Version                 |
+| ------------------- | --------------- | --------------------------- |
+| frontend-specialist | 1.0.0           | 1.1.0 (enhancement)         |
+| docs-writer         | 0.1.0 (stub)    | 1.0.0 (full implementation) |
+| code-reviewer       | 0.1.0 (stub)    | 1.0.0 (full implementation) |
 
 ## Verification
 
@@ -417,11 +433,11 @@ For each skill, add `references/` and `assets/` directories. SKILL.md content un
 
 Counts are estimates — actual totals depend on how many templates each domain requires. All counts are approximate (marked ~).
 
-| Category | New Files | Modified Files |
-|----------|-----------|----------------|
-| Golden example (Phase 1) | ~11 (1 SKILL.md + 3 refs + 4 templates + 1 examples + 1 dir) | 0 |
-| New uplift skills (Phase 2) | ~33 (3 skills × ~11 files each) | 0 |
-| Agent transforms (Phase 3) | 0 | 3 |
-| Retrofit directories (Phase 4) | ~65-80 (13 skills × 5-6 files each) | 0 |
-| Registry update | 0 | 1 |
-| **Total** | **~110-125** | **4** |
+| Category                       | New Files                                                    | Modified Files |
+| ------------------------------ | ------------------------------------------------------------ | -------------- |
+| Golden example (Phase 1)       | ~11 (1 SKILL.md + 3 refs + 4 templates + 1 examples + 1 dir) | 0              |
+| New uplift skills (Phase 2)    | ~33 (3 skills × ~11 files each)                              | 0              |
+| Agent transforms (Phase 3)     | 0                                                            | 3              |
+| Retrofit directories (Phase 4) | ~65-80 (13 skills × 5-6 files each)                          | 0              |
+| Registry update                | 0                                                            | 1              |
+| **Total**                      | **~110-125**                                                 | **4**          |

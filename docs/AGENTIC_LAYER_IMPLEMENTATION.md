@@ -27,16 +27,17 @@ Successfully implemented a comprehensive agentic layer transforming this codebas
 
 Created layered PRIMER.md system in `.claude/primers/`:
 
-| File | Purpose |
-|------|---------|
-| `BASE_PRIMER.md` | Core agent persona, principles, and workflows |
-| `ORCHESTRATOR_PRIMER.md` | Orchestrator-specific coordination patterns |
-| `FRONTEND_AGENT_PRIMER.md` | Frontend specialization (Next.js/React) |
-| `BACKEND_AGENT_PRIMER.md` | Backend specialization (FastAPI/Python) |
+| File                       | Purpose                                       |
+| -------------------------- | --------------------------------------------- |
+| `BASE_PRIMER.md`           | Core agent persona, principles, and workflows |
+| `ORCHESTRATOR_PRIMER.md`   | Orchestrator-specific coordination patterns   |
+| `FRONTEND_AGENT_PRIMER.md` | Frontend specialization (Next.js/React)       |
+| `BACKEND_AGENT_PRIMER.md`  | Backend specialization (FastAPI/Python)       |
 | `DATABASE_AGENT_PRIMER.md` | Database specialization (PostgreSQL/Supabase) |
-| `VERIFIER_PRIMER.md` | Independent verifier persona and procedures |
+| `VERIFIER_PRIMER.md`       | Independent verifier persona and procedures   |
 
 **Key Features**:
+
 - Verification-first mindset embedded
 - Self-correction procedures defined
 - Evidence-based development enforced
@@ -64,12 +65,14 @@ async def iterate_until_passing(task, context, max_attempts=3) -> (result, succe
 **Test Coverage**: 13/13 tests passing ✅
 
 **Benefits**:
+
 - Agents self-correct before verification
 - Iterative improvement up to 3 attempts
 - Evidence-based failure analysis
 - Alternative approach suggestions
 
 Created `apps/backend/src/agents/review_agent.py`:
+
 - Dedicated code review agent
 - Analyzes diffs for quality issues
 - Categorizes issues by severity (critical, high, medium, low)
@@ -90,12 +93,14 @@ async def get_successful_patterns(pattern_type) -> list[MemoryEntry]
 ```
 
 Created `apps/backend/src/memory/session_manager.py`:
+
 - Manages session lifecycle
 - Captures learnings automatically
 - Provides session-to-session knowledge transfer
 - Accumulates insights over time
 
 **Benefits**:
+
 - Agents learn from past successes
 - Avoid repeating past failures
 - Context improves over time
@@ -105,15 +110,16 @@ Created `apps/backend/src/memory/session_manager.py`:
 
 Created 5 new workflow skills:
 
-| Skill | Purpose |
-|-------|---------|
-| `core/SELF_CORRECTION.md` | Self-review and iteration procedures |
-| `core/CODE_REVIEW.md` | Automated code review checklist |
-| `workflow/FEATURE_DEVELOPMENT.md` | End-to-end feature workflow |
-| `workflow/BUG_FIXING.md` | Systematic debugging process |
-| `workflow/REFACTORING.md` | Safe refactoring patterns |
+| Skill                             | Purpose                              |
+| --------------------------------- | ------------------------------------ |
+| `core/SELF_CORRECTION.md`         | Self-review and iteration procedures |
+| `core/CODE_REVIEW.md`             | Automated code review checklist      |
+| `workflow/FEATURE_DEVELOPMENT.md` | End-to-end feature workflow          |
+| `workflow/BUG_FIXING.md`          | Systematic debugging process         |
+| `workflow/REFACTORING.md`         | Safe refactoring patterns            |
 
 **Benefits**:
+
 - Agents follow consistent workflows
 - Progressive disclosure (load only when needed)
 - Domain expertise encoded
@@ -148,6 +154,7 @@ def _partition_context_for_subagent(subtask) -> dict
 ```
 
 **Capabilities**:
+
 - Spawn specialized subagents (frontend, backend, database, test, review)
 - Execute multiple subagents in parallel
 - Dependency resolution (wave-based execution)
@@ -156,6 +163,7 @@ def _partition_context_for_subagent(subtask) -> dict
 - Context partitioning
 
 **Patterns Implemented**:
+
 1. **Plan → Parallelize → Integrate**: Orchestrator plans, spawns parallel agents, merges results
 2. **Specialized Workers**: Each agent focuses on its domain
 3. **Hub-and-Spoke**: Orchestrator coordinates, no agent-to-agent communication
@@ -165,6 +173,7 @@ def _partition_context_for_subagent(subtask) -> dict
 Created MCP ecosystem:
 
 **Files**:
+
 - `apps/backend/src/tools/mcp_integration.py` - Core MCP protocol support
 - `apps/backend/src/tools/mcp_client.py` - Client for connecting to MCP servers
 - `apps/backend/src/tools/mcp_server.py` - Custom MCP server for domain memory
@@ -182,6 +191,7 @@ Created MCP ecosystem:
 | `slack` | Notifications | Disabled (requires tokens) |
 
 **Custom Memory Server Tools**:
+
 - `query_memory`: Query domain memories with filters
 - `search_similar`: Semantic search through memories
 - `store_pattern`: Store successful patterns
@@ -202,12 +212,14 @@ class ContextManager:
 ```
 
 **Optimization Strategies**:
+
 1. **Context Partitioning**: Each subagent gets only relevant context (frontend gets .tsx files, backend gets .py files, etc.)
 2. **Progressive Summarization**: Compress old messages to save tokens
 3. **Deferred Loading**: Skills and tools loaded on-demand, not upfront
 4. **Smart Caching**: Cache frequently accessed data
 
 **Expected Savings**:
+
 - Context reduction: **85%+** via partitioning and deferred loading
 - Token efficiency: **37%+** via programmatic calling
 - Improved accuracy: **72% → 90%** with tool examples
@@ -231,6 +243,7 @@ class PRAutomation:
 ```
 
 **Workflow**:
+
 1. Agent completes task
 2. Create branch: `feature/agent-{task-id}`
 3. Commit with agent attribution
@@ -240,26 +253,32 @@ class PRAutomation:
 7. Store PR metadata in `agent_runs` table
 
 **PR Template**:
+
 ```markdown
 ## Agent-Generated PR: {feature_name}
 
 ### Summary
+
 {AI-generated summary}
 
 ### Changes Made
+
 - {file}: {description}
 
 ### Test Plan
+
 - [ ] Tests passing
 - [ ] Manual verification
 
 ### Verification Evidence
+
 - Build: ✅ Passed
 - Type Check: ✅ Passed
 - Lint: ✅ Passed
 - Tests: ✅ N/N passing
 
 ### Agent Metadata
+
 - Agent ID: {id}
 - Task ID: {id}
 - Verifier ID: {id}
@@ -273,6 +292,7 @@ class PRAutomation:
 Created `.github/workflows/agent-pr-checks.yml`:
 
 **Workflow Jobs**:
+
 1. **Detect Agent PR**: Check if PR is agent-generated
 2. **Validate Metadata**: Verify agent metadata in PR description
 3. **Quality Checks**: Run type-check, lint, tests, build
@@ -280,6 +300,7 @@ Created `.github/workflows/agent-pr-checks.yml`:
 5. **Update PR Status**: Comment with results
 
 **Security Measures**:
+
 - Scan for hardcoded secrets
 - Detect debug code (console.log, print statements)
 - Verify agent attribution
@@ -300,6 +321,7 @@ class AgentMetrics:
 ```
 
 **Metrics Tracked**:
+
 - Tasks completed vs failed (by agent type)
 - Average iterations to success
 - Verification pass rate
@@ -605,6 +627,7 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 ## Success Criteria Checklist
 
 ### Phase 1: Core Infrastructure ✅
+
 - [x] All PRIMER.md files created
 - [x] Feedback loops working (agents iterate until success)
 - [x] Memory accumulation storing learnings
@@ -612,6 +635,7 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 - [x] Self-correction demonstrated (13/13 tests passing)
 
 ### Phase 2: Multi-Agent Orchestration ✅
+
 - [x] Orchestrator spawns and coordinates subagents
 - [x] Parallel execution with dependency resolution
 - [x] MCP protocol integrated
@@ -619,6 +643,7 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 - [x] Integration tests passing (18/22, 4 need DB credentials)
 
 ### Phase 3: Workflow Automation ✅
+
 - [x] PR automation implemented
 - [x] CI/CD workflow created and configured
 - [x] Monitoring and metrics tracking implemented
@@ -626,6 +651,7 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 - [ ] Agent dashboard (Next.js) - Planned for Phase 4
 
 ### Production Readiness
+
 - [x] Core components tested
 - [x] Type checking mostly clean (pre-existing issues in deps)
 - [x] Linting clean for new code
@@ -638,30 +664,35 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 ## Key Achievements
 
 ### 1. Self-Driving Capability
+
 - Agents execute tasks autonomously with minimal human intervention
 - Self-correction loops iterate up to 3 times before escalation
 - Independent verification ensures quality
 - Shadow mode PRs keep humans in the loop
 
 ### 2. Learning & Improvement
+
 - Session-based learning accumulates knowledge over time
 - Successful patterns stored for reuse
 - Failure patterns stored to avoid repeating
 - Agents get smarter with each session
 
 ### 3. Multi-Agent Coordination
+
 - Orchestrator coordinates multiple specialized agents
 - Parallel execution with automatic dependency resolution
 - Context partitioning prevents bloat
 - Result merging and conflict resolution
 
 ### 4. Production-Ready Workflows
+
 - Automated PR creation with comprehensive descriptions
 - CI/CD validation for all agent PRs
 - Security scanning and quality checks
 - Metrics tracking and performance monitoring
 
 ### 5. MCP Ecosystem Integration
+
 - Standard protocol for tool integration
 - Custom domain memory MCP server
 - Configured external MCP servers (git, filesystem, etc.)
@@ -672,17 +703,20 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 ## Next Steps
 
 ### Phase 4: Continuous Improvement (Planned)
+
 - [ ] Create `continuous_improvement.py` for automated tech debt cleanup
 - [ ] Implement `intelligent_router.py` for ML-based task routing
 - [ ] Add scheduled jobs (daily cleanup PRs, weekly refactoring)
 
 ### Phase 5: Self-Learning (Planned)
+
 - [ ] Create `learning_engine.py` for pattern extraction
 - [ ] Implement prompt evolution based on learnings
 - [ ] A/B testing for different approaches
 - [ ] Automated prompt optimization
 
 ### Phase 6: Agent Dashboard (Planned)
+
 - [ ] Create Next.js dashboard at `apps/web/app/(dashboard)/agents/page.tsx`
 - [ ] Real-time agent status visualization
 - [ ] Task queue and progress tracking
@@ -690,6 +724,7 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 - [ ] Cost tracking and optimization insights
 
 ### Production Hardening
+
 - [ ] Stress testing with high task volume
 - [ ] Error handling edge cases
 - [ ] Rate limiting and throttling
@@ -701,20 +736,24 @@ print(f"By Agent Type: {stats['by_agent_type']}")
 ## Testing Summary
 
 ### Unit Tests
+
 - **Self-Correction**: 13/13 passing ✅
 - **Coverage**: All new methods tested
 - **Quality**: Comprehensive edge case coverage
 
 ### Integration Tests
+
 - **Total**: 18/22 passing
 - **Core Workflows**: 18/18 passing ✅
 - **Database-Dependent**: 4 tests require Supabase credentials
 
 ### Type Checking
+
 - **New Code**: Clean (review_agent, session_manager, subagent_manager, etc.)
 - **Pre-existing Issues**: Some type errors in legacy code (not introduced by agentic layer)
 
 ### Linting
+
 - **All new files**: Passing ✅
 - **Standards**: Following project conventions
 
@@ -805,24 +844,28 @@ result = await orchestrator.run("Refactor authentication module to improve maint
 ## Impact & Benefits
 
 ### Productivity Gains
+
 - **Feature Development**: 3-5x faster with parallel agents
 - **Bug Fixing**: 2-3x faster with systematic debugging
 - **Code Review**: Automated first-pass review before human review
 - **Documentation**: Auto-generated from code changes
 
 ### Quality Improvements
+
 - **Test Coverage**: Agents write tests as part of workflow
 - **Consistency**: Follows patterns stored in memory
 - **Best Practices**: Embedded in agent personas
 - **No Regressions**: Independent verification catches issues
 
 ### Knowledge Accumulation
+
 - **Session Learning**: Each session improves future performance
 - **Pattern Reuse**: Successful approaches reused automatically
 - **Failure Avoidance**: Known failure patterns avoided
 - **Continuous Improvement**: System gets smarter over time
 
 ### Developer Experience
+
 - **Shadow Mode**: Humans maintain oversight and control
 - **Transparent**: Full visibility into agent actions
 - **Reviewable**: All changes via PRs with evidence
@@ -847,6 +890,7 @@ The system currently operates at:
 ✅ Context partitioning and optimization
 
 **Path to Class 3** (Future):
+
 - Continuous improvement agents (automated tech debt cleanup)
 - Intelligent routing (ML-based agent selection)
 - Self-learning (prompt evolution from learnings)
@@ -858,14 +902,14 @@ The system currently operates at:
 
 ### Target Metrics (To Be Measured in Production)
 
-| Metric | Target | Current Status |
-|--------|--------|----------------|
-| First-attempt success rate | >70% | Ready to measure |
-| Verification pass rate | >85% | Ready to measure |
-| PR merge rate | >85% | Ready to measure |
-| Context reduction | >85% | Implemented |
-| Average iterations | <2.0 | Ready to measure |
-| Error rate | <5% | Ready to measure |
+| Metric                     | Target | Current Status   |
+| -------------------------- | ------ | ---------------- |
+| First-attempt success rate | >70%   | Ready to measure |
+| Verification pass rate     | >85%   | Ready to measure |
+| PR merge rate              | >85%   | Ready to measure |
+| Context reduction          | >85%   | Implemented      |
+| Average iterations         | <2.0   | Ready to measure |
+| Error rate                 | <5%    | Ready to measure |
 
 ---
 
@@ -884,5 +928,5 @@ The agentic layer foundation is **complete and ready for systematic testing and 
 
 ---
 
-*Generated by Agentic Layer Implementation - Phase 1-3 Complete*
-*Ready for Production Hardening and Real-World Testing*
+_Generated by Agentic Layer Implementation - Phase 1-3 Complete_
+_Ready for Production Hardening and Real-World Testing_

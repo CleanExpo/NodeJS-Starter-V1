@@ -5,6 +5,7 @@
 The Agent PRD System transforms free-text requirements into comprehensive, production-ready Product Requirement Documents using Claude Opus 4.5.
 
 **What it generates**:
+
 - 📄 Complete PRD with executive summary, requirements, constraints
 - 📝 User stories with acceptance criteria (Epic → User Story format)
 - 🏗️ Technical specification (database schema, API endpoints, architecture)
@@ -75,6 +76,7 @@ print(analysis["functional_requirements"])
 ```
 
 **Outputs**: `PRDAnalysis` with:
+
 - Executive summary (2-3 sentences)
 - Problem statement
 - Target users
@@ -105,6 +107,7 @@ feature_list = decomposer.to_feature_list_json(decomposition)
 ```
 
 **Outputs**: `FeatureDecomposition` with:
+
 - Epics (high-level feature groups)
 - User stories (As a X, I want Y, so that Z)
 - Acceptance criteria (Given-When-Then)
@@ -131,6 +134,7 @@ print(f"API endpoints: {len(tech_spec['api_endpoints'])}")
 ```
 
 **Outputs**: `TechnicalSpec` with:
+
 - System architecture overview + Mermaid diagram
 - Database schema (tables, columns, indexes, relationships)
 - API endpoints (method, path, auth, request/response schemas)
@@ -161,6 +165,7 @@ print(f"E2E tests: {len(test_plan['e2e_tests'])}")
 ```
 
 **Outputs**: `TestPlan` with:
+
 - Unit test scenarios
 - Integration test scenarios
 - E2E test scenarios
@@ -192,6 +197,7 @@ print(f"Milestones: {', '.join(m['name'] for m in roadmap['milestones'])}")
 ```
 
 **Outputs**: `Roadmap` with:
+
 - Sprint breakdown (goals, stories, deliverables, risks)
 - Milestones (MVP, Beta, Launch)
 - Dependency graph (Mermaid diagram)
@@ -207,6 +213,7 @@ print(f"Milestones: {', '.join(m['name'] for m in roadmap['milestones'])}")
 When you specify `output_dir`, the system generates 6 files:
 
 ### 1. `prd.md` - Product Requirements Document
+
 - Executive summary
 - Problem statement
 - Target users, success metrics
@@ -215,6 +222,7 @@ When you specify `output_dir`, the system generates 6 files:
 - Constraints, assumptions, out-of-scope
 
 ### 2. `user_stories.md` - User Stories
+
 - Organized by epic
 - Full user story format
 - Acceptance criteria (Given-When-Then)
@@ -222,6 +230,7 @@ When you specify `output_dir`, the system generates 6 files:
 - Dependencies, technical notes
 
 ### 3. `feature_list.json` - Feature List (for InitializerAgent)
+
 ```json
 {
   "version": "1.0",
@@ -242,6 +251,7 @@ When you specify `output_dir`, the system generates 6 files:
 ```
 
 ### 4. `tech_spec.md` - Technical Specification
+
 - Architecture overview + diagram
 - Database schema with all tables
 - API endpoints with full specs
@@ -249,12 +259,14 @@ When you specify `output_dir`, the system generates 6 files:
 - Security, performance, deployment
 
 ### 5. `test_plan.md` - Test Plan
+
 - Coverage strategy
 - Unit, integration, E2E test scenarios
 - Security tests
 - CI integration approach
 
 ### 6. `roadmap.md` - Implementation Roadmap
+
 - Sprint breakdown
 - Milestones
 - Dependency graph
@@ -290,6 +302,7 @@ await initializer.execute(
 ```
 
 The InitializerAgent will:
+
 1. Load features from `feature_list.json`
 2. Implement each feature using CodingAgent
 3. Track progress in `claude-progress.txt`
@@ -360,6 +373,7 @@ else:
 ### 1. Provide Clear Requirements
 
 ✅ **Good**:
+
 ```
 Build a task management app for remote teams with real-time collaboration.
 Users should create projects, assign tasks with due dates, track progress
@@ -368,6 +382,7 @@ users and integrate with Slack for notifications.
 ```
 
 ❌ **Bad**:
+
 ```
 Make a todo app
 ```
@@ -375,6 +390,7 @@ Make a todo app
 ### 2. Add Relevant Context
 
 Always provide:
+
 - Target users (who will use this?)
 - Timeline (how much time do we have?)
 - Team size (how many developers?)
@@ -467,6 +483,7 @@ This means you'll get placeholder data. Review the raw LLM output.
 ### "Analysis failed" or "Decomposition failed"
 
 Check:
+
 1. ANTHROPIC_API_KEY is set correctly
 2. Requirements are detailed enough (> 50 characters)
 3. Claude Opus 4.5 API is accessible
@@ -475,6 +492,7 @@ Check:
 ### Empty or minimal output
 
 Provide more context:
+
 - Add specific features to requirements
 - Specify target users more clearly
 - Add business constraints
@@ -485,13 +503,13 @@ Provide more context:
 
 **Typical generation times** (depends on requirements complexity):
 
-| Agent | Time | Tokens |
-|-------|------|--------|
-| PRDAnalysisAgent | 5-10s | ~2K |
-| FeatureDecomposer | 10-20s | ~4K |
-| TechnicalSpecGenerator | 15-30s | ~8K |
-| TestScenarioGenerator | 15-30s | ~8K |
-| RoadmapPlanner | 15-30s | ~8K |
+| Agent                    | Time        | Tokens   |
+| ------------------------ | ----------- | -------- |
+| PRDAnalysisAgent         | 5-10s       | ~2K      |
+| FeatureDecomposer        | 10-20s      | ~4K      |
+| TechnicalSpecGenerator   | 15-30s      | ~8K      |
+| TestScenarioGenerator    | 15-30s      | ~8K      |
+| RoadmapPlanner           | 15-30s      | ~8K      |
 | **Total (orchestrator)** | **1-2 min** | **~30K** |
 
 **Cost estimate**: ~$0.50-1.00 per full PRD generation (Claude Opus 4.5 pricing)

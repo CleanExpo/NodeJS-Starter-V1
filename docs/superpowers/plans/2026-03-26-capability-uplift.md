@@ -15,6 +15,7 @@
 ## Task 1: Golden Example — `document-formatting-uplift` (Full Detail)
 
 **Files:**
+
 - Create: `.skills/custom/document-formatting-uplift/SKILL.md`
 - Create: `.skills/custom/document-formatting-uplift/references/anti-patterns.md`
 - Create: `.skills/custom/document-formatting-uplift/references/standards.md`
@@ -93,6 +94,7 @@ description: >
 - [ ] **Step 3: Create references/anti-patterns.md**
 
 Full catalogue of 12 banned patterns. For EACH pattern, include:
+
 - **Name**: The anti-pattern
 - **What it looks like** (before): 3-5 line example of the bad default
 - **Why it's bad**: One sentence explaining the problem
@@ -102,6 +104,7 @@ Full catalogue of 12 banned patterns. For EACH pattern, include:
 - [ ] **Step 4: Create references/standards.md (Scientific Luxury variant)**
 
 Document styling for Scientific Luxury projects:
+
 - Code blocks: Dark background (`#0a0a0a`), spectral syntax highlighting (Cyan for keywords, Emerald for strings, Amber for numbers, Red for errors)
 - Status annotations: Use spectral colours inline — `[ACTIVE]` in Cyan, `[COMPLETE]` in Emerald, `[WARNING]` in Amber, `[ERROR]` in Red
 - Data/metrics: JetBrains Mono font, tabular alignment
@@ -112,6 +115,7 @@ Document styling for Scientific Luxury projects:
 - [ ] **Step 5: Create references/standards-generic.md (Portable variant)**
 
 Professional document styling for any project:
+
 - Code blocks: Standard markdown with language hints
 - Typography: System sans-serif body, monospace for code/data
 - Hierarchy: Font size ratio 1:1.25:1.5 (body:H3:H2)
@@ -122,6 +126,7 @@ Professional document styling for any project:
 - [ ] **Step 6: Create 4 template files**
 
 `assets/templates/scientific-luxury/technical-spec.md`:
+
 ```markdown
 # [Feature Name] — Technical Specification
 
@@ -150,8 +155,8 @@ Professional document styling for any project:
 ## Implementation
 
 | Task | Owner | Files | Status |
-|------|-------|-------|--------|
-| | | | |
+| ---- | ----- | ----- | ------ |
+|      |       |       |        |
 
 ## Verification
 
@@ -165,14 +170,17 @@ Create the remaining 3 templates (user-guide SL, technical-spec generic, user-gu
 Three side-by-side comparisons:
 
 **Example 1: Bullet wall → Prose**
+
 - Before: 8-item bullet list describing a login flow
 - After: 2-paragraph prose description of the same flow
 
 **Example 2: Header spam → Appropriate hierarchy**
+
 - Before: H2 → H3 → H4 → H5 for a simple concept
 - After: H2 with prose paragraphs (no sub-headings needed)
 
 **Example 3: AI prose → Direct writing**
+
 - Before: "Let's dive into the comprehensive overview of our authentication system. It's worth noting that..."
 - After: "The authentication system uses JWT tokens stored in HTTP-only cookies."
 
@@ -183,6 +191,7 @@ find .skills/custom/document-formatting-uplift -type f | sort
 ```
 
 Expected output:
+
 ```
 .skills/custom/document-formatting-uplift/SKILL.md
 .skills/custom/document-formatting-uplift/assets/examples/before-after.md
@@ -252,6 +261,7 @@ git commit -m "feat(skills): add data-visualisation-uplift — spectral chart ae
 - [ ] **Step 3: Create references/anti-patterns.md** — 8 bad Mermaid defaults with before/after
 
 - [ ] **Step 4: Create references/standards.md** — SL Mermaid theme init:
+
 ```
 %%{init: {'theme': 'base', 'themeVariables': {
   'primaryColor': '#00F5FF', 'primaryTextColor': '#ffffff',
@@ -264,6 +274,7 @@ git commit -m "feat(skills): add data-visualisation-uplift — spectral chart ae
   'fontSize': '14px'
 }}}%%
 ```
+
 Node colour mapping: data=Cyan, success/output=Emerald, decision/warning=Amber, error/failure=Red, external/integration=Magenta.
 
 - [ ] **Step 5: Create references/standards-generic.md** — Professional dark-mode diagram palette
@@ -297,7 +308,7 @@ git commit -m "feat(skills): add diagram-uplift — spectral Mermaid theming"
 - [ ] **Step 4: Create references/standards.md** — SL naming conventions from project:
   - React: PascalCase.tsx, hooks: use{Domain}{Action}.ts
   - Backend: snake_case.py, routes: {domain}.py
-  - Tests: {component}.test.tsx / test_{module}.py
+  - Tests: {component}.test.tsx / test\_{module}.py
   - Variables: domain-specific (`agentExecutionResult`, `nutritionEntry`, not `data`, `result`)
 
 - [ ] **Step 5: Create references/standards-generic.md** — Universal clean-code patterns
@@ -318,6 +329,7 @@ git commit -m "feat(skills): add code-output-uplift — domain-specific naming e
 ## Task 5: Transform `frontend-specialist` Agent
 
 **Files:**
+
 - Modify: `.claude/agents/frontend-specialist/agent.md`
 
 - [ ] **Step 1: Read current agent file fully**
@@ -348,6 +360,7 @@ git commit -m "feat(agents): uplift frontend-specialist — banned defaults + re
 ## Task 6: Implement `docs-writer` Agent
 
 **Files:**
+
 - Modify: `.claude/agents/docs-writer/agent.md` (full replacement of stub)
 
 - [ ] **Step 1: Read current stub**
@@ -355,6 +368,7 @@ git commit -m "feat(agents): uplift frontend-specialist — banned defaults + re
 - [ ] **Step 2: Replace with full implementation**
 
 Use the agent definition from spec lines 239-280. Include:
+
 - Frontmatter: version 1.0.0, role: "Technical Documentation Specialist", status: active, token_budget: 40000
 - Core Responsibilities (5 items)
 - Banned Defaults table (8 items)
@@ -374,6 +388,7 @@ git commit -m "feat(agents): implement docs-writer — Capability Uplift standar
 ## Task 7: Implement `code-reviewer` Agent
 
 **Files:**
+
 - Modify: `.claude/agents/code-reviewer/agent.md` (full replacement of stub)
 
 - [ ] **Step 1: Read current stub**
@@ -381,6 +396,7 @@ git commit -m "feat(agents): implement docs-writer — Capability Uplift standar
 - [ ] **Step 2: Replace with full implementation**
 
 Use the agent definition from spec lines 288-343. Include:
+
 - Frontmatter: version 1.0.0, role: "Code Review Specialist", status: active, token_budget: 50000
 - Core Responsibilities (5 items)
 - Review Checklist — 10 TypeScript + 10 Python items
@@ -481,6 +497,7 @@ git commit -m "feat(skills): retrofit process domain skills with Capability Upli
 ## Task 11: Update AGENTS.md Registry
 
 **Files:**
+
 - Modify: `.skills/AGENTS.md`
 
 - [ ] **Step 1: Add 4 new skills to the Custom Skills table**
@@ -490,6 +507,7 @@ Add rows for: document-formatting-uplift, data-visualisation-uplift, diagram-upl
 - [ ] **Step 2: Update Skill Priority list**
 
 Insert new skills at their designated positions:
+
 - code-output-uplift: after #3 (council-of-logic), before #4 (execution-guardian)
 - document-formatting-uplift: after #5 (system-supervisor), before #6 (skill-manager)
 - data-visualisation-uplift: after dashboard-patterns

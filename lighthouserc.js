@@ -88,7 +88,7 @@ module.exports = {
         'color-contrast': 'error',
         'html-has-lang': 'error',
         'image-alt': 'error',
-        'label': 'error',
+        label: 'error',
         'meta-viewport': 'error',
         'aria-allowed-attr': 'error',
         'aria-required-attr': 'error',
@@ -102,7 +102,7 @@ module.exports = {
         'uses-https': 'error',
         'no-vulnerable-libraries': 'error',
         'csp-xss': 'warn',
-        'deprecations': 'warn',
+        deprecations: 'warn',
 
         // Performance
         'uses-responsive-images': 'warn',
@@ -122,11 +122,11 @@ module.exports = {
         // SEO
         'meta-description': 'error',
         'robots-txt': 'warn',
-        'canonical': 'warn',
+        canonical: 'warn',
         'structured-data': 'warn',
 
         // PWA (if applicable)
-        'viewport': 'error',
+        viewport: 'error',
         'installable-manifest': 'off', // Turn on if implementing PWA
         'service-worker': 'off', // Turn on if implementing PWA
         'works-offline': 'off', // Turn on if implementing PWA
@@ -144,4 +144,4 @@ module.exports = {
       target: 'temporary-public-storage',
     },
   },
-}
+};

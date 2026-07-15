@@ -1,4 +1,4 @@
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
 interface ChatRequest {
   message: string;
@@ -10,24 +10,22 @@ interface ChatResponse {
   conversationId: string;
   taskStatus?: {
     id: string;
-    status: "pending" | "in_progress" | "completed" | "failed";
+    status: 'pending' | 'in_progress' | 'completed' | 'failed';
   };
 }
 
-export async function sendChatMessage(
-  request: ChatRequest
-): Promise<ChatResponse> {
-  const response = await fetch("/api/chat", {
-    method: "POST",
+export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
+  const response = await fetch('/api/chat', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(request),
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: "Unknown error" }));
-    throw new Error(error.error || "Failed to send message");
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(error.error || 'Failed to send message');
   }
 
   return response.json();

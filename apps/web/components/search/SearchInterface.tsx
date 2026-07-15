@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useCallback } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { apiClient, ApiClientError } from "@/lib/api/client";
-import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+} from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { apiClient, ApiClientError } from '@/lib/api/client';
+import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 
 /* ----------------------------------------
    Types
@@ -42,7 +42,7 @@ interface SearchFilters {
   created_before?: string;
 }
 
-type SearchState = "idle" | "loading" | "results" | "empty" | "error";
+type SearchState = 'idle' | 'loading' | 'results' | 'empty' | 'error';
 
 export interface SearchInterfaceProps {
   onResultsChange?: (results: SearchResult[]) => void;
@@ -53,13 +53,10 @@ export interface SearchInterfaceProps {
    Component
    ---------------------------------------- */
 
-export function SearchInterface({
-  onResultsChange,
-  className,
-}: SearchInterfaceProps) {
+export function SearchInterface({ onResultsChange, className }: SearchInterfaceProps) {
   // Search input and state
-  const [query, setQuery] = useState<string>("");
-  const [state, setState] = useState<SearchState>("idle");
+  const [query, setQuery] = useState<string>('');
+  const [state, setState] = useState<SearchState>('idle');
   const [error, setError] = useState<string | null>(null);
 
   // Filters
@@ -75,10 +72,10 @@ export function SearchInterface({
 
   // Document types (can be expanded based on API)
   const documentTypes = [
-    { value: "contract", label: "Contract" },
-    { value: "policy", label: "Policy" },
-    { value: "agreement", label: "Agreement" },
-    { value: "document", label: "Document" },
+    { value: 'contract', label: 'Contract' },
+    { value: 'policy', label: 'Policy' },
+    { value: 'agreement', label: 'Agreement' },
+    { value: 'document', label: 'Document' },
   ];
 
   /**
@@ -87,13 +84,13 @@ export function SearchInterface({
   const handleSearch = useCallback(
     async (newOffset: number = 0) => {
       if (!query.trim()) {
-        setState("idle");
+        setState('idle');
         setResults([]);
         setTotal(0);
         return;
       }
 
-      setState("loading");
+      setState('loading');
       setError(null);
       setOffset(newOffset);
 
@@ -105,27 +102,24 @@ export function SearchInterface({
           ...(filters.type && { type: filters.type }),
         };
 
-        const response = await apiClient.post<SearchResponse>(
-          "/api/search",
-          searchParams
-        );
+        const response = await apiClient.post<SearchResponse>('/api/search', searchParams);
 
         setResults(response.results);
         setTotal(response.total);
 
         if (response.results.length === 0) {
-          setState("empty");
+          setState('empty');
         } else {
-          setState("results");
+          setState('results');
           onResultsChange?.(response.results);
         }
       } catch (err) {
         const message =
           err instanceof ApiClientError
             ? err.message
-            : "An error occurred while searching. Please try again.";
+            : 'An error occurred while searching. Please try again.';
         setError(message);
-        setState("error");
+        setState('error');
         setResults([]);
       }
     },
@@ -137,8 +131,8 @@ export function SearchInterface({
    */
   const handleClearFilters = useCallback(() => {
     setFilters({});
-    setQuery("");
-    setState("idle");
+    setQuery('');
+    setState('idle');
     setResults([]);
     setTotal(0);
     setOffset(0);
@@ -148,8 +142,8 @@ export function SearchInterface({
    * Clear search input
    */
   const handleClearSearch = useCallback(() => {
-    setQuery("");
-    setState("idle");
+    setQuery('');
+    setState('idle');
     setResults([]);
     setTotal(0);
     setOffset(0);
@@ -180,7 +174,7 @@ export function SearchInterface({
   const hasActiveFilters = Object.keys(filters).length > 0;
 
   return (
-    <div className={cn("w-full space-y-6", className)}>
+    <div className={cn('w-full space-y-6', className)}>
       {/* Search Input Section */}
       <Card>
         <CardHeader>
@@ -194,7 +188,7 @@ export function SearchInterface({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   handleSearch(0);
                 }
               }}
@@ -213,8 +207,8 @@ export function SearchInterface({
             )}
             <Button
               onClick={() => handleSearch(0)}
-              disabled={state === "loading" || !query.trim()}
-              loading={state === "loading"}
+              disabled={state === 'loading' || !query.trim()}
+              loading={state === 'loading'}
               loadingText="Searching..."
             >
               Search
@@ -223,14 +217,12 @@ export function SearchInterface({
 
           {/* Filter Controls */}
           <div className="space-y-3">
-            <Label className="text-xs font-semibold text-muted-foreground">
-              Filters
-            </Label>
+            <Label className="text-muted-foreground text-xs font-semibold">Filters</Label>
             <div className="flex flex-wrap gap-3">
               {/* Document Type Filter */}
-              <div className="flex-1 min-w-[200px]">
+              <div className="min-w-[200px] flex-1">
                 <Select
-                  value={filters.type || ""}
+                  value={filters.type || ''}
                   onValueChange={(value) => {
                     setFilters((prev) => ({
                       ...prev,
@@ -272,9 +264,7 @@ export function SearchInterface({
                   <Badge variant="secondary" className="cursor-pointer">
                     Type: {filters.type}
                     <button
-                      onClick={() =>
-                        setFilters((prev) => ({ ...prev, type: undefined }))
-                      }
+                      onClick={() => setFilters((prev) => ({ ...prev, type: undefined }))}
                       className="ml-1 hover:opacity-70"
                     >
                       ×
@@ -288,59 +278,61 @@ export function SearchInterface({
       </Card>
 
       {/* Results Section */}
-      {state === "idle" && (
+      {state === 'idle' && (
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">
+            <p className="text-muted-foreground text-center">
               Enter a search query to find documents
             </p>
           </CardContent>
         </Card>
       )}
 
-      {state === "loading" && (
+      {state === 'loading' && (
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col items-center justify-center gap-3 py-8">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
-              <p className="text-sm text-muted-foreground">Searching...</p>
+              <div className="border-muted border-t-primary h-8 w-8 animate-spin rounded-full border-4" />
+              <p className="text-muted-foreground text-sm">Searching...</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {state === "error" && (
+      {state === 'error' && (
         <Card className="border-destructive/50 bg-destructive/10">
           <CardContent className="pt-6">
-            <p className="text-sm text-destructive">{error}</p>
+            <p className="text-destructive text-sm">{error}</p>
           </CardContent>
         </Card>
       )}
 
-      {state === "empty" && (
+      {state === 'empty' && (
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">
+            <p className="text-muted-foreground text-center">
               No documents found matching your search. Try different keywords.
             </p>
           </CardContent>
         </Card>
       )}
 
-      {state === "results" && results.length > 0 && (
+      {state === 'results' && results.length > 0 && (
         <div className="space-y-4">
           {/* Results Info */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              Showing {offset + 1} to {Math.min(offset + limit, total)} of{" "}
-              {total} results
+            <p className="text-muted-foreground text-sm">
+              Showing {offset + 1} to {Math.min(offset + limit, total)} of {total} results
             </p>
 
             {/* Results Per Page Selector */}
-            <Select value={limit.toString()} onValueChange={(value) => {
-              setLimit(parseInt(value));
-              setOffset(0);
-            }}>
+            <Select
+              value={limit.toString()}
+              onValueChange={(value) => {
+                setLimit(parseInt(value));
+                setOffset(0);
+              }}
+            >
               <SelectTrigger className="w-32" aria-label="Results per page">
                 <SelectValue />
               </SelectTrigger>
@@ -355,15 +347,13 @@ export function SearchInterface({
           {/* Results List */}
           <div className="space-y-3">
             {results.map((result) => (
-              <Card key={result.id} className="hover:shadow-md transition-shadow">
+              <Card key={result.id} className="transition-shadow hover:shadow-md">
                 <CardContent className="pt-6">
                   <div className="space-y-3">
                     {/* Title and Type */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
-                        <h3 className="font-semibold line-clamp-2">
-                          {result.title}
-                        </h3>
+                        <h3 className="line-clamp-2 font-semibold">{result.title}</h3>
                       </div>
                       {result.type && (
                         <Badge variant="outline" className="shrink-0">
@@ -373,21 +363,19 @@ export function SearchInterface({
                     </div>
 
                     {/* Snippet */}
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {result.snippet}
-                    </p>
+                    <p className="text-muted-foreground line-clamp-3 text-sm">{result.snippet}</p>
 
                     {/* Relevance Score */}
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="bg-muted h-2 flex-1 overflow-hidden rounded-full">
                         <div
-                          className="h-full bg-primary transition-all"
+                          className="bg-primary h-full transition-all"
                           style={{
                             width: `${Math.round(result.relevance * 100)}%`,
                           }}
                         />
                       </div>
-                      <span className="text-xs text-muted-foreground font-medium">
+                      <span className="text-muted-foreground text-xs font-medium">
                         {Math.round(result.relevance * 100)}%
                       </span>
                     </div>
@@ -411,7 +399,7 @@ export function SearchInterface({
               </Button>
 
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Page {currentPage} of {totalPages}
                 </span>
               </div>
@@ -432,4 +420,3 @@ export function SearchInterface({
     </div>
   );
 }
-

@@ -19,14 +19,14 @@ Quick setup guide for NodeJS-Starter-V1 - your self-contained AI starter templat
 
 Install these tools before starting:
 
-| Tool | Version | Installation |
-|------|---------|--------------|
-| **Docker** | Latest | [docker.com](https://docker.com/get-started) |
-| **Node.js** | 20+ | [nodejs.org](https://nodejs.org/) |
-| **pnpm** | 9+ | `npm install -g pnpm` |
-| **Python** | 3.12+ | [python.org](https://python.org/) |
-| **uv** | Latest | `pip install uv` |
-| **Ollama** | Latest | [ollama.com](https://ollama.com/) |
+| Tool        | Version | Installation                                 |
+| ----------- | ------- | -------------------------------------------- |
+| **Docker**  | Latest  | [docker.com](https://docker.com/get-started) |
+| **Node.js** | 20+     | [nodejs.org](https://nodejs.org/)            |
+| **pnpm**    | 9+      | `npm install -g pnpm`                        |
+| **Python**  | 3.12+   | [python.org](https://python.org/)            |
+| **uv**      | Latest  | `pip install uv`                             |
+| **Ollama**  | Latest  | [ollama.com](https://ollama.com/)            |
 
 ### Verify Installation
 
@@ -64,6 +64,7 @@ pnpm run setup:windows
 ```
 
 **What this does:**
+
 - ✅ Installs dependencies (pnpm, uv)
 - ✅ Copies `.env.example` to `.env`
 - ✅ Starts Docker services (PostgreSQL, Redis)
@@ -72,6 +73,7 @@ pnpm run setup:windows
 - ✅ Verifies all services are running
 
 **Expected output:**
+
 ```
 ✅ Setup complete! Run 'pnpm dev' to start.
 ```
@@ -83,6 +85,7 @@ pnpm dev
 ```
 
 **Services will start on:**
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - PostgreSQL: localhost:5432
@@ -99,6 +102,7 @@ Open your browser and verify:
 - [ ] **Ollama running**: http://localhost:11434/api/tags
 
 **Test authentication:**
+
 ```bash
 # Login with default admin user
 curl -X POST http://localhost:8000/api/auth/login \
@@ -109,6 +113,7 @@ curl -X POST http://localhost:8000/api/auth/login \
 ```
 
 **Test AI provider:**
+
 ```bash
 curl -X POST http://localhost:8000/api/ai/generate \
   -H "Content-Type: application/json" \
@@ -138,6 +143,7 @@ curl -X POST http://localhost:8000/api/ai/generate \
 ### Optional Upgrades (Later)
 
 Want to enhance your app? See `docs/OPTIONAL_SERVICES.md` for:
+
 - Deploying to Vercel/Netlify/DigitalOcean
 - Upgrading to Claude API (better quality)
 - Adding Sentry, PostHog, Stripe, etc.
@@ -151,6 +157,7 @@ Want to enhance your app? See `docs/OPTIONAL_SERVICES.md` for:
 **Problem:** Setup script encounters errors
 
 **Solution:**
+
 ```bash
 # Check prerequisites are installed
 docker --version
@@ -168,6 +175,7 @@ ollama --version
 **Problem:** `Address already in use` error
 
 **Solution:**
+
 ```bash
 # Find what's using the port
 lsof -i :3000   # Frontend
@@ -185,6 +193,7 @@ kill -9 <PID>
 **Problem:** `Cannot connect to Docker daemon`
 
 **Solution:**
+
 ```bash
 # Start Docker Desktop (macOS/Windows)
 # Or start Docker service (Linux)
@@ -199,6 +208,7 @@ docker ps
 **Problem:** `model 'llama3.1:8b' not found`
 
 **Solution:**
+
 ```bash
 # List downloaded models
 ollama list
@@ -216,6 +226,7 @@ ollama list
 **Problem:** `could not connect to server`
 
 **Solution:**
+
 ```bash
 # Check if PostgreSQL is running
 docker compose ps postgres
@@ -407,6 +418,7 @@ See `docs/AI_PROVIDERS.md` for details.
 ### VS Code
 
 **Recommended Extensions:**
+
 - Python
 - Pylance
 - ESLint
@@ -414,6 +426,7 @@ See `docs/AI_PROVIDERS.md` for details.
 - Tailwind CSS IntelliSense
 
 **Settings:**
+
 ```json
 {
   "python.defaultInterpreterPath": "apps/backend/.venv/bin/python",
@@ -427,6 +440,7 @@ See `docs/AI_PROVIDERS.md` for details.
 ### PyCharm/IntelliJ
 
 **Configure Python Interpreter:**
+
 - Go to Settings → Project → Python Interpreter
 - Point to `apps/backend/.venv/`
 

@@ -15,11 +15,11 @@
  * - pacts/web-backend-api.json (contract specification)
  */
 
-import { PactV3, MatchersV3 } from '@pact-foundation/pact'
-import { describe, it, beforeAll, afterAll, expect } from 'vitest'
-import path from 'path'
+import { PactV3, MatchersV3 } from '@pact-foundation/pact';
+import { describe, it, beforeAll, afterAll, expect } from 'vitest';
+import path from 'path';
 
-const { like, eachLike, string, integer, iso8601DateTimeWithMillis } = MatchersV3
+const { like, eachLike, string, integer, iso8601DateTimeWithMillis } = MatchersV3;
 
 // Pact Provider Configuration
 const provider = new PactV3({
@@ -27,7 +27,7 @@ const provider = new PactV3({
   provider: 'backend-api',
   dir: path.resolve(process.cwd(), 'pacts'),
   logLevel: 'info',
-})
+});
 
 describe('PRD Generation API Contract', () => {
   describe('POST /api/prd/generate', () => {
@@ -73,17 +73,17 @@ describe('PRD Generation API Contract', () => {
               target_audience: 'Developers',
               key_features: ['Feature 1', 'Feature 2'],
             }),
-          })
+          });
 
-          const data = await response.json()
+          const data = await response.json();
 
-          expect(response.status).toBe(200)
-          expect(data.run_id).toBeDefined()
-          expect(data.status).toBe('pending')
-          expect(data.message).toBeDefined()
-          expect(data.created_at).toBeDefined()
-        })
-    })
+          expect(response.status).toBe(200);
+          expect(data.run_id).toBeDefined();
+          expect(data.status).toBe('pending');
+          expect(data.message).toBeDefined();
+          expect(data.created_at).toBeDefined();
+        });
+    });
 
     it('should return validation error for invalid input', async () => {
       await provider
@@ -123,16 +123,16 @@ describe('PRD Generation API Contract', () => {
               product_name: '',
               description: '',
             }),
-          })
+          });
 
-          const data = await response.json()
+          const data = await response.json();
 
-          expect(response.status).toBe(422)
-          expect(data.detail).toBeDefined()
-          expect(Array.isArray(data.detail)).toBe(true)
-        })
-    })
-  })
+          expect(response.status).toBe(422);
+          expect(data.detail).toBeDefined();
+          expect(Array.isArray(data.detail)).toBe(true);
+        });
+    });
+  });
 
   describe('GET /api/prd/status/{run_id}', () => {
     it('should return status for a valid run_id', async () => {
@@ -160,16 +160,16 @@ describe('PRD Generation API Contract', () => {
           },
         })
         .executeTest(async (mockServer) => {
-          const response = await fetch(`${mockServer.url}/api/prd/status/run_123`)
-          const data = await response.json()
+          const response = await fetch(`${mockServer.url}/api/prd/status/run_123`);
+          const data = await response.json();
 
-          expect(response.status).toBe(200)
-          expect(data.run_id).toBe('run_123')
-          expect(data.status).toBeDefined()
-          expect(data.progress).toBeGreaterThanOrEqual(0)
-          expect(data.progress).toBeLessThanOrEqual(100)
-        })
-    })
+          expect(response.status).toBe(200);
+          expect(data.run_id).toBe('run_123');
+          expect(data.status).toBeDefined();
+          expect(data.progress).toBeGreaterThanOrEqual(0);
+          expect(data.progress).toBeLessThanOrEqual(100);
+        });
+    });
 
     it('should return 404 for non-existent run_id', async () => {
       await provider
@@ -189,14 +189,14 @@ describe('PRD Generation API Contract', () => {
           },
         })
         .executeTest(async (mockServer) => {
-          const response = await fetch(`${mockServer.url}/api/prd/status/invalid_run`)
-          const data = await response.json()
+          const response = await fetch(`${mockServer.url}/api/prd/status/invalid_run`);
+          const data = await response.json();
 
-          expect(response.status).toBe(404)
-          expect(data.detail).toBeDefined()
-        })
-    })
-  })
+          expect(response.status).toBe(404);
+          expect(data.detail).toBeDefined();
+        });
+    });
+  });
 
   describe('GET /api/prd/result/{prd_id}', () => {
     it('should return completed PRD result', async () => {
@@ -235,17 +235,17 @@ describe('PRD Generation API Contract', () => {
           },
         })
         .executeTest(async (mockServer) => {
-          const response = await fetch(`${mockServer.url}/api/prd/result/prd_123`)
-          const data = await response.json()
+          const response = await fetch(`${mockServer.url}/api/prd/result/prd_123`);
+          const data = await response.json();
 
-          expect(response.status).toBe(200)
-          expect(data.prd_id).toBe('prd_123')
-          expect(data.content).toBeDefined()
-          expect(data.content.product_name).toBeDefined()
-          expect(data.status).toBe('completed')
-        })
-    })
-  })
+          expect(response.status).toBe(200);
+          expect(data.prd_id).toBe('prd_123');
+          expect(data.content).toBeDefined();
+          expect(data.content.product_name).toBeDefined();
+          expect(data.status).toBe('completed');
+        });
+    });
+  });
 
   describe('GET /api/prd/documents/{prd_id}', () => {
     it('should return list of generated documents', async () => {
@@ -274,16 +274,16 @@ describe('PRD Generation API Contract', () => {
           },
         })
         .executeTest(async (mockServer) => {
-          const response = await fetch(`${mockServer.url}/api/prd/documents/prd_123`)
-          const data = await response.json()
+          const response = await fetch(`${mockServer.url}/api/prd/documents/prd_123`);
+          const data = await response.json();
 
-          expect(response.status).toBe(200)
-          expect(data.prd_id).toBe('prd_123')
-          expect(Array.isArray(data.documents)).toBe(true)
-        })
-    })
-  })
-})
+          expect(response.status).toBe(200);
+          expect(data.prd_id).toBe('prd_123');
+          expect(Array.isArray(data.documents)).toBe(true);
+        });
+    });
+  });
+});
 
 describe('Health Check Contract', () => {
   it('should return health status', async () => {
@@ -306,12 +306,12 @@ describe('Health Check Contract', () => {
         },
       })
       .executeTest(async (mockServer) => {
-        const response = await fetch(`${mockServer.url}/health`)
-        const data = await response.json()
+        const response = await fetch(`${mockServer.url}/health`);
+        const data = await response.json();
 
-        expect(response.status).toBe(200)
-        expect(data.status).toBe('healthy')
-        expect(data.timestamp).toBeDefined()
-      })
-  })
-})
+        expect(response.status).toBe(200);
+        expect(data.status).toBe('healthy');
+        expect(data.timestamp).toBeDefined();
+      });
+  });
+});

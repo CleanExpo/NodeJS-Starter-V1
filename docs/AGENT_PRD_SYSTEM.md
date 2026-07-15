@@ -110,6 +110,7 @@ The **Agent PRD System** is an AI-powered requirements analysis and product spec
 **File**: `apps/backend/src/agents/prd/analysis_agent.py`
 
 **Responsibilities**:
+
 - Parse user requirements
 - Extract key information (goals, users, constraints)
 - Identify stakeholders
@@ -117,6 +118,7 @@ The **Agent PRD System** is an AI-powered requirements analysis and product spec
 - Generate executive summary
 
 **Input**:
+
 ```python
 {
     "requirements": "Build a chat application...",
@@ -129,6 +131,7 @@ The **Agent PRD System** is an AI-powered requirements analysis and product spec
 ```
 
 **Output**:
+
 ```python
 {
     "summary": "AI-powered chat application...",
@@ -147,6 +150,7 @@ The **Agent PRD System** is an AI-powered requirements analysis and product spec
 **File**: `apps/backend/src/agents/prd/feature_decomposer.py`
 
 **Responsibilities**:
+
 - Break requirements into epics
 - Generate user stories
 - Create acceptance criteria
@@ -154,6 +158,7 @@ The **Agent PRD System** is an AI-powered requirements analysis and product spec
 - Assign priorities
 
 **User Story Format**:
+
 ```
 As a [user type],
 I want to [action],
@@ -169,6 +174,7 @@ Dependencies: [feature-id-1, feature-id-2]
 ```
 
 **Output**:
+
 ```json
 {
   "epics": [
@@ -201,6 +207,7 @@ Dependencies: [feature-id-1, feature-id-2]
 **File**: `apps/backend/src/agents/prd/tech_spec_generator.py`
 
 **Responsibilities**:
+
 - Generate system architecture
 - Define database schema
 - Specify API endpoints
@@ -209,10 +216,12 @@ Dependencies: [feature-id-1, feature-id-2]
 - Set performance requirements
 
 **Output**:
-```markdown
+
+````markdown
 # Technical Specification
 
 ## System Architecture
+
 - Frontend: Next.js 15 + React 19
 - Backend: FastAPI + LangGraph
 - Database: PostgreSQL (Supabase)
@@ -222,24 +231,29 @@ Dependencies: [feature-id-1, feature-id-2]
 ## Database Schema
 
 ### users table
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | UUID | PRIMARY KEY |
-| email | TEXT | UNIQUE, NOT NULL |
-| created_at | TIMESTAMPTZ | DEFAULT NOW() |
+
+| Column     | Type        | Constraints      |
+| ---------- | ----------- | ---------------- |
+| id         | UUID        | PRIMARY KEY      |
+| email      | TEXT        | UNIQUE, NOT NULL |
+| created_at | TIMESTAMPTZ | DEFAULT NOW()    |
 
 ## API Endpoints
 
 ### POST /api/auth/login
+
 **Request**:
+
 ```json
 {
   "email": "user@example.com",
   "password": "secure123"
 }
 ```
+````
 
 **Response**:
+
 ```json
 {
   "user": {...},
@@ -248,16 +262,19 @@ Dependencies: [feature-id-1, feature-id-2]
 ```
 
 ## Performance Requirements
+
 - API response time: < 200ms (p95)
 - Page load time: < 2s
 - Concurrent users: 1000+
 
 ## Security Requirements
+
 - HTTPS only
 - JWT authentication
 - CSRF protection
 - Rate limiting: 100 req/min per IP
-```
+
+````
 
 ---
 
@@ -309,7 +326,7 @@ Dependencies: [feature-id-1, feature-id-2]
 - Login with unverified account
 - Password reset for non-existent email
 - Session expiry during usage
-```
+````
 
 ---
 
@@ -318,6 +335,7 @@ Dependencies: [feature-id-1, feature-id-2]
 **File**: `apps/backend/src/agents/prd/roadmap_planner.py`
 
 **Responsibilities**:
+
 - Create sprint breakdown
 - Prioritize features
 - Build dependency graph
@@ -325,13 +343,16 @@ Dependencies: [feature-id-1, feature-id-2]
 - Identify risks
 
 **Output**:
+
 ```markdown
 # Implementation Roadmap
 
 ## Sprint 1 (2 weeks) - MVP Foundation
+
 **Goal**: Basic auth + database setup
 
 ### Features
+
 - [Critical] User signup (3 days)
 - [Critical] User login (2 days)
 - [Critical] Database schema (1 day)
@@ -341,9 +362,11 @@ Dependencies: [feature-id-1, feature-id-2]
 **Risk**: Auth integration complexity (Medium)
 
 ## Sprint 2 (2 weeks) - Core Functionality
+
 **Goal**: Main features working
 
 ### Features
+
 - [Critical] Chat interface (3 days)
 - [Critical] Message sending (2 days)
 - [Critical] Real-time updates (2 days)
@@ -353,11 +376,12 @@ Dependencies: [feature-id-1, feature-id-2]
 **Risk**: Real-time performance (High)
 
 ## Dependency Graph
-
 ```
+
 user-signup → user-login → chat-interface
-                          ↓
-                    message-sending → real-time-updates
+↓
+message-sending → real-time-updates
+
 ```
 
 ## Estimated Timeline: 6 weeks (3 sprints)
@@ -395,9 +419,11 @@ apps/backend/src/agents/prd/
 ## API Endpoints
 
 ### POST /api/prd/generate
+
 **Generate complete PRD from requirements**
 
 **Request**:
+
 ```json
 {
   "requirements": "Build a chat app with AI responses",
@@ -411,6 +437,7 @@ apps/backend/src/agents/prd/
 ```
 
 **Response**:
+
 ```json
 {
   "prd_id": "prd_abc123",
@@ -420,9 +447,11 @@ apps/backend/src/agents/prd/
 ```
 
 ### GET /api/prd/{prd_id}
+
 **Get generated PRD**
 
 **Response**:
+
 ```json
 {
   "prd_id": "prd_abc123",
@@ -445,9 +474,11 @@ apps/backend/src/agents/prd/
 ```
 
 ### POST /api/prd/{prd_id}/refine
+
 **Refine PRD with additional context**
 
 **Request**:
+
 ```json
 {
   "refinements": "Add OAuth login with Google",
@@ -460,9 +491,11 @@ apps/backend/src/agents/prd/
 ## Frontend Components
 
 ### PRD Generator Page
+
 **File**: `apps/web/app/prd/generate/page.tsx`
 
 **Features**:
+
 - Textarea for requirements input
 - Context fields (users, timeline, team size)
 - Real-time generation progress
@@ -471,9 +504,11 @@ apps/backend/src/agents/prd/
 - Share PRD link
 
 ### PRD Viewer
+
 **File**: `apps/web/app/prd/[id]/page.tsx`
 
 **Features**:
+
 - Tabbed interface (PRD, User Stories, Tech Spec, Tests, Roadmap)
 - Markdown rendering
 - Export to PDF
@@ -486,6 +521,7 @@ apps/backend/src/agents/prd/
 ## Database Schema
 
 ### prds table
+
 ```sql
 CREATE TABLE prds (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -527,6 +563,7 @@ CREATE INDEX idx_prds_status ON prds(status);
 ## LLM Prompts
 
 ### Analysis Prompt
+
 ```
 You are a senior product manager analyzing requirements.
 
@@ -550,6 +587,7 @@ Format as structured JSON.
 ```
 
 ### Feature Decomposition Prompt
+
 ```
 You are an expert at breaking down product requirements into user stories.
 
@@ -571,16 +609,19 @@ Organize into epics. Ensure EVERY feature is testable and has clear acceptance c
 ## Success Metrics
 
 ### Quality Metrics
+
 - Generated PRDs should score >8/10 on completeness (human review)
 - 90%+ of generated features should be actionable
 - Technical specs should include all necessary endpoints/schemas
 
 ### Performance Metrics
+
 - PRD generation time: <60 seconds
 - Feature decomposition: <30 seconds
 - Total end-to-end: <2 minutes
 
 ### Usage Metrics
+
 - PRDs generated per month
 - Average features per PRD
 - Regeneration rate (indicates quality)
@@ -591,6 +632,7 @@ Organize into epics. Ensure EVERY feature is testable and has clear acceptance c
 ## Implementation Phases
 
 ### Phase 1: Core PRD Generation (Week 1)
+
 - [x] PRDAnalysisAgent
 - [x] FeatureDecomposer
 - [x] Basic PRD document generation
@@ -598,18 +640,21 @@ Organize into epics. Ensure EVERY feature is testable and has clear acceptance c
 - [x] Database schema
 
 ### Phase 2: Enhanced Specifications (Week 1)
+
 - [x] TechnicalSpecGenerator
 - [x] TestScenarioGenerator
 - [x] RoadmapPlanner
 - [x] Template system
 
 ### Phase 3: Frontend Interface (Week 2)
+
 - [ ] PRD generator page
 - [ ] PRD viewer
 - [ ] Real-time generation tracking
 - [ ] Export functionality
 
 ### Phase 4: Advanced Features (Week 2+)
+
 - [ ] Iterative refinement
 - [ ] Collaboration features
 - [ ] Version history
@@ -620,6 +665,7 @@ Organize into epics. Ensure EVERY feature is testable and has clear acceptance c
 ## Example Flow
 
 ### User Input:
+
 ```
 "Build a SaaS app for project management with:
 - Team collaboration
@@ -633,6 +679,7 @@ Target: Small businesses (10-50 employees)"
 ### Generated Output:
 
 **1. PRD Document** (`prd.md`)
+
 - Executive summary
 - Problem statement
 - Target users (3 personas)
@@ -641,17 +688,20 @@ Target: Small businesses (10-50 employees)"
 - 12 non-functional requirements
 
 **2. User Stories** (`user_stories.md`)
+
 - 5 epics
 - 38 user stories
 - Each with acceptance criteria
 - Prioritized and estimated
 
 **3. Feature List** (`feature_list.json`)
+
 - 38 features in structured JSON
 - Ready for InitializerAgent
 - Dependencies mapped
 
 **4. Technical Spec** (`tech_spec.md`)
+
 - System architecture
 - 12 database tables with schemas
 - 24 API endpoints
@@ -659,12 +709,14 @@ Target: Small businesses (10-50 employees)"
 - Security requirements
 
 **5. Test Plan** (`test_plan.md`)
+
 - 120 unit test scenarios
 - 24 integration tests
 - 8 E2E test flows
 - Edge cases identified
 
 **6. Roadmap** (`roadmap.md`)
+
 - 6 sprints (12 weeks)
 - Features per sprint
 - Dependency graph
@@ -677,6 +729,7 @@ Target: Small businesses (10-50 employees)"
 ## Integration with Existing Systems
 
 ### With InitializerAgent
+
 ```python
 # After PRD generation, use feature_list.json
 prd_result = await prd_orchestrator.generate(requirements)
@@ -695,6 +748,7 @@ await initializer.execute(
 ```
 
 ### With LongRunningAgentHarness
+
 ```python
 # PRD → Features → Multi-session implementation
 prd = await generate_prd("Build project management tool")

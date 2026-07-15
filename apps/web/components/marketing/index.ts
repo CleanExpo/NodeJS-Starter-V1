@@ -17,7 +17,7 @@ export {
   HeroTrusted,
   heroVariants,
   type HeroSectionProps,
-} from "./hero-section";
+} from './hero-section';
 
 // Feature Grid
 export {
@@ -30,7 +30,7 @@ export {
   featureCardVariants,
   type Feature,
   type FeatureGridProps,
-} from "./feature-grid";
+} from './feature-grid';
 
 // Testimonials
 export {
@@ -44,4 +44,4 @@ export {
   testimonialCardVariants,
   type Testimonial,
   type TestimonialsProps,
-} from "./testimonials";
+} from './testimonials';

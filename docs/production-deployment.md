@@ -32,6 +32,7 @@ Complete guide for deploying the domain memory system to production environments
   - Note project reference ID
 
 - [ ] **All migrations tested locally**
+
   ```powershell
   .\scripts\init-database.ps1 -Reset -Verify
   cd apps\backend
@@ -39,6 +40,7 @@ Complete guide for deploying the domain memory system to production environments
   ```
 
 - [ ] **Migrations ready to apply**
+
   ```powershell
   # Link to production project
   supabase link --project-ref <your-project-ref>
@@ -78,20 +80,24 @@ Complete guide for deploying the domain memory system to production environments
 ### Code & Tests
 
 - [ ] **All tests passing locally**
+
   ```powershell
   pnpm turbo run type-check lint test
   ```
 
 - [ ] **Integration tests pass**
+
   ```powershell
   cd apps\backend
   uv run pytest tests\integration\ -v -m integration
   ```
 
 - [ ] **Performance benchmarks acceptable**
+
   ```powershell
   uv run pytest tests\performance\ -v -m performance -s
   ```
+
   - [ ] CRUD operations < 100ms (P95)
   - [ ] Vector search < 500ms (P95)
 
@@ -164,6 +170,7 @@ supabase db push --linked
 ```
 
 **Expected output:**
+
 ```
 ✅ Applied migration 00000000000000_initial_schema.sql
 ✅ Applied migration 00000000000001_create_users.sql
@@ -192,6 +199,7 @@ AND table_name LIKE 'domain_%';
 ```
 
 **Expected tables:**
+
 - `domain_memories`
 - `domain_knowledge`
 - `user_preferences`
@@ -212,6 +220,7 @@ WHERE tablename = 'domain_memories';
 ```
 
 **Expected indexes:**
+
 - `domain_memories_pkey` (PRIMARY KEY)
 - `idx_domain_memories_domain`
 - `idx_domain_memories_category`
@@ -226,12 +235,14 @@ WHERE tablename = 'domain_memories';
 Create environment-specific configuration files:
 
 **Vercel/Netlify (Frontend):**
+
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 ```
 
 **Backend (Railway/Render/AWS):**
+
 ```env
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
 OPENAI_API_KEY=sk-...
@@ -249,6 +260,7 @@ OPENAI_API_KEY=sk-...
 ```
 
 **Why:**
+
 - Simple provider is development-only (hash-based)
 - Anthropic embeddings not yet available
 - OpenAI provides production-quality semantic search
@@ -256,6 +268,7 @@ OPENAI_API_KEY=sk-...
 ### Security Best Practices
 
 1. **Never commit secrets to Git**
+
    ```powershell
    # Verify .env is in .gitignore
    git check-ignore .env
@@ -312,6 +325,7 @@ CMD ["uv", "run", "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", 
 ```
 
 **Build and deploy:**
+
 ```powershell
 # Build image
 docker build -t your-registry/backend:latest apps/backend
@@ -337,6 +351,7 @@ vercel --prod
 ```
 
 **Environment variables in Vercel:**
+
 1. Project Settings → Environment Variables
 2. Add production variables
 3. Redeploy
@@ -405,6 +420,7 @@ if __name__ == "__main__":
 ```
 
 Run against production:
+
 ```powershell
 # Set production environment variables
 $env:NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
@@ -426,6 +442,7 @@ uv run python scripts\production-smoke-test.py
    - Recommended: 20 connections for typical workload
 
 2. **Index Optimization**
+
    ```sql
    -- Check index usage
    SELECT
@@ -439,6 +456,7 @@ uv run python scripts\production-smoke-test.py
    ```
 
 3. **Query Performance**
+
    ```sql
    -- Enable query statistics
    SELECT pg_stat_statements_reset();
@@ -457,6 +475,7 @@ uv run python scripts\production-smoke-test.py
 ### Vector Search Optimization
 
 1. **HNSW Index Parameters**
+
    ```sql
    -- Verify HNSW index configuration
    SELECT
@@ -477,6 +496,7 @@ uv run python scripts\production-smoke-test.py
 ### Application Optimization
 
 1. **Enable Caching**
+
    ```python
    # Cache frequently accessed memories
    from functools import lru_cache
@@ -541,6 +561,7 @@ WHERE tablename LIKE 'domain_%';
    - Configure HSTS headers
 
 2. **CORS Configuration**
+
    ```python
    # apps/backend/src/api/main.py
    from fastapi.middleware.cors import CORSMiddleware
@@ -568,6 +589,7 @@ WHERE tablename LIKE 'domain_%';
    - Database query performance
 
 3. **Logging**
+
    ```python
    # Configure structured logging
    import logging
@@ -629,12 +651,14 @@ supabase db reset --linked --version <previous-version>
 ### Application Rollback
 
 **Vercel:**
+
 ```powershell
 # Rollback to previous deployment
 vercel rollback
 ```
 
 **Docker:**
+
 ```powershell
 # Deploy previous image version
 docker pull your-registry/backend:previous-tag
@@ -644,6 +668,7 @@ docker pull your-registry/backend:previous-tag
 ### Emergency Procedures
 
 1. **Disable memory system temporarily**
+
    ```python
    # Feature flag to bypass memory operations
    MEMORY_ENABLED = os.getenv("MEMORY_ENABLED", "true") == "true"
@@ -653,6 +678,7 @@ docker pull your-registry/backend:previous-tag
    ```
 
 2. **Fallback to read-only mode**
+
    ```python
    MEMORY_READ_ONLY = os.getenv("MEMORY_READ_ONLY", "false") == "true"
 
@@ -665,12 +691,12 @@ docker pull your-registry/backend:previous-tag
 
 ### Common Production Issues
 
-| Issue | Symptoms | Solution |
-|-------|----------|----------|
-| **Slow vector search** | Queries > 500ms | Check HNSW index, reduce `match_count`, optimize similarity threshold |
-| **Connection pool exhausted** | "too many connections" error | Increase pool size in Supabase, check for connection leaks |
-| **High memory usage** | OOM errors | Implement pagination, add memory limits, optimize embedding cache |
-| **RLS blocking queries** | Empty results for authenticated users | Verify RLS policies, check JWT claims, test with service role |
+| Issue                         | Symptoms                              | Solution                                                              |
+| ----------------------------- | ------------------------------------- | --------------------------------------------------------------------- |
+| **Slow vector search**        | Queries > 500ms                       | Check HNSW index, reduce `match_count`, optimize similarity threshold |
+| **Connection pool exhausted** | "too many connections" error          | Increase pool size in Supabase, check for connection leaks            |
+| **High memory usage**         | OOM errors                            | Implement pagination, add memory limits, optimize embedding cache     |
+| **RLS blocking queries**      | Empty results for authenticated users | Verify RLS policies, check JWT claims, test with service role         |
 
 ### Debug Checklist
 

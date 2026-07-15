@@ -13,6 +13,7 @@ Living documentation for CleanExpo/NodeJS-Starter-V1. This file is the entry poi
 ### 1. Architecture
 
 **The system is organized as:**
+
 - Express.js server with modular route handlers
 - Middleware layer for auth, logging, validation
 - Service layer for business logic
@@ -20,6 +21,7 @@ Living documentation for CleanExpo/NodeJS-Starter-V1. This file is the entry poi
 - Configuration system for environment management
 
 **Key design principles:**
+
 - RESTful API design
 - Separation of concerns (routes → services → data)
 - Middleware-driven cross-cutting concerns
@@ -63,12 +65,14 @@ To add a new route:
 ### 4. Middleware
 
 **Common middleware:**
+
 - `middleware/auth.js` — Authentication and authorization
 - `middleware/logging.js` — Request/response logging
 - `middleware/validation.js` — Input validation
 - `middleware/errors.js` — Global error handling
 
 **Using middleware:**
+
 ```javascript
 app.use(authMiddleware);
 app.post('/api/protected', authMiddleware, handlerFunction);
@@ -77,11 +81,13 @@ app.post('/api/protected', authMiddleware, handlerFunction);
 ### 5. Configuration
 
 **Environment-based config:**
+
 - `.env` — Development secrets (git-ignored)
 - `.env.example` — Template for env vars
 - `config/index.js` — Config loading and validation
 
 **Accessing config:**
+
 ```javascript
 const config = require('./config');
 console.log(config.database.url);
@@ -90,17 +96,19 @@ console.log(config.database.url);
 ### 6. Testing
 
 **Test structure:**
+
 - `test/` — Test files
 - Use your preferred test framework (Jest, Mocha, etc.)
 - Run `npm test` to execute
 
 ### 7. Database
 
-*Add details about your database setup, migrations, models, etc.*
+_Add details about your database setup, migrations, models, etc._
 
 ### 8. API Standards
 
 **Response format:**
+
 ```javascript
 {
   "success": true,
@@ -110,6 +118,7 @@ console.log(config.database.url);
 ```
 
 **Error format:**
+
 ```javascript
 {
   "success": false,
@@ -120,7 +129,7 @@ console.log(config.database.url);
 
 ### 9. Logging & Observability
 
-*Add information about logging, error tracking, monitoring, etc.*
+_Add information about logging, error tracking, monitoring, etc._
 
 ## Living Documentation
 
@@ -154,23 +163,23 @@ When adding new features:
 
 ## Key Files
 
-| File | Purpose |
-|------|----------|
-| `index.js` | Application entry point |
-| `config/index.js` | Configuration loader |
-| `routes/` | API route handlers |
-| `middleware/` | Express middleware |
-| `services/` | Business logic |
-| `models/` | Data models |
-| `test/` | Test files |
-| `.env.example` | Environment variable template |
-| `SYSTEM_DOCS.md` | This file |
-| `ROUTE_REFERENCE.md` | API route documentation |
-| `CLAUDE.md` | Claude integration guide |
+| File                 | Purpose                       |
+| -------------------- | ----------------------------- |
+| `index.js`           | Application entry point       |
+| `config/index.js`    | Configuration loader          |
+| `routes/`            | API route handlers            |
+| `middleware/`        | Express middleware            |
+| `services/`          | Business logic                |
+| `models/`            | Data models                   |
+| `test/`              | Test files                    |
+| `.env.example`       | Environment variable template |
+| `SYSTEM_DOCS.md`     | This file                     |
+| `ROUTE_REFERENCE.md` | API route documentation       |
+| `CLAUDE.md`          | Claude integration guide      |
 
 ## Troubleshooting
 
-*Add common issues and solutions here as they come up.*
+_Add common issues and solutions here as they come up._
 
 ## Further Reading
 

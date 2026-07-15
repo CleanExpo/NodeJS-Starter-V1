@@ -2,10 +2,10 @@
    Image Generation Types
    ---------------------------------------- */
 
-export type AspectRatio = "1:1" | "16:9" | "4:3" | "9:16" | "21:9";
-export type Resolution = "1K" | "2K" | "4K";
-export type ImageStyle = "modern" | "minimalist" | "bold" | "elegant" | "playful" | "professional";
-export type ImageCategory = "hero" | "feature" | "icon" | "avatar" | "background" | "illustration";
+export type AspectRatio = '1:1' | '16:9' | '4:3' | '9:16' | '21:9';
+export type Resolution = '1K' | '2K' | '4K';
+export type ImageStyle = 'modern' | 'minimalist' | 'bold' | 'elegant' | 'playful' | 'professional';
+export type ImageCategory = 'hero' | 'feature' | 'icon' | 'avatar' | 'background' | 'illustration';
 
 /* ----------------------------------------
    Base Configuration
@@ -36,7 +36,7 @@ export interface IconGenerationConfig {
   /** Description of the icon */
   description: string;
   /** Icon style */
-  style: "outline" | "filled" | "duotone" | "gradient";
+  style: 'outline' | 'filled' | 'duotone' | 'gradient';
   /** Primary color (HSL) */
   primaryColor: string;
   /** Secondary color for duotone/gradient (HSL) */
@@ -44,7 +44,7 @@ export interface IconGenerationConfig {
   /** Size in pixels */
   size: 24 | 32 | 48 | 64 | 128;
   /** Background style */
-  background?: "transparent" | "circle" | "rounded" | "square";
+  background?: 'transparent' | 'circle' | 'rounded' | 'square';
 }
 
 /* ----------------------------------------
@@ -56,7 +56,7 @@ export interface GeneratedImage {
   /** Base64 encoded image data */
   data: string;
   /** MIME type */
-  mimeType: "image/png" | "image/jpeg" | "image/webp";
+  mimeType: 'image/png' | 'image/jpeg' | 'image/webp';
   /** Generated alt text */
   altText: string;
   /** Thinking/reasoning from the model */
@@ -78,7 +78,7 @@ export interface GeneratedIcon {
   /** SVG content or base64 image */
   content: string;
   /** Format type */
-  format: "svg" | "png";
+  format: 'svg' | 'png';
   /** Generated name for the icon */
   name: string;
   /** Original configuration */
@@ -96,7 +96,7 @@ export interface BrandAsset {
   /** Unique identifier */
   id: string;
   /** Asset type */
-  type: "image" | "icon" | "illustration";
+  type: 'image' | 'icon' | 'illustration';
   /** File path relative to public */
   path: string;
   /** Alt text for accessibility */
@@ -169,59 +169,59 @@ export interface PromptTemplate {
 
 export const PROMPT_TEMPLATES: Record<string, PromptTemplate> = {
   hero: {
-    name: "Hero Image",
-    description: "Full-width hero section background or illustration",
+    name: 'Hero Image',
+    description: 'Full-width hero section background or illustration',
     template: `Create a {style} hero image for {context}.
 The image should be visually striking and professional.
 Color palette: {colors}
 Style: {style}
 Must convey: {message}`,
-    variables: ["context", "colors", "style", "message"],
+    variables: ['context', 'colors', 'style', 'message'],
     defaultConfig: {
-      aspectRatio: "16:9",
-      resolution: "2K",
-      category: "hero",
+      aspectRatio: '16:9',
+      resolution: '2K',
+      category: 'hero',
     },
   },
   featureIcon: {
-    name: "Feature Icon",
-    description: "Icon for feature cards or service listings",
+    name: 'Feature Icon',
+    description: 'Icon for feature cards or service listings',
     template: `Design a {style} icon representing {concept}.
 The icon should be clear and recognizable at small sizes.
 Primary color: {primaryColor}
 Style: {iconStyle}`,
-    variables: ["concept", "primaryColor", "iconStyle", "style"],
+    variables: ['concept', 'primaryColor', 'iconStyle', 'style'],
     defaultConfig: {
-      aspectRatio: "1:1",
-      resolution: "1K",
-      category: "icon",
+      aspectRatio: '1:1',
+      resolution: '1K',
+      category: 'icon',
     },
   },
   illustration: {
-    name: "Illustration",
-    description: "Custom illustration for content sections",
+    name: 'Illustration',
+    description: 'Custom illustration for content sections',
     template: `Create a {style} illustration depicting {scene}.
 The illustration should be {mood} and align with a {industry} brand.
 Color palette: {colors}`,
-    variables: ["scene", "mood", "industry", "colors", "style"],
+    variables: ['scene', 'mood', 'industry', 'colors', 'style'],
     defaultConfig: {
-      aspectRatio: "4:3",
-      resolution: "2K",
-      category: "illustration",
+      aspectRatio: '4:3',
+      resolution: '2K',
+      category: 'illustration',
     },
   },
   avatar: {
-    name: "Avatar",
-    description: "Profile avatar or team member placeholder",
+    name: 'Avatar',
+    description: 'Profile avatar or team member placeholder',
     template: `Generate a {style} avatar image.
 Style: Professional, friendly
 Background: {background}
 This is for a {context} profile.`,
-    variables: ["background", "context", "style"],
+    variables: ['background', 'context', 'style'],
     defaultConfig: {
-      aspectRatio: "1:1",
-      resolution: "1K",
-      category: "avatar",
+      aspectRatio: '1:1',
+      resolution: '1K',
+      category: 'avatar',
     },
   },
 };

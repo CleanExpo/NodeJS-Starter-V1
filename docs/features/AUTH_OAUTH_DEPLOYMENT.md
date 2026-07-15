@@ -85,12 +85,14 @@ The OAuth callback URL must be whitelisted in:
 ### Vercel Deployment
 
 1. **Set Environment Variables**
+
    ```bash
    vercel env add NEXT_PUBLIC_SUPABASE_URL
    vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
    ```
 
 2. **Deploy**
+
    ```bash
    vercel --prod
    ```
@@ -101,6 +103,7 @@ The OAuth callback URL must be whitelisted in:
 ### Manual Deployment
 
 1. **Build the application**
+
    ```bash
    pnpm build
    ```
@@ -117,6 +120,7 @@ The OAuth callback URL must be whitelisted in:
 ### Automated Checks
 
 Run the health check script:
+
 ```bash
 .\scripts\health-check.ps1 -Quick
 ```
@@ -150,26 +154,31 @@ Run the health check script:
 ### Common Issues
 
 #### "OAuth provider not configured"
+
 - Verify the provider is enabled in Supabase Dashboard
 - Check that Client ID and Secret are correct
 
 #### "Redirect URI mismatch"
+
 - Ensure callback URL matches exactly in:
   - OAuth provider settings
   - Supabase redirect URLs
   - Application code
 
 #### "Invalid state parameter"
+
 - Clear browser cookies and try again
 - Check for CORS issues
 
 #### "User not created after OAuth"
+
 - Verify Supabase auth settings allow new user signups
 - Check Supabase logs for errors
 
 ### Debug Mode
 
 Enable debug logging by setting:
+
 ```env
 NEXT_PUBLIC_DEBUG=true
 ```
@@ -186,6 +195,7 @@ If issues occur after deployment:
    - Users can still use email/password
 
 2. **Revert Code Changes**
+
    ```bash
    git revert HEAD
    git push origin main
@@ -214,6 +224,7 @@ If issues occur after deployment:
 ### Alerts
 
 Set up alerts for:
+
 - OAuth error rate > 5%
 - OAuth latency > 5 seconds
 - Sudden drop in OAuth logins
@@ -221,6 +232,7 @@ Set up alerts for:
 ## Support
 
 For issues with OAuth implementation:
+
 1. Check Supabase logs
 2. Review browser console errors
 3. Verify environment variables
@@ -228,4 +240,4 @@ For issues with OAuth implementation:
 
 ---
 
-*Deployment guide created as part of feature development workflow*
+_Deployment guide created as part of feature development workflow_

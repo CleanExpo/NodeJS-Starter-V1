@@ -6,15 +6,15 @@
 
 interface AgentStatsProps {
   stats: {
-    total_agents: number
-    active_agents: number
-    total_tasks: number
-    successful_tasks: number
-    failed_tasks: number
-    success_rate: number
-    avg_iterations: number
-    avg_duration_seconds: number
-  }
+    total_agents: number;
+    active_agents: number;
+    total_tasks: number;
+    successful_tasks: number;
+    failed_tasks: number;
+    success_rate: number;
+    avg_iterations: number;
+    avg_duration_seconds: number;
+  };
 }
 
 export function AgentStats({ stats }: AgentStatsProps) {
@@ -44,14 +44,14 @@ export function AgentStats({ stats }: AgentStatsProps) {
       subtitle: 'Self-corrections',
       color: stats.avg_iterations < 2 ? 'green' : 'orange',
     },
-  ]
+  ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
         <div
           key={card.label}
-          className="bg-white p-6 rounded-lg shadow-md border-l-4"
+          className="rounded-lg border-l-4 bg-white p-6 shadow-md"
           style={{
             borderLeftColor:
               card.color === 'green'
@@ -65,18 +65,14 @@ export function AgentStats({ stats }: AgentStatsProps) {
                       : '#eab308',
           }}
         >
-          <div className="text-sm font-medium text-gray-600 mb-2">
-            {card.label}
-          </div>
+          <div className="mb-2 text-sm font-medium text-gray-600">{card.label}</div>
           <div className="text-3xl font-bold text-gray-900">
             {card.value}
             {card.suffix && <span className="text-lg text-gray-600">{card.suffix}</span>}
           </div>
-          {card.subtitle && (
-            <div className="text-sm text-gray-500 mt-1">{card.subtitle}</div>
-          )}
+          {card.subtitle && <div className="mt-1 text-sm text-gray-500">{card.subtitle}</div>}
         </div>
       ))}
     </div>
-  )
+  );
 }

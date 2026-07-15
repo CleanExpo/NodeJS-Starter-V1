@@ -5,16 +5,19 @@ This directory contains load testing scripts using [k6](https://k6.io), a modern
 ## Installation
 
 ### Windows
+
 ```bash
 winget install k6 --source winget
 ```
 
 ### macOS
+
 ```bash
 brew install k6
 ```
 
 ### Linux
+
 ```bash
 # Debian/Ubuntu
 sudo gpg -k
@@ -29,64 +32,76 @@ See [k6 installation docs](https://k6.io/docs/get-started/installation/) for oth
 ## Test Scenarios
 
 ### 1. Baseline Test (`baseline-test.js`)
+
 **Purpose**: Establish performance baseline under normal conditions
 
 **Load**: 50 concurrent users for 3 minutes
 
 **Thresholds**:
+
 - p95 response time: < 300ms
 - p99 response time: < 500ms
 - Error rate: < 0.5%
 
 **Run**:
+
 ```bash
 k6 run tests/performance/baseline-test.js
 ```
 
 ### 2. Load Test (`load-test.js`)
+
 **Purpose**: Validate performance under expected load
 
 **Load**: Ramp up to 100 concurrent users over 5 minutes
 
 **Thresholds**:
+
 - p95 response time: < 500ms
 - p99 response time: < 1000ms
 - Error rate: < 1%
 - Success rate: > 99%
 
 **Run**:
+
 ```bash
 k6 run tests/performance/load-test.js
 ```
 
 ### 3. Stress Test (`stress-test.js`)
+
 **Purpose**: Find system breaking point and performance degradation
 
 **Load**: Gradually increase to 200 concurrent users over 10 minutes
 
 **Thresholds**:
+
 - p95 response time: < 1000ms
 - p99 response time: < 2000ms
 - Error rate: < 5%
 - Max 50 timeouts
 
 **Run**:
+
 ```bash
 k6 run tests/performance/stress-test.js
 ```
 
 ### 4. Spike Test (`spike-test.js`)
+
 **Purpose**: Test auto-scaling and recovery from sudden traffic surges
 
 **Load**: Sudden spike from 0 to 500 users, sustain, then drop
 
 **Thresholds**:
+
 - p95 response time: < 3000ms
 - p99 response time: < 5000ms
 - Error rate: < 10%
 - Recovery time: < 2000ms (p95)
 
 **Run**:
+
 ```bash
 k6 run tests/performance/spike-test.js
 ```
@@ -109,27 +124,32 @@ k6 run -e BASE_URL=https://staging-api.yourapp.com tests/performance/load-test.j
 ## Output Formats
 
 ### Console Output (default)
+
 ```bash
 k6 run tests/performance/load-test.js
 ```
 
 ### JSON Output
+
 ```bash
 k6 run --out json=results.json tests/performance/load-test.js
 ```
 
 ### CSV Output
+
 ```bash
 k6 run --out csv=results.csv tests/performance/load-test.js
 ```
 
 ### Cloud Output (k6 Cloud)
+
 ```bash
 k6 login cloud --token YOUR_K6_CLOUD_TOKEN
 k6 run --out cloud tests/performance/load-test.js
 ```
 
 ### InfluxDB + Grafana
+
 ```bash
 # Send metrics to InfluxDB
 k6 run --out influxdb=http://localhost:8086/k6 tests/performance/load-test.js
@@ -142,15 +162,18 @@ k6 run --out influxdb=http://localhost:8086/k6 tests/performance/load-test.js
 ### Key Metrics
 
 **http_req_duration**: Time from request start to response end
+
 - `avg`: Average response time
 - `p(95)`: 95th percentile (95% of requests faster than this)
 - `p(99)`: 99th percentile (99% of requests faster than this)
 - `max`: Slowest request
 
 **http_req_failed**: Percentage of failed HTTP requests
+
 - Goal: < 1% for normal operations
 
 **vus**: Number of virtual users
+
 - Active concurrent users during test
 
 **iterations**: Total number of test iterations completed
@@ -158,10 +181,12 @@ k6 run --out influxdb=http://localhost:8086/k6 tests/performance/load-test.js
 ### Pass/Fail Criteria
 
 Tests pass if all thresholds are met:
+
 - ✅ All threshold checks show "✓"
 - ❌ Failed checks show "✗" and test exits with error code 99
 
 ### Example Output
+
 ```
      ✓ health check status is 200
      ✓ PRD generation status is 200 or 202
@@ -179,9 +204,10 @@ Tests pass if all thresholds are met:
 ## CI/CD Integration
 
 Load tests run automatically in CI for:
+
 - ✅ Scheduled runs (weekly)
 - ✅ Manual triggers
-- ⚠️  Not on every PR (too resource intensive)
+- ⚠️ Not on every PR (too resource intensive)
 
 See `.github/workflows/performance-testing.yml`
 
@@ -190,6 +216,7 @@ See `.github/workflows/performance-testing.yml`
 ### Before Running Tests
 
 1. **Start services**: Ensure backend and frontend are running
+
    ```bash
    # Backend
    cd apps/backend && uv run uvicorn src.api.main:app
@@ -220,22 +247,26 @@ See `.github/workflows/performance-testing.yml`
 ## Troubleshooting
 
 ### High Error Rates
+
 - Check application logs for exceptions
 - Verify database connections
 - Check network connectivity
 
 ### High Response Times
+
 - Profile backend code for slow operations
 - Check database query performance
 - Review caching strategies
 - Monitor CPU/memory usage
 
 ### Connection Timeouts
+
 - Increase server timeout settings
 - Check firewall rules
 - Verify network bandwidth
 
 ### Inconsistent Results
+
 - Run multiple times and average
 - Check for background processes
 - Ensure stable network connection

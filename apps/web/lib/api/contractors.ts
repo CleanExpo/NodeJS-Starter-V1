@@ -15,10 +15,10 @@ import type {
   AvailabilityStatus,
   AustralianState,
   ErrorResponse,
-} from "@/types/contractor";
+} from '@/types/contractor';
 
 // Backend API URL from environment variable
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 /**
  * Handle API errors with proper typing
@@ -30,24 +30,21 @@ class ContractorAPIError extends Error {
     public details?: ErrorResponse
   ) {
     super(message);
-    this.name = "ContractorAPIError";
+    this.name = 'ContractorAPIError';
   }
 }
 
 /**
  * Generic fetch wrapper with error handling
  */
-async function apiFetch<T>(
-  endpoint: string,
-  options?: RequestInit
-): Promise<T> {
+async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
   try {
     const response = await fetch(url, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...options?.headers,
       },
     });
@@ -73,7 +70,7 @@ async function apiFetch<T>(
       throw error;
     }
     throw new ContractorAPIError(
-      `Network error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`,
       0
     );
   }
@@ -93,10 +90,10 @@ export const contractorAPI = {
     specialisation?: string;
   }): Promise<ContractorListResponse> {
     const queryParams = new URLSearchParams();
-    if (params?.page) queryParams.set("page", params.page.toString());
-    if (params?.pageSize) queryParams.set("page_size", params.pageSize.toString());
-    if (params?.state) queryParams.set("state", params.state);
-    if (params?.specialisation) queryParams.set("specialisation", params.specialisation);
+    if (params?.page) queryParams.set('page', params.page.toString());
+    if (params?.pageSize) queryParams.set('page_size', params.pageSize.toString());
+    if (params?.state) queryParams.set('state', params.state);
+    if (params?.specialisation) queryParams.set('specialisation', params.specialisation);
 
     const endpoint = `/api/contractors/?${queryParams.toString()}`;
     return apiFetch<ContractorListResponse>(endpoint);
@@ -113,8 +110,8 @@ export const contractorAPI = {
    * Create new contractor
    */
   async create(data: ContractorCreate): Promise<Contractor> {
-    return apiFetch<Contractor>("/api/contractors/", {
-      method: "POST",
+    return apiFetch<Contractor>('/api/contractors/', {
+      method: 'POST',
       body: JSON.stringify(data),
     });
   },
@@ -124,7 +121,7 @@ export const contractorAPI = {
    */
   async update(contractorId: string, data: ContractorUpdate): Promise<Contractor> {
     return apiFetch<Contractor>(`/api/contractors/${contractorId}`, {
-      method: "PATCH",
+      method: 'PATCH',
       body: JSON.stringify(data),
     });
   },
@@ -134,7 +131,7 @@ export const contractorAPI = {
    */
   async delete(contractorId: string): Promise<void> {
     return apiFetch<void>(`/api/contractors/${contractorId}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
   },
 
@@ -145,13 +142,10 @@ export const contractorAPI = {
     contractorId: string,
     data: AvailabilitySlotCreate
   ): Promise<AvailabilitySlot> {
-    return apiFetch<AvailabilitySlot>(
-      `/api/contractors/${contractorId}/availability`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-      }
-    );
+    return apiFetch<AvailabilitySlot>(`/api/contractors/${contractorId}/availability`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   },
 
   /**
@@ -161,7 +155,7 @@ export const contractorAPI = {
     contractorId: string,
     status?: AvailabilityStatus
   ): Promise<AvailabilitySlot[]> {
-    const queryParams = status ? `?status=${status}` : "";
+    const queryParams = status ? `?status=${status}` : '';
     return apiFetch<AvailabilitySlot[]>(
       `/api/contractors/${contractorId}/availability${queryParams}`
     );
@@ -177,10 +171,10 @@ export const contractorAPI = {
     pageSize?: number;
   }): Promise<ContractorListResponse> {
     const queryParams = new URLSearchParams();
-    queryParams.set("suburb", params.suburb);
-    if (params.state) queryParams.set("state", params.state);
-    if (params.page) queryParams.set("page", params.page.toString());
-    if (params.pageSize) queryParams.set("page_size", params.pageSize.toString());
+    queryParams.set('suburb', params.suburb);
+    if (params.state) queryParams.set('state', params.state);
+    if (params.page) queryParams.set('page', params.page.toString());
+    if (params.pageSize) queryParams.set('page_size', params.pageSize.toString());
 
     const endpoint = `/api/contractors/search/by-location?${queryParams.toString()}`;
     return apiFetch<ContractorListResponse>(endpoint);
@@ -208,7 +202,7 @@ export function useContractor(contractorId: string) {
         }
       } catch (err) {
         if (mounted) {
-          setError(err instanceof Error ? err.message : "Failed to load contractor");
+          setError(err instanceof Error ? err.message : 'Failed to load contractor');
         }
       } finally {
         if (mounted) {
@@ -228,4 +222,4 @@ export function useContractor(contractorId: string) {
 }
 
 // Add React import at top of file (will be used by hook)
-import React from "react";
+import React from 'react';

@@ -37,30 +37,30 @@ const apiErrors = new Counter('api_errors');
 // Test configuration
 export const options = {
   stages: [
-    { duration: '1m', target: 20 },   // Ramp up to 20 users
-    { duration: '3m', target: 100 },  // Ramp up to 100 users
-    { duration: '1m', target: 0 },    // Ramp down to 0 users
+    { duration: '1m', target: 20 }, // Ramp up to 20 users
+    { duration: '3m', target: 100 }, // Ramp up to 100 users
+    { duration: '1m', target: 0 }, // Ramp down to 0 users
   ],
 
   thresholds: {
     // HTTP request duration thresholds
-    'http_req_duration': [
-      'p(95)<500',   // 95% of requests should be below 500ms
-      'p(99)<1000',  // 99% of requests should be below 1000ms
+    http_req_duration: [
+      'p(95)<500', // 95% of requests should be below 500ms
+      'p(99)<1000', // 99% of requests should be below 1000ms
     ],
 
     // Error rate threshold
-    'errors': ['rate<0.01'],  // Error rate should be less than 1%
+    errors: ['rate<0.01'], // Error rate should be less than 1%
 
     // Success rate threshold
-    'success': ['rate>0.99'], // Success rate should be greater than 99%
+    success: ['rate>0.99'], // Success rate should be greater than 99%
 
     // HTTP request failures
-    'http_req_failed': ['rate<0.01'],
+    http_req_failed: ['rate<0.01'],
 
     // Custom metrics
-    'prd_generation_duration': ['p(95)<2000'],
-    'api_errors': ['count<10'],
+    prd_generation_duration: ['p(95)<2000'],
+    api_errors: ['count<10'],
   },
 
   // Test metadata
@@ -79,11 +79,7 @@ const testPRDRequest = {
   product_name: 'k6 Load Test Product',
   description: 'A product for load testing the PRD generation system',
   target_audience: 'Developers and QA Engineers',
-  key_features: [
-    'High performance under load',
-    'Scalable architecture',
-    'Reliable error handling',
-  ],
+  key_features: ['High performance under load', 'Scalable architecture', 'Reliable error handling'],
 };
 
 export default function () {
@@ -103,16 +99,12 @@ export default function () {
   // Test 2: PRD Generation Request
   const prdGenerationStart = Date.now();
 
-  const prdGeneration = http.post(
-    `${BASE_URL}/api/prd/generate`,
-    JSON.stringify(testPRDRequest),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      tags: { name: 'PRDGeneration' },
-    }
-  );
+  const prdGeneration = http.post(`${BASE_URL}/api/prd/generate`, JSON.stringify(testPRDRequest), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    tags: { name: 'PRDGeneration' },
+  });
 
   const prdGenerationSuccess = check(prdGeneration, {
     'PRD generation status is 200 or 202': (r) => r.status === 200 || r.status === 202,

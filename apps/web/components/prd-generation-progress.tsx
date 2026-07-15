@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Loader2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { CheckCircle2, Circle, Loader2 } from 'lucide-react';
 
 interface PRDGenerationProgressProps {
   progress: number;
@@ -10,11 +10,11 @@ interface PRDGenerationProgressProps {
 }
 
 const GENERATION_PHASES = [
-  { name: "Analyzing requirements", percentage: 20 },
-  { name: "Decomposing features into user stories", percentage: 40 },
-  { name: "Generating technical specification", percentage: 60 },
-  { name: "Creating test plan", percentage: 80 },
-  { name: "Planning implementation roadmap", percentage: 100 },
+  { name: 'Analyzing requirements', percentage: 20 },
+  { name: 'Decomposing features into user stories', percentage: 40 },
+  { name: 'Generating technical specification', percentage: 60 },
+  { name: 'Creating test plan', percentage: 80 },
+  { name: 'Planning implementation roadmap', percentage: 100 },
 ];
 
 export function PRDGenerationProgress({ progress, currentStep }: PRDGenerationProgressProps) {
@@ -38,11 +38,11 @@ export function PRDGenerationProgress({ progress, currentStep }: PRDGenerationPr
 
         {/* Current step */}
         {currentStep && (
-          <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-lg border border-primary/10">
-            <Loader2 className="h-5 w-5 text-primary animate-spin shrink-0 mt-0.5" />
+          <div className="bg-primary/5 border-primary/10 flex items-start gap-3 rounded-lg border p-4">
+            <Loader2 className="text-primary mt-0.5 h-5 w-5 shrink-0 animate-spin" />
             <div>
-              <p className="font-medium text-sm">Current Step</p>
-              <p className="text-sm text-muted-foreground">{currentStep}</p>
+              <p className="text-sm font-medium">Current Step</p>
+              <p className="text-muted-foreground text-sm">{currentStep}</p>
             </div>
           </div>
         )}
@@ -52,24 +52,24 @@ export function PRDGenerationProgress({ progress, currentStep }: PRDGenerationPr
           <p className="text-sm font-medium">Generation Phases</p>
           {GENERATION_PHASES.map((phase) => {
             const isCompleted = progress >= phase.percentage;
-            const isCurrent = progress < phase.percentage && progress >= (phase.percentage - 20);
+            const isCurrent = progress < phase.percentage && progress >= phase.percentage - 20;
 
             return (
               <div key={phase.name} className="flex items-center gap-3">
                 {isCompleted ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-green-500" />
                 ) : isCurrent ? (
-                  <Loader2 className="h-5 w-5 text-primary animate-spin shrink-0" />
+                  <Loader2 className="text-primary h-5 w-5 shrink-0 animate-spin" />
                 ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <Circle className="text-muted-foreground h-5 w-5 shrink-0" />
                 )}
                 <span
                   className={`text-sm ${
                     isCompleted
-                      ? "text-foreground line-through"
+                      ? 'text-foreground line-through'
                       : isCurrent
-                      ? "text-primary font-medium"
-                      : "text-muted-foreground"
+                        ? 'text-primary font-medium'
+                        : 'text-muted-foreground'
                   }`}
                 >
                   {phase.name}
@@ -80,7 +80,7 @@ export function PRDGenerationProgress({ progress, currentStep }: PRDGenerationPr
         </div>
 
         {/* Estimated time */}
-        <div className="text-sm text-muted-foreground pt-4 border-t">
+        <div className="text-muted-foreground border-t pt-4 text-sm">
           ⏱️ Estimated time: 1-2 minutes
         </div>
       </CardContent>
