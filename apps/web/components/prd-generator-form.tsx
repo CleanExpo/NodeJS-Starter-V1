@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Sparkles } from "lucide-react";
-import type { PRDGenerationRequest } from "@/hooks/use-prd-generation";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, Sparkles } from 'lucide-react';
+import type { PRDGenerationRequest } from '@/hooks/use-prd-generation';
 
 interface PRDGeneratorFormProps {
   onSubmit: (request: PRDGenerationRequest) => void;
@@ -15,11 +15,11 @@ interface PRDGeneratorFormProps {
 }
 
 export function PRDGeneratorForm({ onSubmit, isGenerating }: PRDGeneratorFormProps) {
-  const [requirements, setRequirements] = useState("");
-  const [targetUsers, setTargetUsers] = useState("");
-  const [timeline, setTimeline] = useState("");
-  const [teamSize, setTeamSize] = useState("2");
-  const [existingStack, setExistingStack] = useState("");
+  const [requirements, setRequirements] = useState('');
+  const [targetUsers, setTargetUsers] = useState('');
+  const [timeline, setTimeline] = useState('');
+  const [teamSize, setTeamSize] = useState('2');
+  const [existingStack, setExistingStack] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,17 +48,15 @@ export function PRDGeneratorForm({ onSubmit, isGenerating }: PRDGeneratorFormPro
             Project Requirements
           </CardTitle>
           <CardDescription>
-            Describe your project in detail. The AI will analyze your requirements and
-            generate comprehensive documentation.
+            Describe your project in detail. The AI will analyze your requirements and generate
+            comprehensive documentation.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="requirements">
               Project Description *
-              <span className="text-sm text-muted-foreground ml-2">
-                (minimum 50 characters)
-              </span>
+              <span className="text-muted-foreground ml-2 text-sm">(minimum 50 characters)</span>
             </Label>
             <Textarea
               id="requirements"
@@ -69,7 +67,7 @@ export function PRDGeneratorForm({ onSubmit, isGenerating }: PRDGeneratorFormPro
               rows={8}
               className="resize-none"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {requirements.length} / 50 characters minimum
             </p>
           </div>
@@ -84,7 +82,7 @@ export function PRDGeneratorForm({ onSubmit, isGenerating }: PRDGeneratorFormPro
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="targetUsers">Target Users</Label>
               <Input
@@ -135,15 +133,9 @@ export function PRDGeneratorForm({ onSubmit, isGenerating }: PRDGeneratorFormPro
         </CardContent>
       </Card>
 
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-muted-foreground">
-          Generation typically takes 1-2 minutes
-        </p>
-        <Button
-          type="submit"
-          disabled={!isValid || isGenerating}
-          size="lg"
-        >
+      <div className="flex items-center justify-between">
+        <p className="text-muted-foreground text-sm">Generation typically takes 1-2 minutes</p>
+        <Button type="submit" disabled={!isValid || isGenerating} size="lg">
           {isGenerating ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { formatDateAU, formatCurrencyAUD, formatPhoneAU } from '@/lib/australian-context';
+import { formatDateAU, formatCurrencyAUD, formatPhoneAU } from '../lib/australian-context';
 
 /**
  * JobCard Component
@@ -132,10 +132,10 @@ export function JobCard({ job }: { job: Job }) {
       transition={{ duration: 0.15 }}
     >
       {/* Header with job type and status */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-primary-100">
-            <WaterDropIcon className="w-6 h-6 text-primary-600" />
+          <div className="bg-primary-100 rounded-lg p-3">
+            <WaterDropIcon className="text-primary-600 h-6 w-6" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">{job.jobType}</h3>
@@ -143,21 +143,21 @@ export function JobCard({ job }: { job: Job }) {
           </div>
         </div>
         <span
-          className={`px-3 py-1 rounded-lg text-sm font-medium border ${statusStyles[job.status]}`}
+          className={`rounded-lg border px-3 py-1 text-sm font-medium ${statusStyles[job.status]}`}
         >
           {statusLabels[job.status]}
         </span>
       </div>
 
       {/* Customer information */}
-      <div className="space-y-3 mb-4">
+      <div className="mb-4 space-y-3">
         <div>
           <p className="text-sm font-medium text-gray-900">{job.customerName}</p>
-          <div className="flex items-center gap-2 mt-1">
-            <PhoneIcon className="w-4 h-4 text-gray-400" />
+          <div className="mt-1 flex items-center gap-2">
+            <PhoneIcon className="h-4 w-4 text-gray-400" />
             <a
               href={`tel:${job.customerPhone}`}
-              className="text-sm text-primary-600 hover:text-primary-700 transition-colors"
+              className="text-primary-600 hover:text-primary-700 text-sm transition-colors"
             >
               {formatPhoneAU(job.customerPhone)}
             </a>
@@ -166,7 +166,7 @@ export function JobCard({ job }: { job: Job }) {
 
         {/* Australian address format: Street, Suburb STATE POSTCODE */}
         <div className="flex items-start gap-2">
-          <LocationIcon className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+          <LocationIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
           <p className="text-sm text-gray-600">
             {job.address}, {job.suburb} {job.state} {job.postcode}
           </p>
@@ -175,17 +175,17 @@ export function JobCard({ job }: { job: Job }) {
 
       {/* Scheduled date (DD/MM/YYYY format) */}
       {job.scheduledDate && (
-        <div className="flex items-center gap-2 mb-4 p-3 rounded-lg bg-blue-50">
-          <CalendarIcon className="w-4 h-4 text-blue-600" />
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-blue-50 p-3">
+          <CalendarIcon className="h-4 w-4 text-blue-600" />
           <div>
-            <p className="text-xs text-blue-600 font-medium">Scheduled</p>
+            <p className="text-xs font-medium text-blue-600">Scheduled</p>
             <p className="text-sm text-blue-900">{formatDateAU(job.scheduledDate)}</p>
           </div>
         </div>
       )}
 
       {/* Pricing with GST (Australian) */}
-      <div className="border-t border-gray-200 pt-4 mt-4">
+      <div className="mt-4 border-t border-gray-200 pt-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Amount</span>
@@ -195,24 +195,24 @@ export function JobCard({ job }: { job: Job }) {
             <span className="text-gray-600">GST (10%)</span>
             <span className="font-medium text-gray-900">{formatCurrencyAUD(job.gst)}</span>
           </div>
-          <div className="flex items-center justify-between text-base border-t border-gray-200 pt-2">
+          <div className="flex items-center justify-between border-t border-gray-200 pt-2 text-base">
             <span className="font-semibold text-gray-900">Total (inc. GST)</span>
-            <span className="font-bold text-primary-600">{formatCurrencyAUD(total)}</span>
+            <span className="text-primary-600 font-bold">{formatCurrencyAUD(total)}</span>
           </div>
         </div>
       </div>
 
       {/* Action buttons with micro-interactions */}
-      <div className="flex gap-2 mt-4">
+      <div className="mt-4 flex gap-2">
         <motion.button
-          className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+          className="bg-primary-600 hover:bg-primary-700 flex-1 rounded-lg px-4 py-2 font-medium text-white transition-colors"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
           View Details
         </motion.button>
         <motion.button
-          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+          className="rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -221,10 +221,8 @@ export function JobCard({ job }: { job: Job }) {
       </div>
 
       {/* Footer with creation date */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
-        <p className="text-xs text-gray-500">
-          Created {formatDateAU(job.createdAt)}
-        </p>
+      <div className="mt-4 border-t border-gray-200 pt-4">
+        <p className="text-xs text-gray-500">Created {formatDateAU(job.createdAt)}</p>
       </div>
     </motion.div>
   );
@@ -242,8 +240,8 @@ export function JobCardExample() {
     postcode: '4000',
     jobType: 'Water Damage Restoration',
     status: 'scheduled',
-    amount: 2500.00,
-    gst: 250.00,  // 10% GST (Australian)
+    amount: 2500.0,
+    gst: 250.0, // 10% GST (Australian)
     scheduledDate: new Date('2025-01-08'),
     createdAt: new Date('2025-01-05'),
   };

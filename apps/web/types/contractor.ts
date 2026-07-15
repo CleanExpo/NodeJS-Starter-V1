@@ -5,9 +5,9 @@
  * Maintains Australian context (DD/MM/YYYY, ABN, mobile formats).
  */
 
-export type AustralianState = "QLD" | "NSW" | "VIC" | "SA" | "WA" | "TAS" | "NT" | "ACT";
+export type AustralianState = 'QLD' | 'NSW' | 'VIC' | 'SA' | 'WA' | 'TAS' | 'NT' | 'ACT';
 
-export type AvailabilityStatus = "available" | "booked" | "tentative" | "unavailable";
+export type AvailabilityStatus = 'available' | 'booked' | 'tentative' | 'unavailable';
 
 export interface Location {
   suburb: string;
@@ -71,9 +71,11 @@ export interface ContractorListResponse {
 }
 
 export interface ErrorResponse {
-  detail: string | Array<{
-    loc: string[];
-    msg: string;
-    type: string;
-  }>;
+  detail:
+    | string
+    | Array<{
+        loc: string[];
+        msg: string;
+        type: string;
+      }>;
 }

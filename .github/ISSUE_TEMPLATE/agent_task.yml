@@ -1,0 +1,39 @@
+name: Agent task (ready-for-agent)
+description: A ticket scoped for one autonomous agent session — only promote when the brief is complete
+labels: [agent-task, needs-triage]
+body:
+  - type: textarea
+    id: brief
+    attributes:
+      label: Agent brief
+      description: |
+        Complete enough that an agent needs NO follow-up questions. State the goal,
+        the files/areas in scope, and the constraints.
+    validations:
+      required: true
+  - type: textarea
+    id: expected_actual
+    attributes:
+      label: Expected vs actual
+      description: The verifiable success state that makes the loop terminable.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification commands
+      description: Exact commands/checks that must be green before the agent opens a PR.
+      placeholder: |
+        pnpm type-check && pnpm lint && pnpm test && pnpm build
+    validations:
+      required: true
+  - type: dropdown
+    id: blast
+    attributes:
+      label: Blast radius
+      options:
+        - trivial (docs/config, no behaviour change)
+        - light (single module, flag-gated)
+        - full (cross-module or behaviour change — needs human review of final PR)
+    validations:
+      required: true

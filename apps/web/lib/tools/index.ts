@@ -81,9 +81,9 @@ export interface APIToolFormat {
 // Constants
 // ============================================================================
 
-const BETA_HEADER = "advanced-tool-use-2025-11-20";
-const TOOL_SEARCH_TYPE = "tool_search_tool_regex_20251119";
-const CODE_EXECUTION_TYPE = "code_execution_20250825";
+const BETA_HEADER = 'advanced-tool-use-2025-11-20';
+const TOOL_SEARCH_TYPE = 'tool_search_tool_regex_20251119';
+const CODE_EXECUTION_TYPE = 'code_execution_20250825';
 
 // ============================================================================
 // Tool Registry
@@ -125,7 +125,7 @@ export class AdvancedToolClient {
     if (this.enableSearch) {
       apiTools.push({
         type: TOOL_SEARCH_TYPE,
-        name: "tool_search",
+        name: 'tool_search',
       });
     }
 
@@ -133,7 +133,7 @@ export class AdvancedToolClient {
     if (this.enableCodeExecution) {
       apiTools.push({
         type: CODE_EXECUTION_TYPE,
-        name: "code_execution",
+        name: 'code_execution',
       });
     }
 
@@ -146,12 +146,10 @@ export class AdvancedToolClient {
           description: tool.description,
           input_schema: tool.inputSchema,
           defer_loading: true,
-          allowed_callers: tool.config.allowedCallers.length > 0
-            ? tool.config.allowedCallers
-            : undefined,
-          input_examples: tool.examples.length > 0
-            ? tool.examples.map((ex) => ex.input)
-            : undefined,
+          allowed_callers:
+            tool.config.allowedCallers.length > 0 ? tool.config.allowedCallers : undefined,
+          input_examples:
+            tool.examples.length > 0 ? tool.examples.map((ex) => ex.input) : undefined,
         });
       } else if (!tool.config.deferLoading || includeDeferred) {
         // Include full definition
@@ -159,12 +157,10 @@ export class AdvancedToolClient {
           name: tool.name,
           description: tool.description,
           input_schema: tool.inputSchema,
-          allowed_callers: tool.config.allowedCallers.length > 0
-            ? tool.config.allowedCallers
-            : undefined,
-          input_examples: tool.examples.length > 0
-            ? tool.examples.map((ex) => ex.input)
-            : undefined,
+          allowed_callers:
+            tool.config.allowedCallers.length > 0 ? tool.config.allowedCallers : undefined,
+          input_examples:
+            tool.examples.length > 0 ? tool.examples.map((ex) => ex.input) : undefined,
         });
       }
     }
@@ -299,16 +295,18 @@ export class AdvancedToolClient {
       deferredTools: deferred,
       estimatedLoadedTokens: loadedTokens,
       estimatedSavedTokens: savedTokens,
-      contextReductionPercent: total > 0
-        ? Math.round((savedTokens / (total * tokensPerTool)) * 100)
-        : 0,
+      contextReductionPercent:
+        total > 0 ? Math.round((savedTokens / (total * tokensPerTool)) * 100) : 0,
     };
   }
 
   /**
    * Handle a tool search request from Claude
    */
-  handleToolSearch(query: string, limit = 5): {
+  handleToolSearch(
+    query: string,
+    limit = 5
+  ): {
     matchedTools: SearchResult[];
     totalMatches: number;
     query: string;
@@ -324,9 +322,7 @@ export class AdvancedToolClient {
   /**
    * Check if a tool request is from code execution
    */
-  isProgrammaticCall(request: {
-    caller?: { type?: string; tool_id?: string };
-  }): boolean {
+  isProgrammaticCall(request: { caller?: { type?: string; tool_id?: string } }): boolean {
     return request.caller?.type === CODE_EXECUTION_TYPE;
   }
 
@@ -374,9 +370,7 @@ export const PROGRAMMATIC_TOOL_CONFIG: ToolConfig = {
 // Factory Functions
 // ============================================================================
 
-export function createAdvancedToolClient(
-  options: AdvancedToolClientOptions
-): AdvancedToolClient {
+export function createAdvancedToolClient(options: AdvancedToolClientOptions): AdvancedToolClient {
   return new AdvancedToolClient(options);
 }
 

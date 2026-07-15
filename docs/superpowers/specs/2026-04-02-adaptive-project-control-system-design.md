@@ -19,26 +19,26 @@ A single `/bootstrap` command that discovers any project, classifies its maturit
 
 ### Signals Collected
 
-| Signal | Detection Method | Informs |
-|--------|-----------------|---------|
-| Language/Framework | `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod` | Commands, formatter hooks, test runner |
-| Package manager | Lock files (`pnpm-lock.yaml`, `uv.lock`, `Cargo.lock`) | Dev/build/test commands |
-| Test runner | Config files (`vitest.config`, `pytest.ini`, `jest.config`) | TESTING.md, stop hook |
-| Build stage | Source file count + test ratio + CI presence + git history | Tier classification |
-| Database/ORM | Schema files, migration dirs, connection configs | ARCHITECTURE.md, migration hooks |
-| MCP servers | `.claude/settings.json` MCP section, env vars | ARCHITECTURE.md integrations |
-| Existing Claude files | CLAUDE.md, `.claude/` directory, AGENTS.md | Audit mode (upgrade vs fresh) |
-| Monorepo structure | `turbo.json`, workspace configs, `apps/` dir | Architecture boundaries |
-| Deploy targets | `vercel.json`, `Dockerfile`, `fly.toml`, CI deploy steps | Production tier eligibility |
+| Signal                | Detection Method                                            | Informs                                |
+| --------------------- | ----------------------------------------------------------- | -------------------------------------- |
+| Language/Framework    | `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`    | Commands, formatter hooks, test runner |
+| Package manager       | Lock files (`pnpm-lock.yaml`, `uv.lock`, `Cargo.lock`)      | Dev/build/test commands                |
+| Test runner           | Config files (`vitest.config`, `pytest.ini`, `jest.config`) | TESTING.md, stop hook                  |
+| Build stage           | Source file count + test ratio + CI presence + git history  | Tier classification                    |
+| Database/ORM          | Schema files, migration dirs, connection configs            | ARCHITECTURE.md, migration hooks       |
+| MCP servers           | `.claude/settings.json` MCP section, env vars               | ARCHITECTURE.md integrations           |
+| Existing Claude files | CLAUDE.md, `.claude/` directory, AGENTS.md                  | Audit mode (upgrade vs fresh)          |
+| Monorepo structure    | `turbo.json`, workspace configs, `apps/` dir                | Architecture boundaries                |
+| Deploy targets        | `vercel.json`, `Dockerfile`, `fly.toml`, CI deploy steps    | Production tier eligibility            |
 
 ### Build Stage Classification
 
-| Stage | Criteria | Tier Assigned |
-|-------|----------|---------------|
-| **Greenfield** | <20 source files, no tests | Foundation only |
-| **Active Build** | 20+ files, test ratio < 30% | Foundation + Governance |
-| **Stabilisation** | Moderate tests, some CI | Foundation + Governance |
-| **Production** | High coverage, CI/CD, deploy config | Foundation + Governance + Production |
+| Stage             | Criteria                            | Tier Assigned                        |
+| ----------------- | ----------------------------------- | ------------------------------------ |
+| **Greenfield**    | <20 source files, no tests          | Foundation only                      |
+| **Active Build**  | 20+ files, test ratio < 30%         | Foundation + Governance              |
+| **Stabilisation** | Moderate tests, some CI             | Foundation + Governance              |
+| **Production**    | High coverage, CI/CD, deploy config | Foundation + Governance + Production |
 
 ### Existing File Handling
 
@@ -65,6 +65,7 @@ If CLAUDE.md or `.claude/` already exists, the generator enters **audit mode** �
 ```
 
 **Design rules for CLAUDE.md generation:**
+
 - Positively framed ("Use X" not "Don't use Y") — "never" only for dangerous operations
 - Exclude anything a linter/formatter handles (PostToolUse hook enforces those)
 - Critical rules at top AND bottom (peripheral attention bias)
@@ -73,31 +74,31 @@ If CLAUDE.md or `.claude/` already exists, the generator enters **audit mode** �
 
 ### Companion Files (each <200 lines)
 
-| File | Content |
-|------|---------|
+| File                      | Content                                                                                               |
+| ------------------------- | ----------------------------------------------------------------------------------------------------- |
 | `.claude/ARCHITECTURE.md` | System overview, component map (ASCII), module boundaries, data model, integrations, design decisions |
-| `.claude/STANDARDS.md` | Patterns linters can't catch: error handling, domain naming, API patterns, canonical file references |
-| `.claude/TESTING.md` | Quick commands, "before you're done" checklist, test data setup, mocking conventions |
-| `.claude/WORKFLOWS.md` | Branch naming, commit format, PR checklist, deploy steps, rollback procedure |
-| `.claude/PROGRESS.md` | Living state: current phase, date, active tasks, decisions table, "notes for next context window" |
+| `.claude/STANDARDS.md`    | Patterns linters can't catch: error handling, domain naming, API patterns, canonical file references  |
+| `.claude/TESTING.md`      | Quick commands, "before you're done" checklist, test data setup, mocking conventions                  |
+| `.claude/WORKFLOWS.md`    | Branch naming, commit format, PR checklist, deploy steps, rollback procedure                          |
+| `.claude/PROGRESS.md`     | Living state: current phase, date, active tasks, decisions table, "notes for next context window"     |
 
 ### settings.json Hooks (Foundation)
 
 **All stages:**
 
-| Hook | Trigger | Type | Purpose |
-|------|---------|------|---------|
-| PreToolUse(Bash) | Before shell commands | command | Block destructive: `rm -rf`, `--force`, `--no-verify`, `DROP`, `TRUNCATE` |
-| PostToolUse(Write\|Edit) | After file changes | command | Auto-format with project's formatter + `\|\| true` |
-| Stop | Session end | command | Append timestamp + `git diff --name-only` to PROGRESS.md |
-| PreCompact | Before compaction | command | Backup PROGRESS.md to `.claude/backups/` |
+| Hook                     | Trigger               | Type    | Purpose                                                                   |
+| ------------------------ | --------------------- | ------- | ------------------------------------------------------------------------- |
+| PreToolUse(Bash)         | Before shell commands | command | Block destructive: `rm -rf`, `--force`, `--no-verify`, `DROP`, `TRUNCATE` |
+| PostToolUse(Write\|Edit) | After file changes    | command | Auto-format with project's formatter + `\|\| true`                        |
+| Stop                     | Session end           | command | Append timestamp + `git diff --name-only` to PROGRESS.md                  |
+| PreCompact               | Before compaction     | command | Backup PROGRESS.md to `.claude/backups/`                                  |
 
 **Stabilisation/Production add:**
 
-| Hook | Trigger | Type | Purpose |
-|------|---------|------|---------|
-| PreToolUse(Edit\|Write) | Before file changes | command | Protect `.env`, `.secret`, `.key`, `.pem` files |
-| Stop | Session end | prompt | "Were tests run after code changes?" semantic check |
+| Hook                    | Trigger             | Type    | Purpose                                             |
+| ----------------------- | ------------------- | ------- | --------------------------------------------------- |
+| PreToolUse(Edit\|Write) | Before file changes | command | Protect `.env`, `.secret`, `.key`, `.pem` files     |
+| Stop                    | Session end         | prompt  | "Were tests run after code changes?" semantic check |
 
 **Permissions:** Deny `rm -rf *`, `git push --force*`, `git reset --hard*`. Allow common project commands.
 
@@ -109,12 +110,12 @@ Generated when build stage is Active Build or higher.
 
 ### Memory System
 
-| File | Purpose | Who Updates |
-|------|---------|-------------|
-| `.claude/memory/CONSTITUTION.md` | Immutable rules (5 most critical from CLAUDE.md). Survives compaction. | Human only |
-| `.claude/memory/compass.md` | ~100-token summary injected before every message. Stack, critical rule, agent roster, budget, state pointers. | Human only |
-| `.claude/memory/current-state.md` | Session state snapshot. Active task, in-progress work, next steps. | PreCompact hook + agents |
-| `.claude/memory/architectural-decisions.md` | Append-only log. `[DD/MM/YYYY] DECISION: X \| REASON: Y \| ALTERNATIVES REJECTED: Z` | Agents (append only) |
+| File                                        | Purpose                                                                                                       | Who Updates              |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `.claude/memory/CONSTITUTION.md`            | Immutable rules (5 most critical from CLAUDE.md). Survives compaction.                                        | Human only               |
+| `.claude/memory/compass.md`                 | ~100-token summary injected before every message. Stack, critical rule, agent roster, budget, state pointers. | Human only               |
+| `.claude/memory/current-state.md`           | Session state snapshot. Active task, in-progress work, next steps.                                            | PreCompact hook + agents |
+| `.claude/memory/architectural-decisions.md` | Append-only log. `[DD/MM/YYYY] DECISION: X \| REASON: Y \| ALTERNATIVES REJECTED: Z`                          | Agents (append only)     |
 
 ### Auto-Activation Chain
 
@@ -147,35 +148,36 @@ PreToolUse hook (before bash) --> blocks dangerous commands
 
 ### Blueprints
 
-| Blueprint | When Generated | DAG Shape |
-|-----------|---------------|-----------|
-| `bugfix.blueprint.md` | Always | reproduce -> fix -> test -> PR |
-| `feature.blueprint.md` | Always | spec -> implement -> test -> review -> PR |
-| `refactor.blueprint.md` | Always | scope -> implement -> verify-no-regression -> PR |
+| Blueprint                | When Generated       | DAG Shape                                          |
+| ------------------------ | -------------------- | -------------------------------------------------- |
+| `bugfix.blueprint.md`    | Always               | reproduce -> fix -> test -> PR                     |
+| `feature.blueprint.md`   | Always               | spec -> implement -> test -> review -> PR          |
+| `refactor.blueprint.md`  | Always               | scope -> implement -> verify-no-regression -> PR   |
 | `migration.blueprint.md` | If database detected | backup -> migrate -> verify -> rollback-test -> PR |
 
 Each blueprint defines: nodes with owners, iteration caps (hard limits), skip conditions, gates with pass/fail thresholds, escalation rules.
 
 ### Rubrics
 
-| Rubric | Threshold | Purpose |
-|--------|-----------|---------|
-| `code-rubric.md` | >=70 pass, 50-69 iterate, <50 escalate | Code quality gate |
-| `architecture-rubric.md` | >=70 | Structural change gate |
+| Rubric                   | Threshold                              | Purpose                |
+| ------------------------ | -------------------------------------- | ---------------------- |
+| `code-rubric.md`         | >=70 pass, 50-69 iterate, <50 escalate | Code quality gate      |
+| `architecture-rubric.md` | >=70                                   | Structural change gate |
 
 Criteria are generated from the project's actual patterns, not generic checklists.
 
 ### Additional Hooks (Governance)
 
-| Hook | Trigger | Type | Purpose |
-|------|---------|------|---------|
-| UserPromptSubmit | Every message | command | Compass injection (reads compass.md) |
-| SessionStart | New session | command | Load CONSTITUTION + git status + current-state |
-| PreCompact | Before compaction | command | Save state to current-state.md + backup PROGRESS.md |
+| Hook             | Trigger           | Type    | Purpose                                             |
+| ---------------- | ----------------- | ------- | --------------------------------------------------- |
+| UserPromptSubmit | Every message     | command | Compass injection (reads compass.md)                |
+| SessionStart     | New session       | command | Load CONSTITUTION + git status + current-state      |
+| PreCompact       | Before compaction | command | Save state to current-state.md + backup PROGRESS.md |
 
 ### Verification Gate Rule
 
 `.claude/rules/verification-gate.md` — semantic rule (not a hook) requiring proof before any completion claim:
+
 1. Where to check
 2. How to get there
 3. What to see
@@ -288,12 +290,12 @@ ROLLBACK OPTIONS:
 
 ### Deploy Target Detection
 
-| Detected | Commands Generated |
-|----------|-------------------|
-| Vercel (`vercel.json`) | `vercel deploy --prod`, `vercel rollback` |
-| Docker (`Dockerfile`) | `docker build && docker push`, container rollback |
-| Fly.io (`fly.toml`) | `fly deploy`, `fly releases rollback` |
-| No deploy config | Skip Production tier, note in PROGRESS.md |
+| Detected               | Commands Generated                                |
+| ---------------------- | ------------------------------------------------- |
+| Vercel (`vercel.json`) | `vercel deploy --prod`, `vercel rollback`         |
+| Docker (`Dockerfile`)  | `docker build && docker push`, container rollback |
+| Fly.io (`fly.toml`)    | `fly deploy`, `fly releases rollback`             |
+| No deploy config       | Skip Production tier, note in PROGRESS.md         |
 
 ---
 
@@ -373,28 +375,28 @@ Templates use `{{placeholder}}` syntax. The LLM reads them as guidance and gener
 
 ## Token Budget Summary
 
-| File | Target | Purpose |
-|------|--------|---------|
-| CLAUDE.md | <150 lines | Always loaded — every token costs |
-| Each companion file | <200 lines | Loaded on demand |
-| compass.md | ~100 tokens | Injected every message |
-| CONSTITUTION.md | ~500 tokens | Loaded at session start |
-| Auto memory (MEMORY.md) | <200 lines | Always loaded — cleanup if exceeded |
+| File                    | Target      | Purpose                             |
+| ----------------------- | ----------- | ----------------------------------- |
+| CLAUDE.md               | <150 lines  | Always loaded — every token costs   |
+| Each companion file     | <200 lines  | Loaded on demand                    |
+| compass.md              | ~100 tokens | Injected every message              |
+| CONSTITUTION.md         | ~500 tokens | Loaded at session start             |
+| Auto memory (MEMORY.md) | <200 lines  | Always loaded — cleanup if exceeded |
 
 ---
 
 ## Key Design Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| Native Claude Code, no Lobster dependency | We adopt the patterns (approval halting, envelopes, state persistence) but build them in the skill/command system we already control |
-| LLM generates content, not string-replace | Templates are guidance, not fill-in-the-blank. The LLM understands the project and writes appropriate content |
-| Auto-classification, not user choice | The user runs `/bootstrap` and the system decides the tier. Reduces cognitive load for non-developer users |
-| Audit mode for existing projects | Never overwrites existing work. Proposes upgrades with diff-style comparison |
-| Zero maintenance after bootstrap | Hooks are the autonomous nervous system. Everything self-activates from settings.json |
-| Peripheral attention bias | Critical rules at top AND bottom of CLAUDE.md. Research shows middle content gets lowest model attention |
-| Positive framing | "Use X" not "Don't use Y" — positive instructions have higher compliance rates |
-| Deterministic hooks for deterministic rules | If a rule can be a shell command, it's a hook (100% enforcement) not an instruction (~90-95%) |
+| Decision                                    | Rationale                                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Native Claude Code, no Lobster dependency   | We adopt the patterns (approval halting, envelopes, state persistence) but build them in the skill/command system we already control |
+| LLM generates content, not string-replace   | Templates are guidance, not fill-in-the-blank. The LLM understands the project and writes appropriate content                        |
+| Auto-classification, not user choice        | The user runs `/bootstrap` and the system decides the tier. Reduces cognitive load for non-developer users                           |
+| Audit mode for existing projects            | Never overwrites existing work. Proposes upgrades with diff-style comparison                                                         |
+| Zero maintenance after bootstrap            | Hooks are the autonomous nervous system. Everything self-activates from settings.json                                                |
+| Peripheral attention bias                   | Critical rules at top AND bottom of CLAUDE.md. Research shows middle content gets lowest model attention                             |
+| Positive framing                            | "Use X" not "Don't use Y" — positive instructions have higher compliance rates                                                       |
+| Deterministic hooks for deterministic rules | If a rule can be a shell command, it's a hook (100% enforcement) not an instruction (~90-95%)                                        |
 
 ---
 

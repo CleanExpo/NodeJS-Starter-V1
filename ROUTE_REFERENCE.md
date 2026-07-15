@@ -24,6 +24,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Description:** Authenticate a user and create a session
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -32,6 +33,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Response (Success):**
+
 ```json
 {
   "success": true,
@@ -47,6 +49,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Status Codes:**
+
 - `200` — Login successful
 - `401` — Invalid credentials
 - `400` — Missing required fields
@@ -58,6 +61,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Description:** Create a new user account
 
 **Request:**
+
 ```json
 {
   "email": "newuser@example.com",
@@ -67,6 +71,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Response (Success):**
+
 ```json
 {
   "success": true,
@@ -79,6 +84,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Status Codes:**
+
 - `201` — User created
 - `409` — User already exists
 - `400` — Invalid input
@@ -92,6 +98,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Headers:** `Authorization: Bearer {token}`
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -100,6 +107,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Status Codes:**
+
 - `200` — Logout successful
 - `401` — Not authenticated
 
@@ -114,9 +122,11 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Headers:** `Authorization: Bearer {token}`
 
 **URL Parameters:**
+
 - `id` (string) — User ID
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -130,6 +140,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Status Codes:**
+
 - `200` — User found
 - `404` — User not found
 - `401` — Not authenticated
@@ -143,6 +154,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Headers:** `Authorization: Bearer {token}`
 
 **Request:**
+
 ```json
 {
   "name": "Updated Name",
@@ -151,6 +163,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -163,6 +176,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 ```
 
 **Status Codes:**
+
 - `200` — User updated
 - `404` — User not found
 - `401` — Not authenticated
@@ -172,23 +186,27 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 
 ## Data
 
-*Add your core data endpoints here (resources, collections, etc.)*
+_Add your core data endpoints here (resources, collections, etc.)_
 
 ### GET /api/data
 
 **Description:** List all data items
 
 **Query Parameters:**
+
 - `page` (number) — Page number (default: 1)
 - `limit` (number) — Items per page (default: 20)
 - `sort` (string) — Sort field (default: createdAt)
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": {
-    "items": [ /* array of data items */ ],
+    "items": [
+      /* array of data items */
+    ],
     "pagination": {
       "page": 1,
       "limit": 20,
@@ -203,7 +221,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 
 ## Admin
 
-*Add administrative endpoints here (user management, system settings, etc.)*
+_Add administrative endpoints here (user management, system settings, etc.)_
 
 ### GET /api/admin/health
 
@@ -212,6 +230,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Headers:** `Authorization: Bearer {admin-token}`
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -235,6 +254,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Description:** Public system health check
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -249,6 +269,7 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 **Description:** Get application version info
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -265,15 +286,16 @@ Complete documentation of all API endpoints in CleanExpo/NodeJS-Starter-V1.
 
 **Common error codes:**
 
-| Code | Status | Meaning |
-|------|--------|----------|
-| `AUTH_REQUIRED` | 401 | Authentication token missing or invalid |
-| `NOT_FOUND` | 404 | Resource not found |
-| `INVALID_INPUT` | 400 | Request validation failed |
-| `FORBIDDEN` | 403 | Authenticated but not authorized |
-| `SERVER_ERROR` | 500 | Unexpected server error |
+| Code            | Status | Meaning                                 |
+| --------------- | ------ | --------------------------------------- |
+| `AUTH_REQUIRED` | 401    | Authentication token missing or invalid |
+| `NOT_FOUND`     | 404    | Resource not found                      |
+| `INVALID_INPUT` | 400    | Request validation failed               |
+| `FORBIDDEN`     | 403    | Authenticated but not authorized        |
+| `SERVER_ERROR`  | 500    | Unexpected server error                 |
 
 **Error response format:**
+
 ```json
 {
   "success": false,

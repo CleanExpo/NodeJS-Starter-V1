@@ -8,11 +8,7 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://pwwwhoaxxtkmowifpuwf.supabase.co';
-const SUPABASE_ANON_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d3dob2F4eHRrbW93aWZwdXdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2Mzc0MzIsImV4cCI6MjA4MDIxMzQzMn0.FvyEwEuBdnPE0K2IomLiZFmlDuR3gf4vasEjhHcOu4Q';
+import { requireSupabaseEnv } from '@/lib/env';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -61,7 +57,8 @@ async function getCurrentUser(): Promise<{
  * - `.auth.getUser()` reads the FastAPI JWT cookie and validates via backend
  */
 export async function createClient() {
-  const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { url, anonKey } = requireSupabaseEnv();
+  const supabase = createSupabaseClient(url, anonKey);
 
   // Attach auth compatibility layer
   const client = Object.create(supabase);

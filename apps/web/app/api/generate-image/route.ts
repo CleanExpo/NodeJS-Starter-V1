@@ -1,16 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import {
-  generateImage,
-  generateIcon,
-  getAPIStatus,
-} from "@/lib/image-generation/gemini-client";
-import { registerImageAsset, registerIconAsset } from "@/lib/image-generation/asset-manager";
+import { NextRequest, NextResponse } from 'next/server';
+import { generateImage, generateIcon, getAPIStatus } from '@/lib/image-generation/gemini-client';
+import { registerImageAsset, registerIconAsset } from '@/lib/image-generation/asset-manager';
 import type {
   ImageGenerationConfig,
   IconGenerationConfig,
   ImageGenerationResponse,
   IconGenerationResponse,
-} from "@/lib/image-generation/types";
+} from '@/lib/image-generation/types';
 
 /* ----------------------------------------
    Rate Limiting (Simple in-memory)
@@ -51,10 +47,10 @@ export async function GET(): Promise<NextResponse> {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Rate limiting
-    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { success: false, error: "Rate limit exceeded. Try again later." },
+        { success: false, error: 'Rate limit exceeded. Try again later.' },
         { status: 429 }
       );
     }
@@ -62,16 +58,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Check API status
     const status = getAPIStatus();
     if (!status.configured) {
-      return NextResponse.json(
-        { success: false, error: status.message },
-        { status: 503 }
-      );
+      return NextResponse.json({ success: false, error: status.message }, { status: 503 });
     }
 
     // Parse request body
     const body = await request.json();
     const { type, config, options } = body as {
-      type: "image" | "icon";
+      type: 'image' | 'icon';
       config: ImageGenerationConfig | IconGenerationConfig;
       options?: {
         save?: boolean;
@@ -83,19 +76,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Validate request
     if (!type || !config) {
       return NextResponse.json(
-        { success: false, error: "Missing required fields: type and config" },
+        { success: false, error: 'Missing required fields: type and config' },
         { status: 400 }
       );
     }
 
     // Generate based on type
-    if (type === "image") {
+    if (type === 'image') {
       const imageConfig = config as ImageGenerationConfig;
 
       // Validate image config
       if (!imageConfig.prompt || !imageConfig.context) {
         return NextResponse.json(
-          { success: false, error: "Image config requires prompt and context" },
+          { success: false, error: 'Image config requires prompt and context' },
           { status: 400 }
         );
       }
@@ -119,13 +112,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(response);
     }
 
-    if (type === "icon") {
+    if (type === 'icon') {
       const iconConfig = config as IconGenerationConfig;
 
       // Validate icon config
       if (!iconConfig.description) {
         return NextResponse.json(
-          { success: false, error: "Icon config requires description" },
+          { success: false, error: 'Icon config requires description' },
           { status: 400 }
         );
       }
@@ -154,12 +147,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 400 }
     );
   } catch (error) {
-    console.error("[API] Image generation error:", error);
+    console.error('[API] Image generation error:', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error occurred",
+        error: error instanceof Error ? error.message : 'Unknown error occurred',
       },
       { status: 500 }
     );

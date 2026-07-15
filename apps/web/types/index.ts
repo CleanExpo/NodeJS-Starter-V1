@@ -9,7 +9,7 @@ export interface User {
 // Chat types
 export interface Message {
   id: string;
-  role: "user" | "assistant" | "system";
+  role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: Date;
   metadata?: Record<string, unknown>;
@@ -25,7 +25,7 @@ export interface Conversation {
 }
 
 // Task types
-export type TaskStatus = "pending" | "in_progress" | "completed" | "failed" | "blocked";
+export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'blocked';
 
 export interface Task {
   id: string;
@@ -43,7 +43,7 @@ export interface Agent {
   id: string;
   name: string;
   type: string;
-  status: "active" | "idle" | "busy" | "error";
+  status: 'active' | 'idle' | 'busy' | 'error';
   capabilities: string[];
 }
 

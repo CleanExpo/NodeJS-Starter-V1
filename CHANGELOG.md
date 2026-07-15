@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Monorepo architecture (Next.js 16 + FastAPI + PostgreSQL 15 + Redis 7)
+- Monorepo architecture (Next.js 15 + FastAPI + PostgreSQL 15 + Redis 7)
 - JWT authentication with Supabase PKCE
 - 12 API routers (agents, chat, webhooks, PRD, workflows, RAG, analytics, contractors, search, documents, health, jobs)
-- 516 test files with coverage thresholds
+- Frontend Vitest + Playwright suites and a backend pytest suite (430+ test functions) with coverage thresholds
 - CI/CD pipeline with GitHub Actions
-- Security scanning (CodeQL, dependency audit)
+- Security scanning (Trivy, npm audit, dependency review; opt-in Snyk)
 - Multi-agent coordination harness (8-phase convergence loop)
 - Rate limiting and auth middleware
 - Docker Compose for local development (PostgreSQL + Redis)
@@ -24,6 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Supabase state store now properly initializes when credentials are available  
+- Supabase state store now properly initializes when credentials are available
 - Adaptive thinking now respects `THINKING_ENABLED` environment variable
 - Added `SUPABASE_JWT_SECRET` field to enable shared authentication between app and Supabase

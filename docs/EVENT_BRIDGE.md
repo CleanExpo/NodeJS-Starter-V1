@@ -14,6 +14,7 @@ Complete implementation of real-time communication between Next.js frontend and 
 ## Overview
 
 This event bridge enables:
+
 - ✅ Real-time agent status updates without polling
 - ✅ Bidirectional communication between frontend and backend
 - ✅ Scalable to multiple users simultaneously
@@ -160,14 +161,14 @@ async def trigger_agent_run(
 ### 1. Subscribe to All Agent Runs
 
 ```tsx
-import { useAgentRuns } from "@/hooks/use-agent-runs";
+import { useAgentRuns } from '@/hooks/use-agent-runs';
 
 function AgentMonitor() {
   const { runs, loading, error } = useAgentRuns();
 
   return (
     <div>
-      {runs.map(run => (
+      {runs.map((run) => (
         <div key={run.id}>
           {run.agent_name}: {run.status} - {run.progress_percent}%
         </div>
@@ -180,7 +181,7 @@ function AgentMonitor() {
 ### 2. Subscribe to Single Agent Run
 
 ```tsx
-import { useAgentRun } from "@/hooks/use-agent-runs";
+import { useAgentRun } from '@/hooks/use-agent-runs';
 
 function AgentRunDetail({ runId }: { runId: string }) {
   const { run, loading } = useAgentRun(runId);
@@ -201,7 +202,7 @@ function AgentRunDetail({ runId }: { runId: string }) {
 ### 3. Get Only Active Runs
 
 ```tsx
-import { useActiveAgentRuns } from "@/hooks/use-agent-runs";
+import { useActiveAgentRuns } from '@/hooks/use-agent-runs';
 
 function ActiveAgentsWidget() {
   const { activeRuns } = useActiveAgentRuns();
@@ -209,7 +210,7 @@ function ActiveAgentsWidget() {
   return (
     <div>
       <h3>Active Agents ({activeRuns.length})</h3>
-      {activeRuns.map(run => (
+      {activeRuns.map((run) => (
         <AgentRunCard key={run.id} run={run} />
       ))}
     </div>
@@ -220,11 +221,11 @@ function ActiveAgentsWidget() {
 ### 4. Trigger Agent from UI
 
 ```tsx
-import { triggerAgentRun } from "@/hooks/use-agent-runs";
+import { triggerAgentRun } from '@/hooks/use-agent-runs';
 
 async function handleRunAgent() {
-  const runId = await triggerAgentRun("Build a new feature");
-  console.log("Started agent run:", runId);
+  const runId = await triggerAgentRun('Build a new feature');
+  console.log('Started agent run:', runId);
 }
 ```
 
@@ -296,10 +297,10 @@ class MyCustomAgent(BaseAgent):
 ### Frontend Dashboard
 
 ```tsx
-"use client";
+'use client';
 
-import { useAgentRuns } from "@/hooks/use-agent-runs";
-import { AgentRunMonitor } from "@/components/agent-run-monitor";
+import { useAgentRuns } from '@/hooks/use-agent-runs';
+import { AgentRunMonitor } from '@/components/agent-run-monitor';
 
 export default function Dashboard() {
   const { runs } = useAgentRuns();
@@ -308,7 +309,7 @@ export default function Dashboard() {
     <div>
       <h1>Agent Dashboard</h1>
       <div className="grid gap-4">
-        {runs.map(run => (
+        {runs.map((run) => (
           <AgentRunMonitor key={run.id} runId={run.id} />
         ))}
       </div>
@@ -380,7 +381,7 @@ GROUP BY agent_name;
 const { channel } = useAgentRuns();
 
 useEffect(() => {
-  console.log("Realtime channel state:", channel?.state);
+  console.log('Realtime channel state:', channel?.state);
 }, [channel]);
 ```
 
@@ -396,11 +397,13 @@ useEffect(() => {
 ### Issue: Not Receiving Real-time Updates
 
 1. Check Supabase Realtime is enabled:
+
    ```sql
    SELECT * FROM pg_publication_tables WHERE pubname = 'supabase_realtime';
    ```
 
 2. Verify RLS policies allow your user to SELECT:
+
    ```sql
    SELECT * FROM agent_runs WHERE user_id = auth.uid();
    ```

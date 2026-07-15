@@ -1,6 +1,8 @@
 # Claude Integration Guide
 
-Claudeintegration enables AI-assisted development, decision-making, and system intelligence for CleanExpo/NodeJS-Starter-V1.
+Claude integration enables AI-assisted development, decision-making, and system intelligence for CleanExpo/NodeJS-Starter-V1.
+
+**Engineering standard (binding):** [docs/adr/0001-starter-pack-standard.md](docs/adr/0001-starter-pack-standard.md) — strict types with zero `tsconfig` exclusions, all CI gates green before any PR opens (`pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm build`), Conventional-Commit PR titles, no credentials in code or env examples. New projects start via `scripts/bootstrap-new-project.sh`.
 
 ## Quick Start
 
@@ -18,6 +20,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 **What:** Start a new Claude session with full system context
 
 **Use when:**
+
 - Onboarding new team members
 - Starting major feature development
 - Debugging complex issues
@@ -25,6 +28,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 - Want code examples or best practices
 
 **Example:**
+
 ```
 /hey-claude "How do I add a new API endpoint?"
 /hey-claude "Explain the authentication flow"
@@ -39,6 +43,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 **What:** Begin a CEO Board deliberation on a strategic decision
 
 **Use when:**
+
 - Making significant strategic decisions
 - Need multiple perspectives on a decision
 - Want documented decision history
@@ -46,11 +51,13 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 - Want visual decision artifacts
 
 **How:**
+
 1. Prepare a brief at `.pi/ceo-agents/briefs/[TOPIC]-[DATE].md`
 2. Run `/ceo-begin [TOPIC]-[DATE]`
 3. Review decision memo at `.pi/ceo-agents/memos/[TOPIC]-[DATE].md`
 
 **The 9 Board Members:**
+
 - CEO — Holistic business lens
 - Revenue — Growth and unit economics
 - Product Strategist — User value and roadmap
@@ -62,14 +69,16 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 - Moonshot — Radical innovation
 
 **Example:**
+
 ```
 /ceo-begin "acquisition-offer-2026-03-24"
 ```
 
 **See:**
+
 - [.claude/commands/ceo-begin.md](./.claude/commands/ceo-begin.md)
 - [.pi/README.md](./.pi/README.md)
-- [.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md](./.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md)
+- [.pi/ceo-agents/briefs/\_EXAMPLE-acquisition-offer.md](./.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md)
 
 ---
 
@@ -78,6 +87,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 **What:** Run automated audit of codebase architecture, patterns, and quality
 
 **Use when:**
+
 - Before major refactoring
 - Before releases to catch issues
 - Quarterly architecture review
@@ -85,6 +95,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 - Need to identify inconsistencies
 
 **Audits:**
+
 - Architecture compliance
 - Pattern consistency
 - Code quality metrics
@@ -92,6 +103,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 - Security issues
 
 **Example:**
+
 ```
 /swarm-audit
 /swarm-audit routes
@@ -107,12 +119,14 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 **What:** Auto-generate API route reference documentation
 
 **Use when:**
+
 - After adding new routes
 - Before deployments
 - In CI/CD pipeline
 - Need to sync docs with code
 
 **Generates:**
+
 - Complete route listing
 - Request/response examples
 - Parameter documentation
@@ -122,6 +136,7 @@ Claudeintegration enables AI-assisted development, decision-making, and system i
 **Output:** Updates [ROUTE_REFERENCE.md](./ROUTE_REFERENCE.md)
 
 **Example:**
+
 ```
 /generate-route-reference
 ```
@@ -137,6 +152,7 @@ The `.pi/` directory is a persistent workspace for agent deliberation systems.
 ### Key Directories
 
 **`.pi/ceo-agents/`** — CEO Board deliberation system
+
 - `briefs/` — Board decision briefs (copy `_TEMPLATE.md`)
 - `memos/` — Decision memos and conclusions
 - `conversations/` — Full deliberation transcripts
@@ -144,6 +160,7 @@ The `.pi/` directory is a persistent workspace for agent deliberation systems.
 - `expertise/` — 9 agent expertise files with decision history
 
 **`.pi/shared/`** — Shared business context
+
 - `context/` — Business context template agents load
 
 ### Workflow
@@ -155,8 +172,9 @@ The `.pi/` directory is a persistent workspace for agent deliberation systems.
 5. **Track Outcomes** — Compare predictions to actual results
 
 **See:**
+
 - [.pi/README.md](./.pi/README.md) — Full workspace documentation
-- [.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md](./.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md) — Golden example
+- [.pi/ceo-agents/briefs/\_EXAMPLE-acquisition-offer.md](./.pi/ceo-agents/briefs/_EXAMPLE-acquisition-offer.md) — Golden example
 
 ---
 
@@ -167,6 +185,7 @@ Documentation that stays in sync with your code.
 ### Key Files
 
 **[SYSTEM_DOCS.md](./SYSTEM_DOCS.md)**
+
 - Architecture overview
 - Running the application
 - Adding new routes
@@ -176,6 +195,7 @@ Documentation that stays in sync with your code.
 - Logging and observability
 
 **[ROUTE_REFERENCE.md](./ROUTE_REFERENCE.md)**
+
 - Complete API endpoint listing
 - Request/response examples
 - Status codes and errors
@@ -183,6 +203,7 @@ Documentation that stays in sync with your code.
 - Auto-generated by `/generate-route-reference`
 
 **[This File - CLAUDE.md](./CLAUDE.md)**
+
 - Claude integration guide
 - Command reference
 - Workflow documentation
@@ -343,7 +364,7 @@ CleanExpo/NodeJS-Starter-V1/
 
 **Inspired by:** IndyDevDan's agent scaling insights
 
-*"If you template your engineering, your agents can do exactly what you did. This is the big advantage. When you're not creating prescriptions, workflows, and systems for your agents to repeat, you miss out on all the true leverage."*
+_"If you template your engineering, your agents can do exactly what you did. This is the big advantage. When you're not creating prescriptions, workflows, and systems for your agents to repeat, you miss out on all the true leverage."_
 
 ---
 

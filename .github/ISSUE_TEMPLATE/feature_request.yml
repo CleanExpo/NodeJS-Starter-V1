@@ -1,0 +1,23 @@
+name: Feature request
+description: A capability the product should have
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: The end state, not the implementation. What can the user do afterwards?
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Verifiable success criteria
+      description: How we will KNOW it works — the checks a reviewer or agent can run.
+    validations:
+      required: true
+  - type: textarea
+    id: nogos
+    attributes:
+      label: No-gos / out of scope
+      description: What this explicitly does NOT include.

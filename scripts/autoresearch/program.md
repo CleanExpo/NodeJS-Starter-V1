@@ -16,12 +16,12 @@ Score is capped at 0 (cannot go negative).
 
 ## Weights Rationale
 
-| Tool | Weight | Reason |
-|------|--------|--------|
-| TypeScript errors (`ts_errors`) | ×5 | Correctness-critical; will break builds |
-| Mypy errors (`mypy_errors`) | ×4 | Python type safety; affects runtime behaviour |
-| ESLint errors (`lint_errors`) | ×3 | Code quality; often auto-fixable |
-| Ruff violations (`ruff_violations`) | ×2 | Style/imports; lowest blast radius |
+| Tool                                | Weight | Reason                                        |
+| ----------------------------------- | ------ | --------------------------------------------- |
+| TypeScript errors (`ts_errors`)     | ×5     | Correctness-critical; will break builds       |
+| Mypy errors (`mypy_errors`)         | ×4     | Python type safety; affects runtime behaviour |
+| ESLint errors (`lint_errors`)       | ×3     | Code quality; often auto-fixable              |
+| Ruff violations (`ruff_violations`) | ×2     | Style/imports; lowest blast radius            |
 
 ## Task
 
@@ -29,6 +29,7 @@ Given the current metrics and prior learnings, identify the **single highest-val
 hypothesis** that would most increase the composite score on the next loop iteration.
 
 Prioritise:
+
 1. Fixes with the highest weight × count product (TypeScript errors first, then mypy)
 2. Fixes that are isolated to one file (lower blast radius)
 3. Fixes that do not require understanding complex domain logic
@@ -36,6 +37,7 @@ Prioritise:
 ## Safety Constraints
 
 Never suggest changes to:
+
 - Database schemas or Alembic migration files
 - Authentication or authorisation logic (`src/auth/`, `middleware.ts`)
 - Environment variable configuration (`.env`, `.env.example`)

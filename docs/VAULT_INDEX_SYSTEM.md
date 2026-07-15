@@ -7,7 +7,6 @@ modified: 20/03/2026
 status: active
 ---
 
-
 # Vault Index System
 
 > Transform your .md ecosystem into an Obsidian-compatible vault with wiki-style linking, O(1) lookup, and semantic search.

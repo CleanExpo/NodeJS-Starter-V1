@@ -1,6 +1,6 @@
-import { defineConfig } from "@playwright/test";
+import { defineConfig } from '@playwright/test';
 
-import baseConfig from "./playwright.config";
+import baseConfig from './playwright.config';
 
 /**
  * Accessibility test config.
@@ -13,5 +13,5 @@ import baseConfig from "./playwright.config";
  */
 export default defineConfig({
   ...baseConfig,
-  testDir: "./tests/accessibility",
+  testDir: './tests/accessibility',
 });

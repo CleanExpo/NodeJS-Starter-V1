@@ -22,6 +22,7 @@ Beads (`bd`) is a distributed issue tracker designed specifically for AI agents.
 ### The Problem
 
 Traditional AI coding sessions suffer from:
+
 - **Context loss** - Tasks forgotten between sessions
 - **No dependency tracking** - What's ready to work on?
 - **Merge conflicts** - Multiple developers/agents clash
@@ -31,14 +32,14 @@ Traditional AI coding sessions suffer from:
 
 Beads solves this with:
 
-| Feature | Benefit |
-|---------|---------|
-| **Git-Native Storage** | Issues stored as JSONL in `.beads/` - versioned, mergeable |
-| **Collision-Free IDs** | Hash-based IDs (`bd-a1b2`) prevent merge conflicts |
-| **Dependency Graph** | `bd ready` shows only unblocked, actionable tasks |
-| **Hierarchical Structure** | Epic → Task → Subtask (`bd-a3f8.1.1`) |
-| **JSON Output** | `--json` flag for programmatic AI parsing |
-| **Session Protocol** | "Land the Plane" ensures work is always pushed |
+| Feature                    | Benefit                                                    |
+| -------------------------- | ---------------------------------------------------------- |
+| **Git-Native Storage**     | Issues stored as JSONL in `.beads/` - versioned, mergeable |
+| **Collision-Free IDs**     | Hash-based IDs (`bd-a1b2`) prevent merge conflicts         |
+| **Dependency Graph**       | `bd ready` shows only unblocked, actionable tasks          |
+| **Hierarchical Structure** | Epic → Task → Subtask (`bd-a3f8.1.1`)                      |
+| **JSON Output**            | `--json` flag for programmatic AI parsing                  |
+| **Session Protocol**       | "Land the Plane" ensures work is always pushed             |
 
 ## Installation
 
@@ -98,12 +99,12 @@ bd sync
 
 ### Priority Levels
 
-| Priority | Usage |
-|----------|-------|
-| `-p 0` | Critical / Blocking |
-| `-p 1` | High priority |
-| `-p 2` | Normal (default) |
-| `-p 3` | Low priority |
+| Priority | Usage               |
+| -------- | ------------------- |
+| `-p 0`   | Critical / Blocking |
+| `-p 1`   | High priority       |
+| `-p 2`   | Normal (default)    |
+| `-p 3`   | Low priority        |
 
 ### Status Values
 
@@ -254,18 +255,18 @@ Shannon: Compress user payload
 
 ## Commands Reference
 
-| Command | Description |
-|---------|-------------|
-| `bd ready` | Show unblocked tasks |
-| `bd list` | Show all open tasks |
-| `bd create "title"` | Create new task |
-| `bd show <id>` | View task details |
-| `bd update <id>` | Modify task |
-| `bd close <id>` | Close task |
-| `bd dep add <child> <parent>` | Add dependency |
-| `bd dep rm <child> <parent>` | Remove dependency |
-| `bd sync` | Force sync to git |
-| `bd doctor` | Health check |
+| Command                       | Description          |
+| ----------------------------- | -------------------- |
+| `bd ready`                    | Show unblocked tasks |
+| `bd list`                     | Show all open tasks  |
+| `bd create "title"`           | Create new task      |
+| `bd show <id>`                | View task details    |
+| `bd update <id>`              | Modify task          |
+| `bd close <id>`               | Close task           |
+| `bd dep add <child> <parent>` | Add dependency       |
+| `bd dep rm <child> <parent>`  | Remove dependency    |
+| `bd sync`                     | Force sync to git    |
+| `bd doctor`                   | Health check         |
 
 ### JSON Output
 

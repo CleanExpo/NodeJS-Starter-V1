@@ -19,24 +19,24 @@ const recoveryTime = new Trend('recovery_time');
 
 export const options = {
   stages: [
-    { duration: '30s', target: 10 },   // Baseline
-    { duration: '1m', target: 500 },   // Spike! 0→500 rapidly
-    { duration: '2m', target: 500 },   // Sustain spike
-    { duration: '1m', target: 10 },    // Drop back down
-    { duration: '30s', target: 0 },    // Recovery
+    { duration: '30s', target: 10 }, // Baseline
+    { duration: '1m', target: 500 }, // Spike! 0→500 rapidly
+    { duration: '2m', target: 500 }, // Sustain spike
+    { duration: '1m', target: 10 }, // Drop back down
+    { duration: '30s', target: 0 }, // Recovery
   ],
 
   thresholds: {
     // Very lenient thresholds - we expect degradation during spike
-    'http_req_duration': [
-      'p(95)<3000',  // 95th percentile < 3s
-      'p(99)<5000',  // 99th percentile < 5s
+    http_req_duration: [
+      'p(95)<3000', // 95th percentile < 3s
+      'p(99)<5000', // 99th percentile < 5s
     ],
-    'errors': ['rate<0.1'],  // Less than 10% error rate
-    'http_req_failed': ['rate<0.1'],
+    errors: ['rate<0.1'], // Less than 10% error rate
+    http_req_failed: ['rate<0.1'],
 
     // Recovery metrics
-    'recovery_time': ['p(95)<2000'],
+    recovery_time: ['p(95)<2000'],
   },
 
   tags: {

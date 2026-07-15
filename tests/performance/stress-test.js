@@ -19,21 +19,21 @@ const timeouts = new Counter('timeouts');
 
 export const options = {
   stages: [
-    { duration: '2m', target: 50 },   // Ramp to 50 users
-    { duration: '3m', target: 100 },  // Ramp to 100 users
-    { duration: '3m', target: 200 },  // Ramp to 200 users (stress)
-    { duration: '2m', target: 0 },    // Ramp down
+    { duration: '2m', target: 50 }, // Ramp to 50 users
+    { duration: '3m', target: 100 }, // Ramp to 100 users
+    { duration: '3m', target: 200 }, // Ramp to 200 users (stress)
+    { duration: '2m', target: 0 }, // Ramp down
   ],
 
   thresholds: {
     // More lenient thresholds for stress test
-    'http_req_duration': [
-      'p(95)<1000',  // 95th percentile < 1s
-      'p(99)<2000',  // 99th percentile < 2s
+    http_req_duration: [
+      'p(95)<1000', // 95th percentile < 1s
+      'p(99)<2000', // 99th percentile < 2s
     ],
-    'errors': ['rate<0.05'],  // Less than 5% error rate
-    'http_req_failed': ['rate<0.05'],
-    'timeouts': ['count<50'],  // No more than 50 timeouts
+    errors: ['rate<0.05'], // Less than 5% error rate
+    http_req_failed: ['rate<0.05'],
+    timeouts: ['count<50'], // No more than 50 timeouts
   },
 
   tags: {

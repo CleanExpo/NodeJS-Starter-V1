@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { sendChatMessage } from "@/lib/api/backend";
+import { useState, useCallback } from 'react';
+import { sendChatMessage } from '@/lib/api/backend';
 
 interface Message {
   id: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
 }
@@ -20,7 +20,7 @@ export function useChat() {
     async (content: string) => {
       const userMessage: Message = {
         id: Date.now().toString(),
-        role: "user",
+        role: 'user',
         content,
         timestamp: new Date(),
       };
@@ -37,7 +37,7 @@ export function useChat() {
 
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
-          role: "assistant",
+          role: 'assistant',
           content: response.response,
           timestamp: new Date(),
         };
@@ -45,7 +45,7 @@ export function useChat() {
         setMessages((prev) => [...prev, assistantMessage]);
         setConversationId(response.conversationId);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(err instanceof Error ? err.message : 'Something went wrong');
       } finally {
         setIsLoading(false);
       }

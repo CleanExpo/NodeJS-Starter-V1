@@ -14,6 +14,7 @@ Scheduled tasks using Vercel Cron for periodic maintenance and monitoring.
 ## Overview
 
 This project uses Vercel Cron to run scheduled tasks directly from the Next.js frontend. This is ideal for:
+
 - Periodic cleanup tasks
 - Health monitoring
 - Daily/weekly reports
@@ -28,11 +29,13 @@ This project uses Vercel Cron to run scheduled tasks directly from the Next.js f
 **Purpose**: Deletes completed/failed agent runs older than 30 days
 
 **What it does**:
+
 - Queries `agent_runs` table for old completed/failed runs
 - Deletes runs with `completed_at` older than 30 days
 - Logs the number of deleted records
 
 **Why at 2 AM?**
+
 - Low traffic period
 - Minimal impact on database performance
 - Runs before daily backup (if configured)
@@ -44,12 +47,14 @@ This project uses Vercel Cron to run scheduled tasks directly from the Next.js f
 **Purpose**: Monitors backend health and latency
 
 **What it does**:
+
 - Pings FastAPI backend `/health` endpoint
 - Measures response time
 - Logs health status
 - Can trigger alerts if unhealthy
 
 **Use cases**:
+
 - Early detection of backend issues
 - Uptime monitoring
 - Performance tracking
@@ -62,12 +67,14 @@ This project uses Vercel Cron to run scheduled tasks directly from the Next.js f
 **Purpose**: Generates daily summary of agent activity
 
 **What it does**:
+
 - Queries yesterday's agent runs
 - Calculates success rate, failures, escalations
 - Computes average execution time
 - Lists top failures
 
 **Report includes**:
+
 - Total runs
 - Completion rate
 - Failed runs with errors
@@ -142,14 +149,14 @@ Cron jobs will automatically start running after deployment.
 
 ### Common Examples
 
-| Schedule | Description |
-|----------|-------------|
-| `*/5 * * * *` | Every 5 minutes |
-| `0 * * * *` | Every hour |
-| `0 0 * * *` | Every day at midnight |
-| `0 9 * * *` | Every day at 9 AM |
-| `0 9 * * 1` | Every Monday at 9 AM |
-| `0 0 1 * *` | First day of every month |
+| Schedule      | Description              |
+| ------------- | ------------------------ |
+| `*/5 * * * *` | Every 5 minutes          |
+| `0 * * * *`   | Every hour               |
+| `0 0 * * *`   | Every day at midnight    |
+| `0 9 * * *`   | Every day at 9 AM        |
+| `0 9 * * 1`   | Every Monday at 9 AM     |
+| `0 0 1 * *`   | First day of every month |
 
 ## Local Testing
 
@@ -173,9 +180,9 @@ Or use a tool like [Postman](https://www.postman.com/) or [Insomnia](https://ins
 All cron endpoints verify the `CRON_SECRET` header:
 
 ```typescript
-const authHeader = request.headers.get("authorization");
+const authHeader = request.headers.get('authorization');
 if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-  return new NextResponse("Unauthorized", { status: 401 });
+  return new NextResponse('Unauthorized', { status: 401 });
 }
 ```
 
@@ -184,6 +191,7 @@ if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
 ### Vercel Protection
 
 Vercel automatically:
+
 - Sets the `Authorization` header with your `CRON_SECRET`
 - Only allows Vercel infrastructure to call cron endpoints
 - Provides execution logs in the Vercel dashboard
@@ -207,17 +215,17 @@ Add to your cron handlers:
 if (!healthy) {
   // Send alert to Slack
   await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
-      text: "🚨 Backend health check failed!",
+      text: '🚨 Backend health check failed!',
     }),
   });
 
   // Or send email via SendGrid, Resend, etc.
   await sendEmail({
-    to: "alerts@example.com",
-    subject: "Backend health check failed",
-    body: "..."
+    to: 'alerts@example.com',
+    subject: 'Backend health check failed',
+    body: '...',
   });
 }
 ```
@@ -228,18 +236,18 @@ if (!healthy) {
 
 ```typescript
 // apps/web/app/api/cron/my-task/route.ts
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   // Verify cron secret
-  const authHeader = request.headers.get("authorization");
+  const authHeader = request.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return new NextResponse('Unauthorized', { status: 401 });
   }
 
   try {
     // Your task logic here
-    console.log("Running my custom task");
+    console.log('Running my custom task');
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -255,7 +263,7 @@ export async function GET(request: Request) {
   "crons": [
     {
       "path": "/api/cron/my-task",
-      "schedule": "0 */6 * * *"  // Every 6 hours
+      "schedule": "0 */6 * * *" // Every 6 hours
     }
   ]
 }
@@ -274,6 +282,7 @@ If not using Vercel, you can trigger cron jobs externally:
 ### Option 1: External Cron Service
 
 Use services like:
+
 - [Cron-job.org](https://cron-job.org/)
 - [EasyCron](https://www.easycron.com/)
 - GitHub Actions

@@ -18,15 +18,15 @@ const errorRate = new Rate('errors');
 
 export const options = {
   stages: [
-    { duration: '30s', target: 10 },  // Warm up to 10 users
-    { duration: '2m', target: 50 },   // Stay at 50 users
-    { duration: '30s', target: 0 },   // Ramp down
+    { duration: '30s', target: 10 }, // Warm up to 10 users
+    { duration: '2m', target: 50 }, // Stay at 50 users
+    { duration: '30s', target: 0 }, // Ramp down
   ],
 
   thresholds: {
-    'http_req_duration': ['p(95)<300', 'p(99)<500'],
-    'errors': ['rate<0.005'],  // Less than 0.5% error rate
-    'http_req_failed': ['rate<0.005'],
+    http_req_duration: ['p(95)<300', 'p(99)<500'],
+    errors: ['rate<0.005'], // Less than 0.5% error rate
+    http_req_failed: ['rate<0.005'],
   },
 
   tags: {

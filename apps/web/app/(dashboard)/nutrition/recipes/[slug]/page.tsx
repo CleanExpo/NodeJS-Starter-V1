@@ -11,6 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, Users, Flame, ArrowLeft } from 'lucide-react';
 
 export async function generateStaticParams() {
+  // Without Supabase config (e.g. template CI builds) there is nothing to
+  // prerender — pages fall back to dynamic rendering at request time.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return [];
+  }
   const supabase = await createClient();
   const slugs = await getAllRecipeSlugs(supabase);
   return slugs.map((slug) => ({ slug }));

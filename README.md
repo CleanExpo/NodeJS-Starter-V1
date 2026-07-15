@@ -166,6 +166,20 @@ pnpm install && pnpm dev    # Install deps and start dev servers
 
 See the detailed Quick Start below for full prerequisites and verification steps.
 
+### Start a NEW project from this template
+
+This repo is a template: every new project inherits the full engineering standard
+(strict types with no source-file exclusions, CI gates incl. secret scan + format +
+Conventional Commits, agent harness, ADRs) on day one — the standard itself is recorded in
+[docs/adr/0001-starter-pack-standard.md](docs/adr/0001-starter-pack-standard.md).
+
+```bash
+gh repo create <org>/<new-name> --template CleanExpo/NodeJS-Starter-V1 --private --clone
+cd <new-name>
+bash scripts/bootstrap-new-project.sh <new-name>   # rename, env hygiene check, repo settings + branch protection
+pnpm install && pnpm verify                        # must be green before the first feature
+```
+
 ---
 
 ## Quick Start
@@ -372,6 +386,7 @@ pnpm vault:adopt
 ```
 
 **Wiki-Link Syntax**:
+
 - `[[skill-name]]` — lookup by ID
 - `[[agent/frontend-specialist]]` — direct path
 - `[[scientific-luxury#banned-elements]]` — section anchor

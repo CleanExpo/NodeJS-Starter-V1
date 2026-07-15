@@ -24,7 +24,7 @@ export {
   type SpacingConfig,
   type ComponentPreferences,
   type DesignSystem,
-} from "./config";
+} from './config';
 
 // Library Registry
 export {
@@ -41,7 +41,7 @@ export {
   type UILibrary,
   type ComponentCategory,
   type SourcingRecommendation,
-} from "./library-registry";
+} from './library-registry';
 
 // Pattern Validator
 export {
@@ -57,4 +57,4 @@ export {
   type ForbiddenPattern,
   type ValidationIssue,
   type ValidationResult,
-} from "./pattern-validator";
+} from './pattern-validator';

@@ -1,14 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChatInterface } from "@/components/chat/chat-interface";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChatInterface } from '@/components/chat/chat-interface';
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome to your AI Agent Orchestration dashboard.
-        </p>
+        <p className="text-muted-foreground">Welcome to your AI Agent Orchestration dashboard.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -18,9 +16,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              No tasks yet
-            </p>
+            <p className="text-muted-foreground text-xs">No tasks yet</p>
           </CardContent>
         </Card>
         <Card>
@@ -29,9 +25,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              No completed tasks
-            </p>
+            <p className="text-muted-foreground text-xs">No completed tasks</p>
           </CardContent>
         </Card>
         <Card>
@@ -40,9 +34,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              No tasks in progress
-            </p>
+            <p className="text-muted-foreground text-xs">No tasks in progress</p>
           </CardContent>
         </Card>
         <Card>
@@ -51,9 +43,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              No failed tasks
-            </p>
+            <p className="text-muted-foreground text-xs">No failed tasks</p>
           </CardContent>
         </Card>
       </div>
@@ -61,9 +51,7 @@ export default function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>AI Chat</CardTitle>
-          <CardDescription>
-            Interact with the AI agent orchestrator
-          </CardDescription>
+          <CardDescription>Interact with the AI agent orchestrator</CardDescription>
         </CardHeader>
         <CardContent>
           <ChatInterface />

@@ -18,7 +18,7 @@ export function formatDateAU(date: Date): string {
   return date.toLocaleDateString('en-AU', {
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   });
 }
 
@@ -34,7 +34,7 @@ export function formatDateTimeAU(date: Date): string {
     year: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
-    hour12: true
+    hour12: true,
   });
 }
 
@@ -48,7 +48,7 @@ export function formatCurrencyAUD(amount: number): string {
     style: 'currency',
     currency: 'AUD',
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 
@@ -58,7 +58,7 @@ export function formatCurrencyAUD(amount: number): string {
  * @returns GST amount
  */
 export function calculateGST(amount: number): number {
-  return amount * 0.10;
+  return amount * 0.1;
 }
 
 /**
@@ -158,7 +158,7 @@ export function getStateName(code: string): string {
     WA: 'Western Australia',
     TAS: 'Tasmania',
     NT: 'Northern Territory',
-    ACT: 'Australian Capital Territory'
+    ACT: 'Australian Capital Territory',
   };
 
   return states[code.toUpperCase()] || code;
@@ -178,7 +178,7 @@ export function getAustralianTimezone(state: string): string {
     WA: 'Australia/Perth',
     TAS: 'Australia/Hobart',
     NT: 'Australia/Darwin',
-    ACT: 'Australia/Sydney'
+    ACT: 'Australia/Sydney',
   };
 
   return timezones[state.toUpperCase()] || 'Australia/Brisbane';
@@ -260,7 +260,7 @@ export function formatAustralianAddress({
   street,
   suburb,
   state,
-  postcode
+  postcode,
 }: {
   street: string;
   suburb: string;

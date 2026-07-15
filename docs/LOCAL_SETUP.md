@@ -17,14 +17,14 @@ Complete guide for setting up and running NodeJS-Starter-V1 locally.
 
 ### Required Tools
 
-| Tool | Version | Purpose | Installation |
-|------|---------|---------|--------------|
-| **Docker** | Latest | PostgreSQL + Redis containers | [docker.com](https://docker.com/get-started) |
-| **Node.js** | 20+ | Frontend runtime | [nodejs.org](https://nodejs.org/) |
-| **pnpm** | 9+ | Package manager | `npm install -g pnpm` |
-| **Python** | 3.12+ | Backend runtime | [python.org](https://python.org/) |
-| **uv** | Latest | Python package manager | `pip install uv` |
-| **Ollama** | Latest | Local AI models | [ollama.com](https://ollama.com/) |
+| Tool        | Version | Purpose                       | Installation                                 |
+| ----------- | ------- | ----------------------------- | -------------------------------------------- |
+| **Docker**  | Latest  | PostgreSQL + Redis containers | [docker.com](https://docker.com/get-started) |
+| **Node.js** | 20+     | Frontend runtime              | [nodejs.org](https://nodejs.org/)            |
+| **pnpm**    | 9+      | Package manager               | `npm install -g pnpm`                        |
+| **Python**  | 3.12+   | Backend runtime               | [python.org](https://python.org/)            |
+| **uv**      | Latest  | Python package manager        | `pip install uv`                             |
+| **Ollama**  | Latest  | Local AI models               | [ollama.com](https://ollama.com/)            |
 
 ### Verify Installation
 
@@ -61,6 +61,7 @@ pnpm dev
 ```
 
 The setup script will:
+
 1. Install dependencies (pnpm, uv)
 2. Copy .env.example to .env
 3. Start Docker services (PostgreSQL, Redis)
@@ -216,10 +217,10 @@ docker compose up -d
 
 ### Default Models
 
-| Model | Size | Purpose | Pull Command |
-|-------|------|---------|--------------|
-| llama3.1:8b | 4.7GB | Text generation | `ollama pull llama3.1:8b` |
-| nomic-embed-text | 274MB | Embeddings | `ollama pull nomic-embed-text` |
+| Model            | Size  | Purpose         | Pull Command                   |
+| ---------------- | ----- | --------------- | ------------------------------ |
+| llama3.1:8b      | 4.7GB | Text generation | `ollama pull llama3.1:8b`      |
+| nomic-embed-text | 274MB | Embeddings      | `ollama pull nomic-embed-text` |
 
 ### Using Different Models
 
@@ -468,6 +469,7 @@ pnpm lint --filter=web
 ### Resource Usage
 
 **Typical Resource Requirements:**
+
 - **RAM**: 8GB minimum, 16GB recommended
 - **Disk**: 10GB for models + dependencies
 - **CPU**: 4 cores minimum

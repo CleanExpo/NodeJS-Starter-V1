@@ -54,6 +54,7 @@
 ## Task 1: Create Tier Classification Reference
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/references/tier-criteria.md`
 
 - [ ] **Step 1: Create the references directory**
@@ -79,77 +80,78 @@ version: 1.0.0
 
 ### Stack Detection
 
-| File | Stack | Package Manager |
-|------|-------|-----------------|
-| `package.json` + `next.config.*` | Next.js | Check for pnpm-lock.yaml, yarn.lock, package-lock.json, bun.lockb |
-| `package.json` + `vite.config.*` | Vite/React | Same as above |
-| `pyproject.toml` | Python | uv (if uv.lock), pip, poetry |
-| `Cargo.toml` | Rust | cargo |
-| `go.mod` | Go | go modules |
-| `package.json` (plain) | Node.js | Check lock files |
+| File                             | Stack      | Package Manager                                                   |
+| -------------------------------- | ---------- | ----------------------------------------------------------------- |
+| `package.json` + `next.config.*` | Next.js    | Check for pnpm-lock.yaml, yarn.lock, package-lock.json, bun.lockb |
+| `package.json` + `vite.config.*` | Vite/React | Same as above                                                     |
+| `pyproject.toml`                 | Python     | uv (if uv.lock), pip, poetry                                      |
+| `Cargo.toml`                     | Rust       | cargo                                                             |
+| `go.mod`                         | Go         | go modules                                                        |
+| `package.json` (plain)           | Node.js    | Check lock files                                                  |
 
 ### Test Runner Detection
 
-| Config File | Runner | Commands |
-|-------------|--------|----------|
-| `vitest.config.*` | Vitest | `npx vitest`, `npx vitest run` |
-| `jest.config.*` or `"jest"` in package.json | Jest | `npx jest`, `npm test` |
-| `pytest.ini` or `pyproject.toml [tool.pytest]` | Pytest | `pytest`, `uv run pytest` |
-| `Cargo.toml` | cargo test | `cargo test` |
-| `*_test.go` files | go test | `go test ./...` |
+| Config File                                    | Runner     | Commands                       |
+| ---------------------------------------------- | ---------- | ------------------------------ |
+| `vitest.config.*`                              | Vitest     | `npx vitest`, `npx vitest run` |
+| `jest.config.*` or `"jest"` in package.json    | Jest       | `npx jest`, `npm test`         |
+| `pytest.ini` or `pyproject.toml [tool.pytest]` | Pytest     | `pytest`, `uv run pytest`      |
+| `Cargo.toml`                                   | cargo test | `cargo test`                   |
+| `*_test.go` files                              | go test    | `go test ./...`                |
 
 ### Formatter Detection
 
-| Config File | Formatter | Hook Command |
-|-------------|-----------|-------------|
-| `.prettierrc*` or `"prettier"` in package.json | Prettier | `npx prettier --write` |
-| `biome.json` | Biome | `npx biome check --write` |
-| `pyproject.toml [tool.black]` or `[tool.ruff]` | Black/Ruff | `black` or `ruff format` |
-| `rustfmt.toml` or `.rustfmt.toml` | rustfmt | `cargo fmt` |
-| `gofmt` (built-in) | gofmt | `gofmt -w` |
+| Config File                                    | Formatter  | Hook Command              |
+| ---------------------------------------------- | ---------- | ------------------------- |
+| `.prettierrc*` or `"prettier"` in package.json | Prettier   | `npx prettier --write`    |
+| `biome.json`                                   | Biome      | `npx biome check --write` |
+| `pyproject.toml [tool.black]` or `[tool.ruff]` | Black/Ruff | `black` or `ruff format`  |
+| `rustfmt.toml` or `.rustfmt.toml`              | rustfmt    | `cargo fmt`               |
+| `gofmt` (built-in)                             | gofmt      | `gofmt -w`                |
 
 ### Database Detection
 
-| Signal | Database | Migration Pattern |
-|--------|----------|-------------------|
-| `supabase/` dir or `supabase` in deps | Supabase/PostgreSQL | `supabase db push` |
-| `prisma/schema.prisma` | Prisma | `npx prisma migrate` |
-| `drizzle.config.*` | Drizzle | `npx drizzle-kit push` |
-| `alembic/` dir or `alembic.ini` | Alembic/SQLAlchemy | `alembic upgrade head` |
-| `migrations/` with `.sql` files | Raw SQL | Manual |
+| Signal                                | Database            | Migration Pattern      |
+| ------------------------------------- | ------------------- | ---------------------- |
+| `supabase/` dir or `supabase` in deps | Supabase/PostgreSQL | `supabase db push`     |
+| `prisma/schema.prisma`                | Prisma              | `npx prisma migrate`   |
+| `drizzle.config.*`                    | Drizzle             | `npx drizzle-kit push` |
+| `alembic/` dir or `alembic.ini`       | Alembic/SQLAlchemy  | `alembic upgrade head` |
+| `migrations/` with `.sql` files       | Raw SQL             | Manual                 |
 
 ### Deploy Target Detection
 
-| Signal | Target | Deploy Command | Rollback Command |
-|--------|--------|---------------|-----------------|
-| `vercel.json` or `.vercel/` | Vercel | `vercel deploy --prod` | `vercel rollback` |
-| `Dockerfile` | Docker | `docker build && docker push` | Revert to previous image tag |
-| `fly.toml` | Fly.io | `fly deploy` | `fly releases rollback` |
-| `render.yaml` | Render | Git push (auto-deploy) | Revert commit |
-| `.github/workflows/*deploy*` | GitHub Actions | Push to deploy branch | Revert commit |
-| `netlify.toml` | Netlify | `netlify deploy --prod` | `netlify rollback` |
-| `railway.json` or `railway.toml` | Railway | `railway up` | Previous deployment in dashboard |
+| Signal                           | Target         | Deploy Command                | Rollback Command                 |
+| -------------------------------- | -------------- | ----------------------------- | -------------------------------- |
+| `vercel.json` or `.vercel/`      | Vercel         | `vercel deploy --prod`        | `vercel rollback`                |
+| `Dockerfile`                     | Docker         | `docker build && docker push` | Revert to previous image tag     |
+| `fly.toml`                       | Fly.io         | `fly deploy`                  | `fly releases rollback`          |
+| `render.yaml`                    | Render         | Git push (auto-deploy)        | Revert commit                    |
+| `.github/workflows/*deploy*`     | GitHub Actions | Push to deploy branch         | Revert commit                    |
+| `netlify.toml`                   | Netlify        | `netlify deploy --prod`       | `netlify rollback`               |
+| `railway.json` or `railway.toml` | Railway        | `railway up`                  | Previous deployment in dashboard |
 
 ### Monorepo Detection
 
-| Signal | Type |
-|--------|------|
-| `turbo.json` | Turborepo |
-| `nx.json` | Nx |
-| `pnpm-workspace.yaml` | pnpm workspaces |
-| `lerna.json` | Lerna |
+| Signal                         | Type                |
+| ------------------------------ | ------------------- |
+| `turbo.json`                   | Turborepo           |
+| `nx.json`                      | Nx                  |
+| `pnpm-workspace.yaml`          | pnpm workspaces     |
+| `lerna.json`                   | Lerna               |
 | `"workspaces"` in package.json | Yarn/npm workspaces |
 
 ## Build Stage Classification
 
-Count source files (exclude node_modules, .git, dist, build, __pycache__, .next, target):
-
+Count source files (exclude node_modules, .git, dist, build, **pycache**, .next, target):
 ```
-Source files = files matching *.ts, *.tsx, *.py, *.rs, *.go (excluding test files)
-Test files = files matching *.test.*, *.spec.*, test_*, *_test.*
+
+Source files = files matching _.ts, _.tsx, _.py, _.rs, _.go (excluding test files)
+Test files = files matching _.test._, _.spec.\_, test\__, _\_test.\_
 Test ratio = test files / source files
 CI present = .github/workflows/ OR .gitlab-ci.yml OR Jenkinsfile exists
 Deploy config = any deploy target detected above
+
 ```
 
 | Stage | Source Files | Test Ratio | CI | Deploy | Tier |
@@ -183,13 +185,14 @@ git commit -m "feat(bootstrap): add tier classification reference"
 ## Task 2: Create Hook Templates Reference
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/references/hook-templates.md`
 
 - [ ] **Step 1: Write the hook templates reference**
 
 Create `.skills/custom/bootstrap/references/hook-templates.md`:
 
-```markdown
+````markdown
 ---
 name: hook-templates
 type: reference
@@ -205,6 +208,7 @@ version: 1.0.0
 **Type:** command
 
 **PowerShell (Windows):**
+
 ```powershell
 $input_json = $args[0] | ConvertFrom-Json
 $cmd = $input_json.tool_input.command
@@ -217,8 +221,10 @@ foreach ($pattern in $blocked) {
 }
 exit 0
 ```
+````
 
 **Bash (Unix/Mac):**
+
 ```bash
 #!/bin/bash
 CMD=$(echo "$1" | jq -r '.tool_input.command // empty')
@@ -237,26 +243,31 @@ exit 0
 **Template (adapt formatter per project):**
 
 **Prettier (JS/TS):**
+
 ```
 npx prettier --write "$TOOL_INPUT_FILE_PATH" || true
 ```
 
 **Black (Python):**
+
 ```
 black "$TOOL_INPUT_FILE_PATH" || true
 ```
 
 **Ruff (Python):**
+
 ```
 ruff format "$TOOL_INPUT_FILE_PATH" || true
 ```
 
 **cargo fmt (Rust):**
+
 ```
 cargo fmt || true
 ```
 
 **gofmt (Go):**
+
 ```
 gofmt -w "$TOOL_INPUT_FILE_PATH" || true
 ```
@@ -264,6 +275,7 @@ gofmt -w "$TOOL_INPUT_FILE_PATH" || true
 ### Stop — Update PROGRESS.md
 
 **PowerShell:**
+
 ```powershell
 $date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $diff = git diff --name-only 2>$null
@@ -272,6 +284,7 @@ Add-Content -Path ".claude/PROGRESS.md" -Value $entry
 ```
 
 **Bash:**
+
 ```bash
 DATE=$(date "+%Y-%m-%d %H:%M")
 DIFF=$(git diff --name-only 2>/dev/null)
@@ -281,6 +294,7 @@ echo -e "\n---\n## Session: $DATE\n\nFiles changed:\n$DIFF" >> .claude/PROGRESS.
 ### PreCompact — Backup PROGRESS.md
 
 **PowerShell:**
+
 ```powershell
 if (Test-Path ".claude/PROGRESS.md") {
     $timestamp = Get-Date -Format "yyyyMMdd-HHmm"
@@ -289,6 +303,7 @@ if (Test-Path ".claude/PROGRESS.md") {
 ```
 
 **Bash:**
+
 ```bash
 if [ -f ".claude/PROGRESS.md" ]; then
     TIMESTAMP=$(date "+%Y%m%d-%H%M")
@@ -302,6 +317,7 @@ fi
 ### PreToolUse(Edit|Write) — Protect Sensitive Files
 
 **PowerShell:**
+
 ```powershell
 $input_json = $args[0] | ConvertFrom-Json
 $file = $input_json.tool_input.file_path
@@ -320,6 +336,7 @@ exit 0
 **Type:** prompt
 
 **Prompt text:**
+
 ```
 Check if any source code files were modified in this session (not just docs/config).
 If yes, verify that relevant tests were run. If tests were not run, remind the user
@@ -331,6 +348,7 @@ to run the test suite before considering the work complete.
 ### UserPromptSubmit — Compass Injection
 
 **PowerShell:**
+
 ```powershell
 if (Test-Path ".claude/memory/compass.md") {
     $compass = Get-Content ".claude/memory/compass.md" -Raw
@@ -341,6 +359,7 @@ if (Test-Path ".claude/memory/compass.md") {
 ### SessionStart — Context Loading
 
 **PowerShell:**
+
 ```powershell
 $output = @()
 if (Test-Path ".claude/memory/CONSTITUTION.md") {
@@ -357,6 +376,7 @@ $output -join "`n"
 ### PreCompact — State Save (Governance)
 
 **PowerShell:**
+
 ```powershell
 # Backup PROGRESS.md
 if (Test-Path ".claude/PROGRESS.md") {
@@ -375,35 +395,29 @@ Set-Content ".claude/memory/current-state.md" $state
 ```json
 {
   "permissions": {
-    "deny": [
-      "rm -rf *",
-      "git push --force*",
-      "git reset --hard*"
-    ],
-    "allow": [
-      "{{package_manager}} *",
-      "git *",
-      "npx *"
-    ]
+    "deny": ["rm -rf *", "git push --force*", "git reset --hard*"],
+    "allow": ["{{package_manager}} *", "git *", "npx *"]
   }
 }
 ```
 
 Replace `{{package_manager}}` with detected package manager (npm, pnpm, yarn, bun, uv, cargo, go).
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 git add .skills/custom/bootstrap/references/hook-templates.md
 git commit -m "feat(bootstrap): add platform-specific hook templates reference"
-```
+````
 
 ---
 
 ## Task 3: Create Harden Checklist Reference
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/references/harden-checklist.md`
 
 - [ ] **Step 1: Write the harden checklist**
@@ -483,6 +497,7 @@ git commit -m "feat(bootstrap): add harden checklist reference"
 ## Task 4: Create Foundation Template Assets
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/assets/claude-md.template.md`
 - Create: `.skills/custom/bootstrap/assets/architecture.template.md`
 - Create: `.skills/custom/bootstrap/assets/standards.template.md`
@@ -544,6 +559,7 @@ context concerns. When compacting, preserve: modified file list, test
 commands, active task state from PROGRESS.md, and uncommitted decisions.
 
 When starting a fresh context window:
+
 1. Read .claude/PROGRESS.md for current state
 2. Read git log for recent changes
 3. Run `{{test_command}}` to verify environment
@@ -567,9 +583,10 @@ Create `.skills/custom/bootstrap/assets/architecture.template.md`:
 {{system_overview_2_3_paragraphs}}
 
 ## Component Map
-
 ```
+
 {{ascii_component_diagram}}
+
 ```
 
 ## Module Boundaries
@@ -635,8 +652,8 @@ Canonical example: see `{{canonical_api_file}}`
 
 ## Patterns to Avoid
 
-| Pattern | Why | Instead |
-|---------|-----|---------|
+| Pattern         | Why        | Instead         |
+| --------------- | ---------- | --------------- |
 | {{antipattern}} | {{reason}} | {{alternative}} |
 ```
 
@@ -644,7 +661,7 @@ Canonical example: see `{{canonical_api_file}}`
 
 Create `.skills/custom/bootstrap/assets/testing.template.md`:
 
-```markdown
+````markdown
 # Testing — {{project_name}}
 
 ## Quick Reference
@@ -659,6 +676,7 @@ Create `.skills/custom/bootstrap/assets/testing.template.md`:
 # With coverage
 {{test_coverage_command}}
 ```
+````
 
 ## Before You Say You're Done
 
@@ -678,10 +696,11 @@ Create `.skills/custom/bootstrap/assets/testing.template.md`:
 
 ## Critical Areas (Regression)
 
-| Area | Test Command | What to Watch |
-|------|-------------|---------------|
-| {{area}} | {{command}} | {{what_to_watch}} |
-```
+| Area     | Test Command | What to Watch     |
+| -------- | ------------ | ----------------- |
+| {{area}} | {{command}}  | {{what_to_watch}} |
+
+````
 
 - [ ] **Step 6: Create WORKFLOWS.md template**
 
@@ -718,7 +737,7 @@ Types: feat, fix, docs, chore, refactor, test, style, perf
 ## Rollback
 
 {{rollback_procedure_or_not_configured}}
-```
+````
 
 - [ ] **Step 7: Create PROGRESS.md template**
 
@@ -743,7 +762,7 @@ Create `.skills/custom/bootstrap/assets/progress.template.md`:
 ## Decisions
 
 | Date | Decision | Rationale |
-|------|----------|-----------|
+| ---- | -------- | --------- |
 
 ## Notes for Next Context Window
 
@@ -767,6 +786,7 @@ git commit -m "feat(bootstrap): add foundation tier template assets"
 ## Task 5: Create Governance Template Assets
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/assets/constitution.template.md`
 - Create: `.skills/custom/bootstrap/assets/compass.template.md`
 - Create: `.skills/custom/bootstrap/assets/verification-gate.template.md`
@@ -786,7 +806,7 @@ Create `.skills/custom/bootstrap/assets/constitution.template.md`:
 id: constitution
 type: memory
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
 ---
 
@@ -810,6 +830,7 @@ status: active
 ## Drift Recovery
 
 If rules feel wrong after compaction:
+
 1. Re-read this file
 2. Read .claude/PROGRESS.md for session state
 3. Run `{{test_command}}` to verify environment
@@ -824,7 +845,7 @@ Create `.skills/custom/bootstrap/assets/compass.template.md`:
 id: compass
 type: memory
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
 ---
 
@@ -851,8 +872,8 @@ Create `.skills/custom/bootstrap/assets/verification-gate.template.md`:
 5. **Confirmation prompt** — ask the user to reply "looks good" or describe what's different
 
 ## Checklist Format
-
 ```
+
 VERIFICATION CHECKLIST — [Feature/Task Name]
 
 Before this is done, please check:
@@ -862,6 +883,7 @@ Before this is done, please check:
 [ ] You should NOT see: [what should be absent]
 
 Reply "looks good" to close this, or describe what's different.
+
 ```
 
 ## Exceptions
@@ -878,16 +900,17 @@ Create `.skills/custom/bootstrap/assets/bugfix.blueprint.template.md`:
 id: bugfix.blueprint
 type: blueprint
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
 ---
 
 # Bugfix Blueprint
 
 ## DAG
-
 ```
+
 reproduce --> fix --> test --> pr
+
 ```
 
 ## Nodes
@@ -944,16 +967,17 @@ Create `.skills/custom/bootstrap/assets/feature.blueprint.template.md`:
 id: feature.blueprint
 type: blueprint
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
 ---
 
 # Feature Blueprint
 
 ## DAG
-
 ```
+
 spec --> implement --> test --> review --> pr
+
 ```
 
 ## Nodes
@@ -1010,16 +1034,17 @@ Create `.skills/custom/bootstrap/assets/refactor.blueprint.template.md`:
 id: refactor.blueprint
 type: blueprint
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
 ---
 
 # Refactor Blueprint
 
 ## DAG
-
 ```
+
 scope --> implement --> verify-no-regression --> pr
+
 ```
 
 ## Nodes
@@ -1069,17 +1094,18 @@ Create `.skills/custom/bootstrap/assets/migration.blueprint.template.md`:
 id: migration.blueprint
 type: blueprint
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
-skip_condition: "No database detected"
+skip_condition: 'No database detected'
 ---
 
 # Migration Blueprint
 
 ## DAG
-
 ```
+
 backup --> migrate --> verify --> rollback-test --> pr
+
 ```
 
 ## Nodes
@@ -1132,7 +1158,7 @@ backup --> migrate --> verify --> rollback-test --> pr
 
 Create `.skills/custom/bootstrap/assets/code-rubric.template.md`:
 
-```markdown
+````markdown
 ---
 name: code-rubric
 type: rubric
@@ -1145,24 +1171,28 @@ version: 1.0.0
 ## Scoring (100 points)
 
 ### Test Coverage (25 pts)
+
 - 25: TDD approach, all acceptance criteria covered
 - 20: Tests exist for main paths
 - 10: Some tests, gaps in coverage
 - 0: No tests
 
 ### Type Safety (25 pts)
+
 - 25: Strict types throughout, no `any`/unsafe casts
 - 20: Minor type gaps
 - 10: Significant type gaps
 - 0: No type safety
 
 ### Error Handling (25 pts)
+
 - 25: All error paths handled, user-facing messages clear
 - 20: Most paths handled
 - 10: Happy path only
 - 0: No error handling
 
 ### Code Organisation (25 pts)
+
 - 25: Clear module boundaries, no circular deps, DRY
 - 20: Minor organisation issues
 - 10: Mixed responsibilities, some duplication
@@ -1170,12 +1200,12 @@ version: 1.0.0
 
 ## Thresholds
 
-| Score | Action |
-|-------|--------|
-| 90-100 | Approved |
-| 70-89 | Minor fixes, then approved |
-| 50-69 | Return to engineer — one iteration |
-| <50 | Reject — escalate to user |
+| Score  | Action                             |
+| ------ | ---------------------------------- |
+| 90-100 | Approved                           |
+| 70-89  | Minor fixes, then approved         |
+| 50-69  | Return to engineer — one iteration |
+| <50    | Reject — escalate to user          |
 
 ## Verification Commands
 
@@ -1184,7 +1214,9 @@ version: 1.0.0
 {{lint_command}}
 {{test_command}}
 ```
-```
+````
+
+````
 
 - [ ] **Step 9: Create architecture rubric template**
 
@@ -1234,7 +1266,7 @@ version: 1.0.0
 | 70-89 | Minor adjustments |
 | 50-69 | Redesign required — one iteration |
 | <50 | Reject — escalate to user |
-```
+````
 
 - [ ] **Step 10: Commit all governance templates**
 
@@ -1256,18 +1288,19 @@ git commit -m "feat(bootstrap): add governance tier template assets"
 ## Task 6: Create Production Template Asset
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/assets/deploy-pipeline.template.md`
 
 - [ ] **Step 1: Create the deploy pipeline template**
 
 Create `.skills/custom/bootstrap/assets/deploy-pipeline.template.md`:
 
-```markdown
+````markdown
 ---
 id: deploy-pipeline
 type: workflow
 version: 1.0.0
-created: {{current_date}}
+created: { { current_date } }
 status: active
 ---
 
@@ -1281,6 +1314,7 @@ status: active
 **Type**: automatic gate
 
 **Checks:**
+
 - [ ] Test suite passes: `{{test_command}}`
 - [ ] Types clean: `{{typecheck_command}}`
 - [ ] Lint clean: `{{lint_command}}`
@@ -1290,6 +1324,7 @@ status: active
 **Gate**: ALL checks must pass. Any failure → HALT with structured report.
 
 **Envelope output:**
+
 ```json
 {
   "stage": "pre-flight",
@@ -1304,18 +1339,21 @@ status: active
   "next": "build"
 }
 ```
+````
 
 ## Stage 2: BUILD
 
 **Type**: automatic gate
 
 **Actions:**
+
 - [ ] Run production build: `{{build_command}}`
 - [ ] Record build artifacts/hash
 
 **Gate**: Build succeeds → proceed. Fails → HALT.
 
 **Envelope output:**
+
 ```json
 {
   "stage": "build",
@@ -1332,10 +1370,12 @@ status: active
 **Skip condition**: No database detected
 
 **Actions:**
+
 - [ ] Generate migration diff
 - [ ] Show exact changes to user
 
 **APPROVAL GATE:**
+
 ```
 MIGRATION APPROVAL REQUIRED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1358,6 +1398,7 @@ Apply these migrations to production? (yes/no)
 **Type**: approval gate
 
 **APPROVAL GATE:**
+
 ```
 DEPLOY APPROVAL REQUIRED
 ━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1379,12 +1420,14 @@ Deploy to production? (yes/no)
 **Type**: automatic gate (post-deploy)
 
 **Checks:**
+
 - [ ] Health check: `curl -sf {{production_url}}/api/health || curl -sf {{production_url}}`
 - [ ] No new errors in monitoring (if configured)
 
 **Gate**: All healthy → proceed. Any failure → present rollback options.
 
 **On failure:**
+
 ```
 CANARY FAILURE — Production health check failed
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1427,14 +1470,15 @@ If session ends mid-deploy, next session reads state and resumes from the last c
   "pendingApproval": null
 }
 ```
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 git add .skills/custom/bootstrap/assets/deploy-pipeline.template.md
 git commit -m "feat(bootstrap): add production tier deploy pipeline template"
-```
+````
 
 ---
 
@@ -1443,6 +1487,7 @@ git commit -m "feat(bootstrap): add production tier deploy pipeline template"
 This is the brain of the generator — the skill definition that orchestrates discovery, generation, hardening, and reporting.
 
 **Files:**
+
 - Create: `.skills/custom/bootstrap/SKILL.md`
 
 - [ ] **Step 1: Write the main skill file**
@@ -1468,12 +1513,13 @@ triggers:
 You are the Project Control System generator. Your job is to discover a project, classify its maturity, and generate the right level of Claude Code project control.
 
 ## Invocation
+```
 
-```
-/bootstrap                    # Auto-discover, generate all applicable tiers
-/bootstrap --tier foundation  # Force foundation only
-/bootstrap --audit            # Compare existing files, propose upgrades
-```
+/bootstrap # Auto-discover, generate all applicable tiers
+/bootstrap --tier foundation # Force foundation only
+/bootstrap --audit # Compare existing files, propose upgrades
+
+````
 
 ## Phase 1: DISCOVER
 
@@ -1500,13 +1546,14 @@ git log --oneline -10 2>/dev/null
 
 # Detect env patterns
 cat .env.example 2>/dev/null || cat .env.local 2>/dev/null
-```
+````
 
 ### Step 2: Classify
 
 Read `.skills/custom/bootstrap/references/tier-criteria.md` for the full classification logic.
 
 From the discovery data, determine:
+
 - **Language/Framework**
 - **Package manager**
 - **Test runner** and exact commands
@@ -1590,6 +1637,7 @@ Read each template, then generate the file with project-specific content:
    - ~100 tokens maximum
 
 10. **.claude/memory/current-state.md** — initialise with:
+
     ```
     Bootstrapped: {{current_date}}
     Stage: {{build_stage}}
@@ -1597,6 +1645,7 @@ Read each template, then generate the file with project-specific content:
     ```
 
 11. **.claude/memory/architectural-decisions.md** — initialise with:
+
     ```
     # Architectural Decisions
     [{{current_date}}] DECISION: Bootstrapped PCS at {{tier}} tier | REASON: Build stage classified as {{stage}} | ALTERNATIVES REJECTED: none
@@ -1664,6 +1713,7 @@ Wait for user confirmation before applying changes.
 Read `.skills/custom/bootstrap/references/harden-checklist.md` and run every check against the generated files.
 
 Fix any issues found. Common fixes:
+
 - Merge rules if instruction count > 20
 - Move linter-enforceable rules to hooks
 - Add peripheral loading (copy critical rule to bottom)
@@ -1721,14 +1771,15 @@ RECOMMENDED NEXT STEPS
 5. **Platform detection**: Use PowerShell hooks on Windows, Bash on Unix/Mac
 6. **Merge, don't clobber**: If settings.json exists, merge new hooks into existing structure
 7. **Every generated CLAUDE.md must have the Context Management section** — this is the compaction survival bridge
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 git add .skills/custom/bootstrap/SKILL.md
 git commit -m "feat(bootstrap): add main SKILL.md — the generator brain"
-```
+````
 
 ---
 
@@ -1737,6 +1788,7 @@ git commit -m "feat(bootstrap): add main SKILL.md — the generator brain"
 Replace the existing project-specific bootstrap command with the new adaptive one.
 
 **Files:**
+
 - Modify: `.claude/commands/bootstrap.md`
 
 - [ ] **Step 1: Read the existing command**
@@ -1768,11 +1820,12 @@ Adaptive Project Control System generator.
 Discovers the project, classifies its maturity (Greenfield, Active Build, Stabilisation, Production), and generates the right level of Claude Code project control across three tiers.
 
 ## Usage
-
 ```
-/bootstrap                    # Auto-discover, generate all applicable tiers
-/bootstrap --tier foundation  # Force foundation only
-/bootstrap --audit            # Compare existing files, propose upgrades
+
+/bootstrap # Auto-discover, generate all applicable tiers
+/bootstrap --tier foundation # Force foundation only
+/bootstrap --audit # Compare existing files, propose upgrades
+
 ```
 
 ## Execution
@@ -1812,6 +1865,7 @@ git commit -m "feat(bootstrap): replace static bootstrap with adaptive PCS gener
 Verify the skill works by running it against this repo in audit mode.
 
 **Files:**
+
 - No new files — this is a verification task
 
 - [ ] **Step 1: Verify all skill files exist**
@@ -1835,6 +1889,7 @@ Expected: Version 2.0.0, adaptive description.
 - [ ] **Step 3: Run a dry audit**
 
 Read the SKILL.md and mentally walk through the discovery phase against this repo:
+
 - Stack: Next.js 15 + FastAPI (detected from package.json + pyproject.toml)
 - Build stage: Active Build (20+ files, moderate tests)
 - Existing files: CLAUDE.md exists, .claude/ exists → audit mode
@@ -1902,6 +1957,7 @@ echo "Total files: $(find .skills/custom/bootstrap -type f | wc -l)"
 ```
 
 Expected output:
+
 ```
 References: 3
 Assets: 16
