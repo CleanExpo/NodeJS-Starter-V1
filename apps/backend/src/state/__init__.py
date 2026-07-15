@@ -8,9 +8,10 @@ from .null_store import NullStateStore
 SupabaseStateStore = NullStateStore
 
 
-def get_state_store() -> NullStateStore:
+def get_state_store() -> SupabaseStateStore:
     """Factory function for the active state store."""
-    return NullStateStore()
+    from src.state.supabase import SupabaseStateStore
+    return SupabaseStateStore()
 
 
 __all__ = [
