@@ -2,8 +2,8 @@ name: Autoresearch — Quality Improvement Loop
 
 on:
   schedule:
-    - cron: '17 */2 * * *'   # Every 2 hours at :17 (avoids :00 fleet collision)
-  workflow_dispatch:           # Manual trigger from Actions tab
+    - cron: '17 */2 * * *' # Every 2 hours at :17 (avoids :00 fleet collision)
+  workflow_dispatch: # Manual trigger from Actions tab
 
 jobs:
   autoresearch:
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
-      contents: write          # Required to commit results back to main
+      contents: write # Required to commit results back to main
 
     steps:
       - name: Checkout code
@@ -50,7 +50,7 @@ jobs:
         run: uv python install 3.12
 
       - name: Cache uv dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/uv
