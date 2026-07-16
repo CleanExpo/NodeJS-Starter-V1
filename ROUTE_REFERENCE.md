@@ -204,9 +204,7 @@ _Add your core data endpoints here (resources, collections, etc.)_
 {
   "success": true,
   "data": {
-    "items": [
-      /* array of data items */
-    ],
+    "items": [/* array of data items */],
     "pagination": {
       "page": 1,
       "limit": 20,

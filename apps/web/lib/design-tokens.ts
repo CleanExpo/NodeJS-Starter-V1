@@ -92,12 +92,7 @@ export const STATUS_COLOURS: Record<AgentStatus, string> = {
 // =============================================================================
 
 export type NotificationType =
-  | 'start'
-  | 'progress'
-  | 'complete'
-  | 'error'
-  | 'escalation'
-  | 'verification';
+  'start' | 'progress' | 'complete' | 'error' | 'escalation' | 'verification';
 
 export const NOTIFICATION_COLOURS: Record<NotificationType, string> = {
   start: SPECTRAL.cyan,

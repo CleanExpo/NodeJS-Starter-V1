@@ -141,7 +141,7 @@ const NotificationStream = React.forwardRef<HTMLDivElement, NotificationStreamPr
         {/* Scrollable notifications list */}
         <div
           ref={scrollContainerRef}
-          className="scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent flex-1 overflow-y-auto"
+          className="flex-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent overflow-y-auto"
         >
           {/* Timeline spine */}
           <div className="relative">

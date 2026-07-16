@@ -66,12 +66,7 @@ export interface ReportSection {
 }
 
 export type SectionType =
-  | 'health'
-  | 'journeys'
-  | 'routes'
-  | 'friction'
-  | 'verification'
-  | 'recommendations';
+  'health' | 'journeys' | 'routes' | 'friction' | 'verification' | 'recommendations';
 
 export interface ReportMetadata {
   generator_version: string;

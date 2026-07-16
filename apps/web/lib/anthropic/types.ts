@@ -214,16 +214,11 @@ export interface MessagesRequestWithThinking extends MessagesRequestBase {
 export interface MessagesRequestWithTools extends MessagesRequestBase {
   tools: (CacheableToolDefinition | ComputerToolDefinition)[];
   tool_choice?:
-    | { type: 'auto' }
-    | { type: 'any' }
-    | { type: 'none' }
-    | { type: 'tool'; name: string };
+    { type: 'auto' } | { type: 'any' } | { type: 'none' } | { type: 'tool'; name: string };
 }
 
 export type MessagesRequest =
-  | MessagesRequestBase
-  | MessagesRequestWithThinking
-  | MessagesRequestWithTools;
+  MessagesRequestBase | MessagesRequestWithThinking | MessagesRequestWithTools;
 
 export interface Usage {
   input_tokens: number;

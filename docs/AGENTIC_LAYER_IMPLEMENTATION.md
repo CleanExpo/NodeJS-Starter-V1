@@ -180,15 +180,16 @@ Created MCP ecosystem:
 - `mcp_config.json` - Configuration for all MCP servers
 
 **Configured MCP Servers**:
-| Server | Purpose | Status |
-|--------|---------|--------|
-| `filesystem` | File operations | Enabled |
-| `git` | Git operations | Enabled |
-| `memory` | Domain memory (custom) | Enabled |
-| `github` | GitHub API | Disabled (requires token) |
-| `postgres` | Database queries | Disabled (requires URL) |
-| `brave-search` | Web search | Disabled (requires API key) |
-| `slack` | Notifications | Disabled (requires tokens) |
+
+| Server         | Purpose                | Status                      |
+| -------------- | ---------------------- | --------------------------- |
+| `filesystem`   | File operations        | Enabled                     |
+| `git`          | Git operations         | Enabled                     |
+| `memory`       | Domain memory (custom) | Enabled                     |
+| `github`       | GitHub API             | Disabled (requires token)   |
+| `postgres`     | Database queries       | Disabled (requires URL)     |
+| `brave-search` | Web search             | Disabled (requires API key) |
+| `slack`        | Notifications          | Disabled (requires tokens)  |
 
 **Custom Memory Server Tools**:
 
