@@ -47,7 +47,7 @@ export function DiaryDaySummary({ summary }: DiaryDaySummaryProps) {
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip
-                formatter={(value: number) => [`${value}g`, '']}
+                formatter={(value) => [`${Number(value ?? 0)}g`, '']}
                 contentStyle={{
                   backgroundColor: 'hsl(var(--background))',
                   border: '1px solid hsl(var(--border))',
