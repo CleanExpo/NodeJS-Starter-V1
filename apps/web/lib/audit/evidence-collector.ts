@@ -29,31 +29,13 @@ export interface Evidence {
 }
 
 export type EvidenceType =
-  | 'screenshot'
-  | 'video'
-  | 'log'
-  | 'metric'
-  | 'snapshot'
-  | 'trace'
-  | 'report'
-  | 'verification';
+  'screenshot' | 'video' | 'log' | 'metric' | 'snapshot' | 'trace' | 'report' | 'verification';
 
 export type EvidenceSource =
-  | 'journey_runner'
-  | 'friction_detector'
-  | 'route_auditor'
-  | 'verifier'
-  | 'manual'
-  | 'scheduled';
+  'journey_runner' | 'friction_detector' | 'route_auditor' | 'verifier' | 'manual' | 'scheduled';
 
 export type EvidenceCategory =
-  | 'pass'
-  | 'fail'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'performance'
-  | 'security';
+  'pass' | 'fail' | 'warning' | 'info' | 'error' | 'performance' | 'security';
 
 export interface EvidenceData {
   content_type: 'text' | 'json' | 'binary' | 'url';

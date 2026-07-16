@@ -147,15 +147,7 @@ export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
 export type MealSlot = 'breakfast' | 'snack_am' | 'lunch' | 'snack_pm' | 'dinner';
 export type MealSlotExtended = MealSlot | 'other';
 export type SymptomType =
-  | 'motor'
-  | 'sensory'
-  | 'cognitive'
-  | 'fatigue'
-  | 'mood'
-  | 'seizure'
-  | 'speech'
-  | 'pain'
-  | 'other';
+  'motor' | 'sensory' | 'cognitive' | 'fatigue' | 'mood' | 'seizure' | 'speech' | 'pain' | 'other';
 
 export interface DailyNutritionSummary {
   date: string;

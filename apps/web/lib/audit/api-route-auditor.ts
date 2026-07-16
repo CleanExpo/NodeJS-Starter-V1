@@ -50,12 +50,7 @@ export interface RouteCheck {
 }
 
 export type CheckCategory =
-  | 'security'
-  | 'validation'
-  | 'error_handling'
-  | 'performance'
-  | 'consistency'
-  | 'documentation';
+  'security' | 'validation' | 'error_handling' | 'performance' | 'consistency' | 'documentation';
 
 export interface PerformanceResult {
   response_time_ms: number;

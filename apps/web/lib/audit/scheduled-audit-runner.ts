@@ -30,11 +30,7 @@ export interface AuditSchedule {
 }
 
 export type AuditType =
-  | 'health_check'
-  | 'journey_run'
-  | 'route_audit'
-  | 'friction_analysis'
-  | 'full_audit';
+  'health_check' | 'journey_run' | 'route_audit' | 'friction_analysis' | 'full_audit';
 
 export interface AuditConfig {
   journeys?: string[];
