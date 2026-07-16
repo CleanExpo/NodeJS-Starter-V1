@@ -84,7 +84,7 @@ jobs:
         run: uv python install ${{ env.PYTHON_VERSION }}
 
       - name: Cache uv dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/uv
@@ -257,7 +257,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('apps/web/package.json') }}
@@ -317,7 +317,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: a11y-playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('apps/web/package.json') }}
