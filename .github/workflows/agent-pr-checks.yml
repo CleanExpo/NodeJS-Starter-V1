@@ -5,6 +5,11 @@ on:
     branches: [main, develop]
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   # Only run for agent-generated PRs
   detect-agent-pr:
@@ -15,11 +20,13 @@ jobs:
       - name: Check if agent PR
         id: check
         run: |
-          if [[ "${{ github.head_ref }}" == feature/agent-* ]]; then
-            echo "is_agent=true" >> $GITHUB_OUTPUT
+          if [[ "$HEAD_REF" == feature/agent-* ]]; then
+            echo "is_agent=true" >> "$GITHUB_OUTPUT"
           else
-            echo "is_agent=false" >> $GITHUB_OUTPUT
+            echo "is_agent=false" >> "$GITHUB_OUTPUT"
           fi
+        env:
+          HEAD_REF: ${{ github.head_ref }}
 
   validate-agent-metadata:
     needs: detect-agent-pr
@@ -31,7 +38,7 @@ jobs:
       - name: Verify Agent Metadata in PR Description
         run: |
           # Get PR description
-          PR_BODY=$(gh pr view ${{ github.event.pull_request.number }} --json body -q '.body')
+          PR_BODY=$(gh pr view "$PR_NUMBER" --json body -q '.body')
 
           # Check for required metadata
           if ! echo "$PR_BODY" | grep -q "Agent ID:"; then
@@ -57,6 +64,7 @@ jobs:
           echo "✅ Agent metadata verified"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
 
   run-quality-checks:
     needs: detect-agent-pr
@@ -72,35 +80,33 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
-        with:
-          version: 9
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Type Check
         id: type-check
         run: |
           pnpm turbo run type-check
-          echo "status=$?" >> $GITHUB_OUTPUT
+          echo "status=$?" >> "$GITHUB_OUTPUT"
 
       - name: Lint
         id: lint
         run: |
           pnpm turbo run lint
-          echo "status=$?" >> $GITHUB_OUTPUT
+          echo "status=$?" >> "$GITHUB_OUTPUT"
 
       - name: Unit Tests
         id: test
         run: |
           pnpm turbo run test
-          echo "status=$?" >> $GITHUB_OUTPUT
+          echo "status=$?" >> "$GITHUB_OUTPUT"
 
       - name: Build
         id: build
         run: |
           pnpm turbo run build
-          echo "status=$?" >> $GITHUB_OUTPUT
+          echo "status=$?" >> "$GITHUB_OUTPUT"
         continue-on-error: true
 
       - name: Report Results
@@ -111,12 +117,14 @@ jobs:
           TEST="${{ steps.test.outputs.status }}"
           BUILD="${{ steps.build.outputs.status }}"
 
-          echo "### Quality Check Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Type Check: $([ "$TYPE_CHECK" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
-          echo "- Lint: $([ "$LINT" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
-          echo "- Tests: $([ "$TEST" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
-          echo "- Build: $([ "$BUILD" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Quality Check Results"
+            echo ""
+            echo "- Type Check: $([ "$TYPE_CHECK" == "0" ] && echo "✅ Passed" || echo "❌ Failed")"
+            echo "- Lint: $([ "$LINT" == "0" ] && echo "✅ Passed" || echo "❌ Failed")"
+            echo "- Tests: $([ "$TEST" == "0" ] && echo "✅ Passed" || echo "❌ Failed")"
+            echo "- Build: $([ "$BUILD" == "0" ] && echo "✅ Passed" || echo "❌ Failed")"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   security-scan:
     needs: detect-agent-pr
@@ -154,7 +162,7 @@ jobs:
           echo "Debug code check complete"
 
   update-pr-status:
-    needs: [validate-agent-metadata, run-quality-checks, security-scan]
+    needs: [detect-agent-pr, validate-agent-metadata, run-quality-checks, security-scan]
     if: needs.detect-agent-pr.outputs.is_agent_pr == 'true' && always()
     runs-on: ubuntu-latest
     steps:
@@ -165,12 +173,15 @@ jobs:
           if [ "${{ needs.run-quality-checks.result }}" == "success" ] && \
              [ "${{ needs.security-scan.result }}" == "success" ] && \
              [ "${{ needs.validate-agent-metadata.result }}" == "success" ]; then
-            gh pr comment ${{ github.event.pull_request.number }} --body "✅ All agent PR checks passed! Ready for human review."
+            gh pr comment "$PR_NUMBER" --body "✅ All agent PR checks passed! Ready for human review." || \
+              echo "::warning::Unable to publish the PR status comment"
           else
-            gh pr comment ${{ github.event.pull_request.number }} --body "❌ Some agent PR checks failed. Please review the workflow results."
+            gh pr comment "$PR_NUMBER" --body "❌ Some agent PR checks failed. Please review the workflow results." || \
+              echo "::warning::Unable to publish the PR status comment"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
 
   library-modification-check:
     name: Library Modification Check
@@ -190,11 +201,11 @@ jobs:
           registry_changed=$(echo "$changed" | grep "^solution-library/registry/" | head -5)
 
           if [ -n "$registry_changed" ]; then
-            echo "LIBRARY_MODIFIED=true" >> $GITHUB_ENV
+            echo "LIBRARY_MODIFIED=true" >> "$GITHUB_ENV"
             echo "Registry files modified:"
             echo "$registry_changed"
           else
-            echo "LIBRARY_MODIFIED=false" >> $GITHUB_ENV
+            echo "LIBRARY_MODIFIED=false" >> "$GITHUB_ENV"
           fi
 
       - name: Warn on library registry changes
