@@ -18,7 +18,7 @@ dependencies = [
 
     # Authentication
     "python-jose[cryptography]>=3.3.0",  # JWT tokens
-    "passlib[bcrypt]>=1.7.0",  # Password hashing
+    "passlib[bcrypt]>=1.7.4",  # Password hashing
 
     # Supabase (Optional - real state backend)
     "supabase>=2.9.0",  # Supabase client
