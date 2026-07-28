@@ -69,7 +69,7 @@
     "autoprefixer": "^10.5.4",
     "eslint": "^9.17.0",
     "eslint-config-next": "16.2.10",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.0",
     "postcss": "^8.5.20",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.7.2",
