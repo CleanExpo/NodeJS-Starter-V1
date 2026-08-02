@@ -44,7 +44,7 @@
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/eslintrc": "^3.3.6",
     "@rushstack/eslint-patch": "1.16.1",
-    "@types/node": "^22.10.0",
+    "@types/node": "^26.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "^3.9.6",
