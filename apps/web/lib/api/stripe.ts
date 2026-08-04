@@ -36,7 +36,7 @@ function getSecretKey(): string {
 export function getStripeClient(): Stripe {
   if (!_stripe) {
     _stripe = new Stripe(getSecretKey(), {
-      apiVersion: '2026-06-24.dahlia',
+      apiVersion: '2026-07-29.dahlia',
       typescript: true,
     });
   }
