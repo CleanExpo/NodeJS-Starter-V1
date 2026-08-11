@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { SymptomLog } from '@/types/nutrition';
 
 export function useSymptoms(initialDate?: string) {
@@ -8,23 +8,29 @@ export function useSymptoms(initialDate?: string) {
   const [logs, setLogs] = useState<SymptomLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const requestIdRef = useRef(0);
 
   const fetchLogs = useCallback(async (d: string) => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     try {
       const res = await fetch(`/api/nutrition/symptoms?date=${d}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      setLogs(json.data);
+      if (requestId === requestIdRef.current) setLogs(json.data);
     } catch (e) {
-      setError(e as Error);
+      if (requestId === requestIdRef.current) setError(e as Error);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchLogs(date);
+    const timeoutId = window.setTimeout(() => void fetchLogs(date), 0);
+    return () => {
+      window.clearTimeout(timeoutId);
+      requestIdRef.current += 1;
+    };
   }, [date, fetchLogs]);
 
   const addLog = useCallback(

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Recipe, RecipeFilters } from '@/types/nutrition';
 
 export function useRecipes(initialFilters?: RecipeFilters) {
@@ -8,8 +8,10 @@ export function useRecipes(initialFilters?: RecipeFilters) {
   const [filters, setFilters] = useState<RecipeFilters>(initialFilters || {});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const requestIdRef = useRef(0);
 
   const fetchRecipes = useCallback(async (f: RecipeFilters) => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -24,16 +26,20 @@ export function useRecipes(initialFilters?: RecipeFilters) {
       const res = await fetch(`/api/nutrition/recipes?${params}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      setRecipes(json.data);
+      if (requestId === requestIdRef.current) setRecipes(json.data);
     } catch (e) {
-      setError(e as Error);
+      if (requestId === requestIdRef.current) setError(e as Error);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchRecipes(filters);
+    const timeoutId = window.setTimeout(() => void fetchRecipes(filters), 0);
+    return () => {
+      window.clearTimeout(timeoutId);
+      requestIdRef.current += 1;
+    };
   }, [filters, fetchRecipes]);
 
   const updateFilters = useCallback((newFilters: Partial<RecipeFilters>) => {

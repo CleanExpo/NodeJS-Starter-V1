@@ -9,6 +9,14 @@ import { usePRDGeneration, usePRDResult } from '@/hooks/use-prd-generation';
 // Mock fetch
 global.fetch = vi.fn();
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
 describe('usePRDGeneration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -243,6 +251,62 @@ describe('usePRDResult', () => {
     const { result } = renderHook(() => usePRDResult(''));
 
     expect(result.current.loading).toBe(false);
+    expect(result.current.result).toBeNull();
+    expect(result.current.error).toBeNull();
     expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it('ignores a stale result after the PRD ID changes', async () => {
+    const firstRequest = deferred<{ ok: boolean; json: () => Promise<{ generated_at: string }> }>();
+    const secondRequest = deferred<{
+      ok: boolean;
+      json: () => Promise<{ generated_at: string }>;
+    }>();
+    (global.fetch as Mock)
+      .mockReturnValueOnce(firstRequest.promise)
+      .mockReturnValueOnce(secondRequest.promise);
+
+    const { result, rerender } = renderHook(({ id }) => usePRDResult(id), {
+      initialProps: { id: 'prd_old' },
+    });
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+
+    rerender({ id: 'prd_new' });
+    expect(result.current.result).toBeNull();
+    expect(result.current.loading).toBe(true);
+    expect(result.current.error).toBeNull();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(2));
+
+    await act(async () => {
+      secondRequest.resolve({
+        ok: true,
+        json: async () => ({ generated_at: 'new' }),
+      });
+    });
+    await waitFor(() => expect(result.current.result?.generated_at).toBe('new'));
+
+    await act(async () => {
+      firstRequest.resolve({
+        ok: true,
+        json: async () => ({ generated_at: 'old' }),
+      });
+    });
+    expect(result.current.result?.generated_at).toBe('new');
+  });
+
+  it('immediately hides an existing result when the PRD ID is cleared', async () => {
+    (global.fetch as Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ generated_at: 'loaded' }),
+    });
+    const { result, rerender } = renderHook(({ id }) => usePRDResult(id), {
+      initialProps: { id: 'prd_123' },
+    });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    rerender({ id: '' });
+    expect(result.current.result).toBeNull();
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBeNull();
   });
 });
