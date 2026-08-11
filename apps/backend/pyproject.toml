@@ -21,7 +21,7 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",  # Password hashing
 
     # Supabase (Optional - real state backend)
-    "supabase>=2.9.0",  # Supabase client
+    "supabase>=2.31.0",  # Supabase client
 
     # AI Models (All Optional - Ollama used by default via HTTP)
     "anthropic>=0.40.0",  # Optional - Claude API
