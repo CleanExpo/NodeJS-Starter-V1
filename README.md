@@ -190,7 +190,7 @@ pnpm install && pnpm verify                        # must be green before the fi
 | Tool    | Version | Download                         |
 | ------- | ------- | -------------------------------- |
 | Docker  | Latest  | [docker.com](https://docker.com) |
-| Node.js | 20+     | [nodejs.org](https://nodejs.org) |
+| Node.js | 20.17+  | [nodejs.org](https://nodejs.org) |
 | Python  | 3.12+   | [python.org](https://python.org) |
 | pnpm    | 9+      | `npm i -g pnpm`                  |
 | Ollama  | Latest  | [ollama.com](https://ollama.com) |

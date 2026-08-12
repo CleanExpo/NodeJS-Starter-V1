@@ -46,14 +46,14 @@
     "@rushstack/eslint-patch": "1.16.1",
     "@types/node": "^22.10.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.9.6",
     "turbo": "^2.10.7",
     "typescript": "^5.7.2"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=20.17.0",
     "pnpm": ">=9.0.0"
   },
   "lint-staged": {
