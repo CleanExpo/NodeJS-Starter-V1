@@ -76,7 +76,13 @@ try {
 # Check Node.js
 if (Test-Command node) {
     $nodeVersion = node --version
-    Write-Success "Node.js installed (version $nodeVersion)"
+    $nodeSemVer = [version]($nodeVersion.TrimStart('v'))
+    if ($nodeSemVer -ge [version]"20.17.0") {
+        Write-Success "Node.js installed (version $nodeVersion)"
+    } else {
+        Write-Error "Node.js $nodeVersion is unsupported (requires 20.17.0 or higher)"
+        $MissingDeps = $true
+    }
 } else {
     Write-Error "Node.js is not installed"
     Write-Host "   Install from: https://nodejs.org/"

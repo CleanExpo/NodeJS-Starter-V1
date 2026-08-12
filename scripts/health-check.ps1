@@ -113,11 +113,11 @@ Write-Phase "Prerequisites and Environment" 1 6
 # Check Node.js
 if (Test-Command "node") {
     $nodeVersion = Get-VersionString "node" "-v"
-    $versionNum = [int]($nodeVersion -replace '[^0-9].*','')
-    if ($versionNum -ge 20) {
+    $nodeSemVer = [version]($nodeVersion.TrimStart('v'))
+    if ($nodeSemVer -ge [version]"20.17.0") {
         Write-Check "Node.js $nodeVersion" $true
     } else {
-        Write-Check "Node.js $nodeVersion" $false "Requires version 20.0.0 or higher"
+        Write-Check "Node.js $nodeVersion" $false "Requires version 20.17.0 or higher"
     }
 } else {
     Write-Check "Node.js" $false "Not installed"
