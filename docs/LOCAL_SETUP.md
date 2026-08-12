@@ -20,7 +20,7 @@ Complete guide for setting up and running NodeJS-Starter-V1 locally.
 | Tool        | Version | Purpose                       | Installation                                 |
 | ----------- | ------- | ----------------------------- | -------------------------------------------- |
 | **Docker**  | Latest  | PostgreSQL + Redis containers | [docker.com](https://docker.com/get-started) |
-| **Node.js** | 20+     | Frontend runtime              | [nodejs.org](https://nodejs.org/)            |
+| **Node.js** | 20.17+  | Frontend runtime              | [nodejs.org](https://nodejs.org/)            |
 | **pnpm**    | 9+      | Package manager               | `npm install -g pnpm`                        |
 | **Python**  | 3.12+   | Backend runtime               | [python.org](https://python.org/)            |
 | **uv**      | Latest  | Python package manager        | `pip install uv`                             |
@@ -31,7 +31,7 @@ Complete guide for setting up and running NodeJS-Starter-V1 locally.
 ```bash
 # Check versions
 docker --version          # Should be 24.0+
-node --version           # Should be v20+
+node --version           # Should be v20.17+
 pnpm --version           # Should be 9+
 python --version         # Should be 3.12+
 uv --version            # Should be latest

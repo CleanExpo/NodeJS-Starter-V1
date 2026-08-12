@@ -99,7 +99,13 @@ else {
 
 if (Test-Command node) {
     $nodeVersion = & node --version
-    Write-Pass "Node.js installed ($nodeVersion)"
+    $nodeSemVer = [version]($nodeVersion.TrimStart('v'))
+    if ($nodeSemVer -ge [version]"20.17.0") {
+        Write-Pass "Node.js installed ($nodeVersion)"
+    }
+    else {
+        Write-Fail "Node.js $nodeVersion is unsupported (requires 20.17.0 or higher)"
+    }
 }
 else {
     Write-Fail "Node.js is not installed"
