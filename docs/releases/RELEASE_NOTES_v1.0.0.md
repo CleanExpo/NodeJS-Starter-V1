@@ -98,7 +98,7 @@ pnpm dev
 **Required:**
 
 - Docker Desktop (for PostgreSQL + Redis)
-- Node.js 20+ (for frontend)
+- Node.js 20.17+ (for frontend)
 - pnpm 9+ (package manager)
 - Python 3.11+ (for backend)
 - uv (Python package manager)
