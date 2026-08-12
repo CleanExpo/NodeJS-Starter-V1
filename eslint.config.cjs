@@ -1,4 +1,5 @@
 // eslint-config-next@16 exports flat config natively (no FlatCompat needed)
+const { fixupConfigRules } = require("@eslint/compat");
 const nextConfig = require("eslint-config-next");
 
 module.exports = [
@@ -14,8 +15,10 @@ module.exports = [
     ],
   },
 
-  // Next.js core config (flat config format — includes @typescript-eslint plugin)
-  ...nextConfig.map((config) => ({
+  // Next.js core config (flat config format — includes @typescript-eslint plugin).
+  // Bridge legacy plugin rule APIs removed by ESLint 10 until upstream plugins
+  // publish native support.
+  ...fixupConfigRules(nextConfig).map((config) => ({
     ...config,
     files: config.files || ["apps/web/**/*.{js,jsx,ts,tsx}"],
   })),
