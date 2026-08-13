@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { FoodDiaryEntry, DailyNutritionSummary } from '@/types/nutrition';
 
 export function useDiary(initialDate?: string) {
@@ -9,8 +9,10 @@ export function useDiary(initialDate?: string) {
   const [summary, setSummary] = useState<DailyNutritionSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const requestIdRef = useRef(0);
 
   const fetchEntries = useCallback(async (d: string) => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     try {
       const [entriesRes, summaryRes] = await Promise.all([
@@ -21,17 +23,23 @@ export function useDiary(initialDate?: string) {
       const summaryJson = await summaryRes.json();
       if (!entriesRes.ok) throw new Error(entriesJson.error);
       if (!summaryRes.ok) throw new Error(summaryJson.error);
-      setEntries(entriesJson.data);
-      setSummary(summaryJson.data);
+      if (requestId === requestIdRef.current) {
+        setEntries(entriesJson.data);
+        setSummary(summaryJson.data);
+      }
     } catch (e) {
-      setError(e as Error);
+      if (requestId === requestIdRef.current) setError(e as Error);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchEntries(date);
+    const timeoutId = window.setTimeout(() => void fetchEntries(date), 0);
+    return () => {
+      window.clearTimeout(timeoutId);
+      requestIdRef.current += 1;
+    };
   }, [date, fetchEntries]);
 
   const addEntry = useCallback(

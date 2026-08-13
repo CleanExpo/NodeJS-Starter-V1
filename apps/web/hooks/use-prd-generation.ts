@@ -324,17 +324,21 @@ export function usePRDGenerationWithProgress() {
  * Hook for fetching and displaying existing PRD
  */
 export function usePRDResult(prdId: string) {
-  const [result, setResult] = useState<PRDResult | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [fetchState, setFetchState] = useState<{
+    prdId: string;
+    result: PRDResult | null;
+    error: string | null;
+    settled: boolean;
+  }>({ prdId, result: null, error: null, settled: !prdId });
 
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
   useEffect(() => {
     if (!prdId) {
-      setLoading(false);
       return;
     }
+
+    let cancelled = false;
 
     const fetchPRD = async () => {
       try {
@@ -345,18 +349,31 @@ export function usePRDResult(prdId: string) {
         }
 
         const data: PRDResult = await response.json();
-        setResult(data);
-        setError(null);
+        if (cancelled) return;
+        setFetchState({ prdId, result: data, error: null, settled: true });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load PRD');
-        setResult(null);
-      } finally {
-        setLoading(false);
+        if (cancelled) return;
+        setFetchState({
+          prdId,
+          result: null,
+          error: err instanceof Error ? err.message : 'Failed to load PRD',
+          settled: true,
+        });
       }
     };
 
-    fetchPRD();
+    const timeoutId = window.setTimeout(() => void fetchPRD(), 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
   }, [prdId, backendUrl]);
 
-  return { result, loading, error };
+  const isCurrentPRD = fetchState.prdId === prdId;
+
+  return {
+    result: prdId && isCurrentPRD ? fetchState.result : null,
+    loading: Boolean(prdId) && (!isCurrentPRD || !fetchState.settled),
+    error: prdId && isCurrentPRD ? fetchState.error : null,
+  };
 }

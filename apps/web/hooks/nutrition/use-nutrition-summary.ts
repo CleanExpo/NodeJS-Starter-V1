@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   DailyNutritionSummary,
   NutrientGoalProgress,
@@ -11,8 +11,10 @@ export function useNutritionSummary(profile: UserHealthProfile | null) {
   const [weeklySummary, setWeeklySummary] = useState<DailyNutritionSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const requestIdRef = useRef(0);
 
   const fetchWeekly = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     try {
       const endDate = new Date().toISOString().split('T')[0];
@@ -22,16 +24,20 @@ export function useNutritionSummary(profile: UserHealthProfile | null) {
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      setWeeklySummary(json.data);
+      if (requestId === requestIdRef.current) setWeeklySummary(json.data);
     } catch (e) {
-      setError(e as Error);
+      if (requestId === requestIdRef.current) setError(e as Error);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchWeekly();
+    const timeoutId = window.setTimeout(() => void fetchWeekly(), 0);
+    return () => {
+      window.clearTimeout(timeoutId);
+      requestIdRef.current += 1;
+    };
   }, [fetchWeekly]);
 
   const todaySummary = weeklySummary.find((s) => s.date === new Date().toISOString().split('T')[0]);

@@ -97,17 +97,20 @@ export function useAgentRuns(taskId?: string, agentName?: string) {
  * Hook to subscribe to a single agent run by ID
  */
 export function useAgentRun(runId: string | null) {
-  const [run, setRun] = useState<AgentRun | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [fetchState, setFetchState] = useState<{
+    runId: string | null;
+    run: AgentRun | null;
+    error: Error | null;
+    settled: boolean;
+  }>({ runId, run: null, error: null, settled: !runId });
 
   useEffect(() => {
     if (!runId) {
-      setRun(null);
-      setLoading(false);
       return;
     }
+
+    let cancelled = false;
+    let timeoutId: number | null = null;
 
     const fetchRun = async () => {
       try {
@@ -119,24 +122,38 @@ export function useAgentRun(runId: string | null) {
         if (!response.ok) throw new Error('Failed to fetch agent run');
 
         const data: AgentRun = await response.json();
-        setRun(data);
-        setError(null);
+        if (cancelled) return;
+        setFetchState({ runId, run: data, error: null, settled: true });
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch agent run'));
+        if (cancelled) return;
+        setFetchState((previous) => ({
+          runId,
+          run: previous.runId === runId ? previous.run : null,
+          error: err instanceof Error ? err : new Error('Failed to fetch agent run'),
+          settled: true,
+        }));
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          timeoutId = window.setTimeout(() => void fetchRun(), 3000);
+        }
       }
     };
 
-    fetchRun();
-    intervalRef.current = setInterval(fetchRun, 3000);
+    timeoutId = window.setTimeout(() => void fetchRun(), 0);
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      cancelled = true;
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
     };
   }, [runId]);
 
-  return { run, loading, error };
+  const isCurrentRun = fetchState.runId === runId;
+
+  return {
+    run: runId && isCurrentRun ? fetchState.run : null,
+    loading: Boolean(runId) && (!isCurrentRun || !fetchState.settled),
+    error: runId && isCurrentRun ? fetchState.error : null,
+  };
 }
 
 /**

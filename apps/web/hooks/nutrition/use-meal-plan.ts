@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { MealPlan, MealSlot } from '@/types/nutrition';
 import { getWeekStartDate } from '@/lib/nutrition/meal-plans';
 
@@ -9,23 +9,29 @@ export function useMealPlan() {
   const [weekStart, setWeekStart] = useState(getWeekStartDate());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const requestIdRef = useRef(0);
 
   const fetchPlan = useCallback(async (ws: string) => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     try {
       const res = await fetch(`/api/nutrition/meal-plans?week_start=${ws}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      setPlan(json.data);
+      if (requestId === requestIdRef.current) setPlan(json.data);
     } catch (e) {
-      setError(e as Error);
+      if (requestId === requestIdRef.current) setError(e as Error);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchPlan(weekStart);
+    const timeoutId = window.setTimeout(() => void fetchPlan(weekStart), 0);
+    return () => {
+      window.clearTimeout(timeoutId);
+      requestIdRef.current += 1;
+    };
   }, [weekStart, fetchPlan]);
 
   const ensurePlan = useCallback(async (): Promise<string> => {
