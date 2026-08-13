@@ -118,4 +118,34 @@ describe('useAgentRun', () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
     vi.useRealTimers();
   });
+
+  it('does not reuse a same-ID run after the ID is cleared', async () => {
+    const secondRequest = deferred<{ ok: boolean; json: () => Promise<AgentRun> }>();
+    (global.fetch as Mock)
+      .mockResolvedValueOnce({ ok: true, json: async () => agentRun('run_123') })
+      .mockReturnValueOnce(secondRequest.promise);
+    const { result, rerender } = renderHook(({ id }) => useAgentRun(id), {
+      initialProps: { id: 'run_123' as string | null },
+    });
+    await waitFor(() => expect(result.current.run?.id).toBe('run_123'));
+
+    rerender({ id: null });
+    rerender({ id: 'run_123' });
+
+    expect(result.current).toEqual({ run: null, loading: true, error: null });
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(2));
+  });
+
+  it('passes an abort signal and aborts it on unmount', async () => {
+    const request = deferred<{ ok: boolean; json: () => Promise<AgentRun> }>();
+    (global.fetch as Mock).mockReturnValueOnce(request.promise);
+    const { unmount } = renderHook(() => useAgentRun('run_123'));
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+    const signal = (global.fetch as Mock).mock.calls[0][1].signal as AbortSignal;
+
+    unmount();
+
+    expect(signal).toBeInstanceOf(AbortSignal);
+    expect(signal.aborted).toBe(true);
+  });
 });

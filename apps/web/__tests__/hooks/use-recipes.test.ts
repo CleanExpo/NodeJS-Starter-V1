@@ -47,4 +47,34 @@ describe('useRecipes', () => {
     });
     expect(result.current.recipes[0]?.id).toBe('new');
   });
+
+  it('clears a fetch error when a later request recovers', async () => {
+    (global.fetch as Mock)
+      .mockResolvedValueOnce({ ok: false, json: async () => ({ error: 'failed' }) })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: [{ id: 'recovered' } as Recipe] }),
+      });
+    const { result } = renderHook(() => useRecipes());
+    await waitFor(() => expect(result.current.error?.message).toBe('failed'));
+
+    act(() => result.current.updateFilters({ search: 'recovered' }));
+
+    await waitFor(() => expect(result.current.error).toBeNull());
+    await waitFor(() => expect(result.current.recipes[0]?.id).toBe('recovered'));
+    expect(result.current.error).toBeNull();
+  });
+
+  it('passes an abort signal and aborts it on unmount', async () => {
+    const request = deferred<{ ok: boolean; json: () => Promise<{ data: Recipe[] }> }>();
+    (global.fetch as Mock).mockReturnValueOnce(request.promise);
+    const { unmount } = renderHook(() => useRecipes());
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+    const signal = (global.fetch as Mock).mock.calls[0][1].signal as AbortSignal;
+
+    unmount();
+
+    expect(signal).toBeInstanceOf(AbortSignal);
+    expect(signal.aborted).toBe(true);
+  });
 });

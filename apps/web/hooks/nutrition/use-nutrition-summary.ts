@@ -12,20 +12,30 @@ export function useNutritionSummary(profile: UserHealthProfile | null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const requestIdRef = useRef(0);
+  const controllerRef = useRef<AbortController | null>(null);
 
   const fetchWeekly = useCallback(async () => {
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
     const requestId = ++requestIdRef.current;
     setLoading(true);
+    setError(null);
     try {
       const endDate = new Date().toISOString().split('T')[0];
       const startDate = new Date(Date.now() - 6 * 86400000).toISOString().split('T')[0];
       const res = await fetch(
-        `/api/nutrition/diary/summary?start_date=${startDate}&end_date=${endDate}`
+        `/api/nutrition/diary/summary?start_date=${startDate}&end_date=${endDate}`,
+        { signal: controller.signal }
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      if (requestId === requestIdRef.current) setWeeklySummary(json.data);
+      if (requestId === requestIdRef.current) {
+        setWeeklySummary(json.data);
+        setError(null);
+      }
     } catch (e) {
+      if (e instanceof Error && e.name === 'AbortError') return;
       if (requestId === requestIdRef.current) setError(e as Error);
     } finally {
       if (requestId === requestIdRef.current) setLoading(false);
@@ -36,6 +46,7 @@ export function useNutritionSummary(profile: UserHealthProfile | null) {
     const timeoutId = window.setTimeout(() => void fetchWeekly(), 0);
     return () => {
       window.clearTimeout(timeoutId);
+      controllerRef.current?.abort();
       requestIdRef.current += 1;
     };
   }, [fetchWeekly]);

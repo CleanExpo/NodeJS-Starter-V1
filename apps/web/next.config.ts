@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
     // typedRoutes: true,
   },
   images: {
-    unoptimized: true,
     remotePatterns: [],
   },
   async headers() {
