@@ -22,7 +22,7 @@ Install these tools before starting:
 | Tool        | Version | Installation                                 |
 | ----------- | ------- | -------------------------------------------- |
 | **Docker**  | Latest  | [docker.com](https://docker.com/get-started) |
-| **Node.js** | 20+     | [nodejs.org](https://nodejs.org/)            |
+| **Node.js** | 20.17+  | [nodejs.org](https://nodejs.org/)            |
 | **pnpm**    | 9+      | `npm install -g pnpm`                        |
 | **Python**  | 3.12+   | [python.org](https://python.org/)            |
 | **uv**      | Latest  | `pip install uv`                             |
@@ -32,7 +32,7 @@ Install these tools before starting:
 
 ```bash
 docker --version          # Should be 24.0+
-node --version           # Should be v20+
+node --version           # Should be v20.17+
 pnpm --version           # Should be 9+
 python --version         # Should be 3.12+
 uv --version            # Should be latest

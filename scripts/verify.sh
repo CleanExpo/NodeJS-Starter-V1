@@ -77,7 +77,15 @@ fi
 
 if check_command node; then
     NODE_VERSION=$(node --version)
-    check_pass "Node.js installed ($NODE_VERSION)"
+    NODE_VERSION_NUMBER=${NODE_VERSION#v}
+    NODE_MAJOR=${NODE_VERSION_NUMBER%%.*}
+    NODE_REMAINDER=${NODE_VERSION_NUMBER#*.}
+    NODE_MINOR=${NODE_REMAINDER%%.*}
+    if [[ "$NODE_VERSION_NUMBER" != *-* ]] && { [ "$NODE_MAJOR" -gt 20 ] || { [ "$NODE_MAJOR" -eq 20 ] && [ "$NODE_MINOR" -ge 17 ]; }; }; then
+        check_pass "Node.js installed ($NODE_VERSION)"
+    else
+        check_fail "Node.js $NODE_VERSION is unsupported (requires 20.17.0 or higher)"
+    fi
 else
     check_fail "Node.js is not installed"
 fi
