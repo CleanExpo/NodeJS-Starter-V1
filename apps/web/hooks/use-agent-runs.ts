@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -97,46 +97,71 @@ export function useAgentRuns(taskId?: string, agentName?: string) {
  * Hook to subscribe to a single agent run by ID
  */
 export function useAgentRun(runId: string | null) {
-  const [run, setRun] = useState<AgentRun | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const generation = useMemo(() => Symbol(runId ?? 'empty'), [runId]);
+  const [fetchState, setFetchState] = useState<{
+    runId: string | null;
+    generation: symbol;
+    run: AgentRun | null;
+    error: Error | null;
+    settled: boolean;
+  }>({ runId, generation, run: null, error: null, settled: !runId });
 
   useEffect(() => {
     if (!runId) {
-      setRun(null);
-      setLoading(false);
       return;
     }
 
+    let cancelled = false;
+    let timeoutId: number | null = null;
+    let controller: AbortController | null = null;
+
     const fetchRun = async () => {
+      controller = new AbortController();
       try {
         const response = await fetch(`${BACKEND_URL}/api/agents/runs/${runId}`, {
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
         });
 
         if (!response.ok) throw new Error('Failed to fetch agent run');
 
         const data: AgentRun = await response.json();
-        setRun(data);
-        setError(null);
+        if (cancelled) return;
+        setFetchState({ runId, generation, run: data, error: null, settled: true });
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch agent run'));
+        if (cancelled) return;
+        if (err instanceof Error && err.name === 'AbortError') return;
+        setFetchState((previous) => ({
+          runId,
+          generation,
+          run: previous.runId === runId && previous.generation === generation ? previous.run : null,
+          error: err instanceof Error ? err : new Error('Failed to fetch agent run'),
+          settled: true,
+        }));
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          timeoutId = window.setTimeout(() => void fetchRun(), 3000);
+        }
       }
     };
 
-    fetchRun();
-    intervalRef.current = setInterval(fetchRun, 3000);
+    timeoutId = window.setTimeout(() => void fetchRun(), 0);
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      cancelled = true;
+      controller?.abort();
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
     };
-  }, [runId]);
+  }, [runId, generation]);
 
-  return { run, loading, error };
+  const isCurrentRun = fetchState.runId === runId && fetchState.generation === generation;
+
+  return {
+    run: runId && isCurrentRun ? fetchState.run : null,
+    loading: Boolean(runId) && (!isCurrentRun || !fetchState.settled),
+    error: runId && isCurrentRun ? fetchState.error : null,
+  };
 }
 
 /**
