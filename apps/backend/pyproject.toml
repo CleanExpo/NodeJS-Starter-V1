@@ -39,7 +39,7 @@ dependencies = [
     "httpx>=0.27.0",
     "pyyaml>=6.0.3",
     "structlog>=24.4.0",
-    "python-multipart>=0.0.12",
+    "python-multipart>=0.0.32",
 
     # Background Workers
     "arq>=0.26.0",  # Async Redis-backed job queue
@@ -55,6 +55,10 @@ dev = [
     "httpx>=0.27.0",
     "types-PyYAML>=6.0.0",
 ]
+
+[tool.uv]
+# PYSEC-2026-3628: all current http2 consumers accept the patched h2 release.
+override-dependencies = ["h2>=4.4.1,<5"]
 
 [tool.ruff]
 line-length = 120

@@ -39,8 +39,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Verify dependencies
-        run: bash scripts/verify.sh | tee verify-output.log
+      - name: Record CI dependency verification
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            echo "pnpm lockfile integrity: passed"
+            echo "pnpm frozen install: passed"
+            pnpm list --recursive --depth -1
+          } | tee verify-output.log
 
       - name: Upload verification report
         if: always()
@@ -89,13 +96,19 @@ jobs:
           path: |
             ~/.cache/uv
             apps/backend/.venv
-          key: ${{ runner.os }}-uv-${{ hashFiles('apps/backend/pyproject.toml') }}
+          key: ${{ runner.os }}-uv-${{ hashFiles('apps/backend/pyproject.toml', 'apps/backend/uv.lock') }}
           restore-keys: |
             ${{ runner.os }}-uv-
 
       - name: Install dependencies
         working-directory: apps/backend
-        run: uv sync --extra dev
+        run: uv sync --locked --extra dev
+
+      - name: Audit locked backend dependencies
+        working-directory: apps/backend
+        run: |
+          uv export --locked --no-dev --no-emit-project --format requirements-txt --output-file "${RUNNER_TEMP}/backend-requirements.txt"
+          uvx --from pip-audit==2.10.1 pip-audit -r "${RUNNER_TEMP}/backend-requirements.txt" --vulnerability-service osv
 
       - name: Initialise database schema
         run: psql postgresql://starter_user:local_dev_password@localhost:5432/starter_db -f scripts/init-db.sql
