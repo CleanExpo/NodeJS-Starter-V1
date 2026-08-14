@@ -23,6 +23,14 @@ export function useHealthProfile() {
     return { controller, requestId: ++requestIdRef.current };
   }, []);
 
+  const beginMutation = useCallback(() => {
+    // A write may already have reached the server, so never attach it to the
+    // controller used to cancel stale reads. Only invalidate stale UI updates.
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    return ++requestIdRef.current;
+  }, []);
+
   const fetchProfile = useCallback(async () => {
     if (!mountedRef.current) return;
     const { controller, requestId } = beginOperation();
@@ -48,14 +56,13 @@ export function useHealthProfile() {
 
   const updateProfile = useCallback(
     async (updates: Partial<UserHealthProfile>) => {
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId)) setError(null);
       try {
         const res = await fetch('/api/nutrition/profile', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updates),
-          signal: controller.signal,
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
@@ -71,7 +78,7 @@ export function useHealthProfile() {
         if (isCurrentOperation(requestId)) setLoading(false);
       }
     },
-    [beginOperation, isCurrentOperation]
+    [beginMutation, isCurrentOperation]
   );
 
   useEffect(() => {

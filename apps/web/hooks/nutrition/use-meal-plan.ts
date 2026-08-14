@@ -29,6 +29,14 @@ export function useMealPlan() {
     return { controller, requestId: ++requestIdRef.current };
   }, []);
 
+  const beginMutation = useCallback(() => {
+    // Reads are safe to cancel. Writes are not: the server may commit after a
+    // client abort, so mutations only invalidate stale UI publication.
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    return ++requestIdRef.current;
+  }, []);
+
   const fetchPlan = useCallback(
     async (ws: string) => {
       if (!mountedRef.current || ws !== weekStartRef.current) return;
@@ -76,18 +84,12 @@ export function useMealPlan() {
   }, [weekStart, fetchPlan]);
 
   const ensurePlan = useCallback(
-    async (
-      existingPlan: MealPlan | null,
-      planWeek: string,
-      requestId: number,
-      signal: AbortSignal
-    ): Promise<string> => {
+    async (existingPlan: MealPlan | null, planWeek: string, requestId: number): Promise<string> => {
       if (existingPlan?.id && existingPlan.week_start_date === planWeek) return existingPlan.id;
       const res = await fetch('/api/nutrition/meal-plans', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ week_start_date: planWeek }),
-        signal,
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
@@ -104,11 +106,12 @@ export function useMealPlan() {
     async (dayOfWeek: number, mealSlot: MealSlot, recipeId: string, servings?: number) => {
       const mutationWeek = weekStart;
       const mutationPlan = plan;
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId, mutationWeek)) setError(null);
       try {
-        const planId = await ensurePlan(mutationPlan, mutationWeek, requestId, controller.signal);
-        if (!isCurrentOperation(requestId, mutationWeek)) return;
+        const planId = await ensurePlan(mutationPlan, mutationWeek, requestId);
+        // Finish the requested write even if the visible week changes while the
+        // plan is being created. Only the subsequent UI publication is scoped.
         const res = await fetch(`/api/nutrition/meal-plans/${planId}/entries`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -118,7 +121,6 @@ export function useMealPlan() {
             recipe_id: recipeId,
             servings: servings || 1,
           }),
-          signal: controller.signal,
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
@@ -131,7 +133,7 @@ export function useMealPlan() {
         if (isCurrentOperation(requestId, mutationWeek)) setLoading(false);
       }
     },
-    [beginOperation, ensurePlan, fetchPlan, isCurrentOperation, plan, weekStart]
+    [beginMutation, ensurePlan, fetchPlan, isCurrentOperation, plan, weekStart]
   );
 
   const removeEntry = useCallback(
@@ -139,14 +141,13 @@ export function useMealPlan() {
       if (!plan?.id) return;
       const mutationWeek = weekStart;
       const planId = plan.id;
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId, mutationWeek)) setError(null);
       try {
         const res = await fetch(`/api/nutrition/meal-plans/${planId}/entries`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ entry_id: entryId }),
-          signal: controller.signal,
         });
         if (!res.ok) {
           const json = await res.json();
@@ -160,7 +161,7 @@ export function useMealPlan() {
         if (isCurrentOperation(requestId, mutationWeek)) setLoading(false);
       }
     },
-    [beginOperation, fetchPlan, isCurrentOperation, plan, weekStart]
+    [beginMutation, fetchPlan, isCurrentOperation, plan, weekStart]
   );
 
   const navigateWeek = useCallback(

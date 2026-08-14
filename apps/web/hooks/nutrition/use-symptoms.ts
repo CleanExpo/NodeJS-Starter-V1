@@ -26,6 +26,14 @@ export function useSymptoms(initialDate?: string) {
     return { controller, requestId: ++requestIdRef.current };
   }, []);
 
+  const beginMutation = useCallback(() => {
+    // Cancel the stale read, not the write. A dispatched write can commit even
+    // if fetch is aborted, which would leave the caller with an ambiguous result.
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    return ++requestIdRef.current;
+  }, []);
+
   const updateDate = useCallback((nextDate: string) => {
     dateRef.current = nextDate;
     setDate(nextDate);
@@ -80,14 +88,13 @@ export function useSymptoms(initialDate?: string) {
   const addLog = useCallback(
     async (log: Partial<SymptomLog>) => {
       const mutationDate = date;
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId, mutationDate)) setError(null);
       try {
         const res = await fetch('/api/nutrition/symptoms', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...log, symptom_date: mutationDate }),
-          signal: controller.signal,
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
@@ -100,18 +107,17 @@ export function useSymptoms(initialDate?: string) {
         if (isCurrentOperation(requestId, mutationDate)) setLoading(false);
       }
     },
-    [beginOperation, date, fetchLogs, isCurrentOperation]
+    [beginMutation, date, fetchLogs, isCurrentOperation]
   );
 
   const deleteLog = useCallback(
     async (id: string) => {
       const mutationDate = date;
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId, mutationDate)) setError(null);
       try {
         const res = await fetch(`/api/nutrition/symptoms/${id}`, {
           method: 'DELETE',
-          signal: controller.signal,
         });
         if (!res.ok) {
           const json = await res.json();
@@ -125,7 +131,7 @@ export function useSymptoms(initialDate?: string) {
         if (isCurrentOperation(requestId, mutationDate)) setLoading(false);
       }
     },
-    [beginOperation, date, fetchLogs, isCurrentOperation]
+    [beginMutation, date, fetchLogs, isCurrentOperation]
   );
 
   return {

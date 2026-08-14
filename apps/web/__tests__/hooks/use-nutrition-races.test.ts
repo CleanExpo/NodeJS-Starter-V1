@@ -4,6 +4,7 @@ import { useDiary } from '@/hooks/nutrition/use-diary';
 import { useHealthProfile } from '@/hooks/nutrition/use-health-profile';
 import { useMealPlan } from '@/hooks/nutrition/use-meal-plan';
 import { useSymptoms } from '@/hooks/nutrition/use-symptoms';
+import { getWeekStartDate } from '@/lib/nutrition/meal-plans';
 import type { MealPlan, UserHealthProfile } from '@/types/nutrition';
 
 global.fetch = vi.fn();
@@ -70,7 +71,7 @@ describe('nutrition hook mutation races', () => {
     expect(result.current.error?.message).toBe('save failed');
   });
 
-  it('aborts an unmounted diary mutation without state publication or refetch', async () => {
+  it('lets an unmounted diary mutation settle without state publication or refetch', async () => {
     const mutation = deferred<ReturnType<typeof ok>>();
     (global.fetch as Mock).mockImplementation((_input: string, init?: RequestInit) =>
       init?.method === 'POST' ? mutation.promise : Promise.resolve(ok([]))
@@ -83,11 +84,10 @@ describe('nutrition hook mutation races', () => {
       mutationPromise = result.current.addEntry({});
     });
     await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(3));
-    const mutationSignal = (global.fetch as Mock).mock.calls[2][1].signal as AbortSignal;
+    expect((global.fetch as Mock).mock.calls[2][1].signal).toBeUndefined();
     const stateBeforeUnmount = result.current;
 
     unmount();
-    expect(mutationSignal.aborted).toBe(true);
     await act(async () => {
       mutation.resolve(ok({ id: 'entry' }));
       await mutationPromise;
@@ -114,8 +114,7 @@ describe('nutrition hook mutation races', () => {
       firstPromise = result.current.addEntry({});
       secondPromise = result.current.addEntry({});
     });
-    const firstSignal = (global.fetch as Mock).mock.calls[2][1].signal as AbortSignal;
-    expect(firstSignal.aborted).toBe(true);
+    expect((global.fetch as Mock).mock.calls[2][1].signal).toBeUndefined();
 
     await act(async () => {
       second.resolve(ok({ id: 'newer' }));
@@ -198,7 +197,7 @@ describe('nutrition hook mutation races', () => {
     const mutationCall = (global.fetch as Mock).mock.calls.find(
       ([, init]) => init?.method === 'POST'
     );
-    expect(mutationCall?.[1].signal).toBeInstanceOf(AbortSignal);
+    expect(mutationCall?.[1].signal).toBeUndefined();
     expect(result.current.loading).toBe(false);
     expect(result.current.error?.message).toBe('meal save failed');
   });
@@ -233,5 +232,36 @@ describe('nutrition hook mutation races', () => {
     expect(entryUrls).toContain('/api/nutrition/meal-plans');
     expect(entryUrls).toContain('/api/nutrition/meal-plans/new-plan/entries');
     expect(entryUrls).not.toContain('/api/nutrition/meal-plans/old-plan/entries');
+  });
+
+  it('finishes entry insertion when the visible week changes after plan creation starts', async () => {
+    const planCreation = deferred<ReturnType<typeof ok>>();
+    const initialWeek = getWeekStartDate();
+    (global.fetch as Mock).mockImplementation((input: string, init?: RequestInit) => {
+      if (!init?.method) return Promise.resolve(ok(null));
+      if (input === '/api/nutrition/meal-plans') return planCreation.promise;
+      return Promise.resolve(ok({ id: 'entry' }));
+    });
+    const { result } = renderHook(() => useMealPlan());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    let mutationPromise!: Promise<unknown>;
+    act(() => {
+      mutationPromise = result.current.addEntry(1, 'breakfast', 'recipe');
+    });
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(2));
+    act(() => result.current.navigateWeek('next'));
+
+    await act(async () => {
+      planCreation.resolve(ok({ id: 'created-plan', week_start_date: initialWeek }));
+      await mutationPromise;
+    });
+
+    const mutationCalls = (global.fetch as Mock).mock.calls.filter(([, init]) => init?.method);
+    expect(mutationCalls.map(([input]) => String(input))).toEqual([
+      '/api/nutrition/meal-plans',
+      '/api/nutrition/meal-plans/created-plan/entries',
+    ]);
+    expect(mutationCalls.every(([, init]) => init?.signal === undefined)).toBe(true);
   });
 });

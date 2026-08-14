@@ -27,6 +27,14 @@ export function useDiary(initialDate?: string) {
     return { controller, requestId: ++requestIdRef.current };
   }, []);
 
+  const beginMutation = useCallback(() => {
+    // Cancel the stale read, not the write. A dispatched write can commit even
+    // if fetch is aborted, which would leave the caller with an ambiguous result.
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    return ++requestIdRef.current;
+  }, []);
+
   const updateDate = useCallback((nextDate: string) => {
     dateRef.current = nextDate;
     setDate(nextDate);
@@ -85,14 +93,13 @@ export function useDiary(initialDate?: string) {
   const addEntry = useCallback(
     async (entry: Partial<FoodDiaryEntry>) => {
       const mutationDate = date;
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId, mutationDate)) setError(null);
       try {
         const res = await fetch('/api/nutrition/diary', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...entry, entry_date: mutationDate }),
-          signal: controller.signal,
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
@@ -105,18 +112,17 @@ export function useDiary(initialDate?: string) {
         if (isCurrentOperation(requestId, mutationDate)) setLoading(false);
       }
     },
-    [beginOperation, date, fetchEntries, isCurrentOperation]
+    [beginMutation, date, fetchEntries, isCurrentOperation]
   );
 
   const deleteEntry = useCallback(
     async (id: string) => {
       const mutationDate = date;
-      const { controller, requestId } = beginOperation();
+      const requestId = beginMutation();
       if (isCurrentOperation(requestId, mutationDate)) setError(null);
       try {
         const res = await fetch(`/api/nutrition/diary/${id}`, {
           method: 'DELETE',
-          signal: controller.signal,
         });
         if (!res.ok) {
           const json = await res.json();
@@ -130,7 +136,7 @@ export function useDiary(initialDate?: string) {
         if (isCurrentOperation(requestId, mutationDate)) setLoading(false);
       }
     },
-    [beginOperation, date, fetchEntries, isCurrentOperation]
+    [beginMutation, date, fetchEntries, isCurrentOperation]
   );
 
   return {
