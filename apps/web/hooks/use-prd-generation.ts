@@ -2,7 +2,7 @@
  * Hook for managing PRD generation with real-time progress tracking.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAgentRun } from './use-agent-runs';
 
 export interface PRDGenerationRequest {
@@ -324,12 +324,14 @@ export function usePRDGenerationWithProgress() {
  * Hook for fetching and displaying existing PRD
  */
 export function usePRDResult(prdId: string) {
+  const generation = useMemo(() => Symbol(prdId || 'empty'), [prdId]);
   const [fetchState, setFetchState] = useState<{
     prdId: string;
+    generation: symbol;
     result: PRDResult | null;
     error: string | null;
     settled: boolean;
-  }>({ prdId, result: null, error: null, settled: !prdId });
+  }>({ prdId, generation, result: null, error: null, settled: !prdId });
 
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -339,10 +341,13 @@ export function usePRDResult(prdId: string) {
     }
 
     let cancelled = false;
+    const controller = new AbortController();
 
     const fetchPRD = async () => {
       try {
-        const response = await fetch(`${backendUrl}/api/prd/result/${prdId}`);
+        const response = await fetch(`${backendUrl}/api/prd/result/${prdId}`, {
+          signal: controller.signal,
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
@@ -350,11 +355,13 @@ export function usePRDResult(prdId: string) {
 
         const data: PRDResult = await response.json();
         if (cancelled) return;
-        setFetchState({ prdId, result: data, error: null, settled: true });
+        setFetchState({ prdId, generation, result: data, error: null, settled: true });
       } catch (err) {
         if (cancelled) return;
+        if (err instanceof Error && err.name === 'AbortError') return;
         setFetchState({
           prdId,
+          generation,
           result: null,
           error: err instanceof Error ? err.message : 'Failed to load PRD',
           settled: true,
@@ -365,11 +372,12 @@ export function usePRDResult(prdId: string) {
     const timeoutId = window.setTimeout(() => void fetchPRD(), 0);
     return () => {
       cancelled = true;
+      controller.abort();
       window.clearTimeout(timeoutId);
     };
-  }, [prdId, backendUrl]);
+  }, [prdId, backendUrl, generation]);
 
-  const isCurrentPRD = fetchState.prdId === prdId;
+  const isCurrentPRD = fetchState.prdId === prdId && fetchState.generation === generation;
 
   return {
     result: prdId && isCurrentPRD ? fetchState.result : null,

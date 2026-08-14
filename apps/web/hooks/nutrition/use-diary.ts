@@ -10,60 +10,116 @@ export function useDiary(initialDate?: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const requestIdRef = useRef(0);
+  const controllerRef = useRef<AbortController | null>(null);
+  const dateRef = useRef(date);
+  const mountedRef = useRef(false);
 
-  const fetchEntries = useCallback(async (d: string) => {
-    const requestId = ++requestIdRef.current;
-    setLoading(true);
-    try {
-      const [entriesRes, summaryRes] = await Promise.all([
-        fetch(`/api/nutrition/diary?date=${d}`),
-        fetch(`/api/nutrition/diary/summary?date=${d}`),
-      ]);
-      const entriesJson = await entriesRes.json();
-      const summaryJson = await summaryRes.json();
-      if (!entriesRes.ok) throw new Error(entriesJson.error);
-      if (!summaryRes.ok) throw new Error(summaryJson.error);
-      if (requestId === requestIdRef.current) {
-        setEntries(entriesJson.data);
-        setSummary(summaryJson.data);
+  const isCurrentOperation = useCallback(
+    (requestId: number, operationDate: string) =>
+      mountedRef.current && requestId === requestIdRef.current && operationDate === dateRef.current,
+    []
+  );
+
+  const beginOperation = useCallback(() => {
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    return { controller, requestId: ++requestIdRef.current };
+  }, []);
+
+  const beginMutation = useCallback(() => {
+    // Cancel the stale read, not the write. A dispatched write can commit even
+    // if fetch is aborted, which would leave the caller with an ambiguous result.
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    return ++requestIdRef.current;
+  }, []);
+
+  const updateDate = useCallback((nextDate: string) => {
+    dateRef.current = nextDate;
+    setDate(nextDate);
+  }, []);
+
+  const fetchEntries = useCallback(
+    async (d: string) => {
+      if (!mountedRef.current || d !== dateRef.current) return;
+      const { controller, requestId } = beginOperation();
+      if (isCurrentOperation(requestId, d)) {
+        setLoading(true);
+        setError(null);
       }
-    } catch (e) {
-      if (requestId === requestIdRef.current) setError(e as Error);
-    } finally {
-      if (requestId === requestIdRef.current) setLoading(false);
-    }
+      try {
+        const [entriesRes, summaryRes] = await Promise.all([
+          fetch(`/api/nutrition/diary?date=${d}`, { signal: controller.signal }),
+          fetch(`/api/nutrition/diary/summary?date=${d}`, { signal: controller.signal }),
+        ]);
+        const entriesJson = await entriesRes.json();
+        const summaryJson = await summaryRes.json();
+        if (!entriesRes.ok) throw new Error(entriesJson.error);
+        if (!summaryRes.ok) throw new Error(summaryJson.error);
+        if (isCurrentOperation(requestId, d)) {
+          setEntries(entriesJson.data);
+          setSummary(summaryJson.data);
+          setError(null);
+        }
+      } catch (e) {
+        if (e instanceof Error && e.name === 'AbortError') return;
+        if (isCurrentOperation(requestId, d)) setError(e as Error);
+      } finally {
+        if (isCurrentOperation(requestId, d)) setLoading(false);
+      }
+    },
+    [beginOperation, isCurrentOperation]
+  );
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      controllerRef.current?.abort();
+      requestIdRef.current += 1;
+    };
   }, []);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => void fetchEntries(date), 0);
     return () => {
       window.clearTimeout(timeoutId);
+      controllerRef.current?.abort();
       requestIdRef.current += 1;
     };
   }, [date, fetchEntries]);
 
   const addEntry = useCallback(
     async (entry: Partial<FoodDiaryEntry>) => {
+      const mutationDate = date;
+      const requestId = beginMutation();
+      if (isCurrentOperation(requestId, mutationDate)) setError(null);
       try {
         const res = await fetch('/api/nutrition/diary', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...entry, entry_date: date }),
+          body: JSON.stringify({ ...entry, entry_date: mutationDate }),
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
-        await fetchEntries(date);
+        if (isCurrentOperation(requestId, mutationDate)) await fetchEntries(mutationDate);
         return json.data;
       } catch (e) {
-        setError(e as Error);
+        if (isCurrentOperation(requestId, mutationDate)) setError(e as Error);
         throw e;
+      } finally {
+        if (isCurrentOperation(requestId, mutationDate)) setLoading(false);
       }
     },
-    [date, fetchEntries]
+    [beginMutation, date, fetchEntries, isCurrentOperation]
   );
 
   const deleteEntry = useCallback(
     async (id: string) => {
+      const mutationDate = date;
+      const requestId = beginMutation();
+      if (isCurrentOperation(requestId, mutationDate)) setError(null);
       try {
         const res = await fetch(`/api/nutrition/diary/${id}`, {
           method: 'DELETE',
@@ -72,18 +128,20 @@ export function useDiary(initialDate?: string) {
           const json = await res.json();
           throw new Error(json.error);
         }
-        await fetchEntries(date);
+        if (isCurrentOperation(requestId, mutationDate)) await fetchEntries(mutationDate);
       } catch (e) {
-        setError(e as Error);
+        if (isCurrentOperation(requestId, mutationDate)) setError(e as Error);
         throw e;
+      } finally {
+        if (isCurrentOperation(requestId, mutationDate)) setLoading(false);
       }
     },
-    [date, fetchEntries]
+    [beginMutation, date, fetchEntries, isCurrentOperation]
   );
 
   return {
     date,
-    setDate,
+    setDate: updateDate,
     entries,
     summary,
     loading,
