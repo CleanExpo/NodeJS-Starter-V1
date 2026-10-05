@@ -38,7 +38,7 @@
     "dots-wrapper": "^3.12.11",
     "framer-motion": "^12.43.0",
     "lucide-react": "^1.33.0",
-    "next": "16.3.1",
+    "next": "16.3.8",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.85.0",
