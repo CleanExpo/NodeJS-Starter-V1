@@ -269,7 +269,9 @@ class TechnicalSpecGenerator(BaseAgent):
         response = await self.client.messages.create(
             model="claude-opus-4-5-20251101",
             max_tokens=12000,  # Large token count for comprehensive spec
-            temperature=0.3,  # Lower temperature for technical accuracy
+            # anthropic>=1.0 dropped sampling params from the signature; the pinned
+            # Opus 4.5 model still honours temperature, so send it via extra_body.
+            extra_body={"temperature": 0.3},  # Lower temperature for technical accuracy
             system=self._get_system_prompt(),
             messages=[
                 {
