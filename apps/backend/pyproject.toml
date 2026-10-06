@@ -6,22 +6,22 @@ requires-python = ">=3.12"
 
 dependencies = [
     # Web Framework
-    "fastapi>=0.139.2",
+    "fastapi>=0.142.2",
     "uvicorn[standard]>=0.54.0",
 
     # Database (PostgreSQL + SQLAlchemy)
-    "sqlalchemy>=2.0.51",
+    "sqlalchemy>=2.1.3",
     "asyncpg>=0.31.0",  # Async PostgreSQL driver
-    "psycopg2-binary>=2.9.12",  # Sync PostgreSQL driver (for migrations)
-    "pgvector>=0.3.0",  # Vector similarity search
-    "alembic>=1.13.0",  # Database migrations
+    "psycopg2-binary>=2.9.13",  # Sync PostgreSQL driver (for migrations)
+    "pgvector>=0.5.0",  # Vector similarity search
+    "alembic>=1.20.0",  # Database migrations
 
     # Authentication
     "PyJWT[crypto]>=2.13.0",  # JWT tokens (HS256 only; avoids unused python-jose ECDSA surface)
     "passlib[bcrypt]>=1.7.4",  # Password hashing
 
     # Supabase (Optional - real state backend)
-    "supabase>=2.9.0",  # Supabase client
+    "supabase>=2.32.0",  # Supabase client
 
     # AI Models (All Optional - Ollama used by default via HTTP)
     "anthropic>=0.40.0",  # Optional - Claude API
@@ -30,28 +30,28 @@ dependencies = [
     # Note: Ollama provider uses httpx (already included) for local AI
 
     # Email
-    "resend>=2.35.0",
+    "resend>=2.49.1",
 
     # Core
-    "pydantic>=2.13.4",
-    "pydantic-settings>=2.6.0",
-    "python-dotenv>=1.2.2",
+    "pydantic>=2.13.5",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.4",
     "httpx>=0.27.0",
     "pyyaml>=6.0.3",
     "structlog>=24.4.0",
     "python-multipart>=0.0.32",
 
     # Background Workers
-    "arq>=0.26.0",  # Async Redis-backed job queue
+    "arq>=0.28.0",  # Async Redis-backed job queue
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=9.1.1",
-    "pytest-asyncio>=0.24.0",
+    "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
     "mypy>=2.4.0",
-    "ruff>=0.16.1",
+    "ruff>=0.16.10",
     "httpx>=0.27.0",
     "types-PyYAML>=6.0.0",
 ]
@@ -126,5 +126,5 @@ directory = "htmlcov"
 
 [dependency-groups]
 dev = [
-    "ruff>=0.16.1",
+    "ruff>=0.16.10",
 ]
