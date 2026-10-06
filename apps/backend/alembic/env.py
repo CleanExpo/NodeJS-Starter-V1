@@ -33,6 +33,12 @@ database_url = os.environ.get("DATABASE_URL")
 if database_url:
     config.set_main_option("sqlalchemy.url", database_url)
 
+# SQLAlchemy 2.1 maps a bare postgresql:// URL to psycopg 3, which is not
+# installed. Pin the sync driver the app uses (src/config/database.py).
+_url = config.get_main_option("sqlalchemy.url")
+if _url and _url.startswith("postgresql://"):
+    config.set_main_option("sqlalchemy.url", _url.replace("postgresql://", "postgresql+psycopg2://", 1))
+
 target_metadata = Base.metadata
 
 
