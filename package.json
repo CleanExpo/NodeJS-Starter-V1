@@ -59,7 +59,10 @@
   "pnpm": {
     "ignoredOptionalDependencies": [
       "sharp"
-    ]
+    ],
+    "overrides": {
+      "tinypool": ">=2.1.2"
+    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
