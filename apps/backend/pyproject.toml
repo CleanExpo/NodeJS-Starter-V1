@@ -14,7 +14,7 @@ dependencies = [
     "asyncpg>=0.31.0",  # Async PostgreSQL driver
     "psycopg2-binary>=2.9.12",  # Sync PostgreSQL driver (for migrations)
     "pgvector>=0.3.0",  # Vector similarity search
-    "alembic>=1.13.0",  # Database migrations
+    "alembic>=1.20.0",  # Database migrations
 
     # Authentication
     "PyJWT[crypto]>=2.13.0",  # JWT tokens (HS256 only; avoids unused python-jose ECDSA surface)
