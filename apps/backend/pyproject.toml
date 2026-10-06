@@ -26,7 +26,7 @@ dependencies = [
     # AI Models (All Optional - Ollama used by default via HTTP)
     "anthropic>=0.40.0",  # Optional - Claude API
     "google-generativeai>=0.8.6",  # Optional - Gemini API
-    "openai>=1.50.0",  # Optional - OpenAI API
+    "openai>=3.24.0",  # Optional - OpenAI API
     # Note: Ollama provider uses httpx (already included) for local AI
 
     # Email
