@@ -185,7 +185,9 @@ class FeatureDecomposer(BaseAgent):
         response = await self.client.messages.create(
             model="claude-opus-4-5-20251101",
             max_tokens=8000,  # More tokens for detailed stories
-            temperature=0.4,  # Slightly higher for creativity in story writing
+            # anthropic>=1.0 dropped sampling params from the signature; the pinned
+            # Opus 4.5 model still honours temperature, so send it via extra_body.
+            extra_body={"temperature": 0.4},  # Slightly higher for creativity in story writing
             system=self._get_system_prompt(),
             messages=[
                 {

@@ -277,7 +277,9 @@ class RoadmapPlanner(BaseAgent):
         response = await self.client.messages.create(
             model="claude-opus-4-5-20251101",
             max_tokens=12000,  # Large token count for comprehensive roadmap
-            temperature=0.4,  # Moderate temperature for planning creativity
+            # anthropic>=1.0 dropped sampling params from the signature; the pinned
+            # Opus 4.5 model still honours temperature, so send it via extra_body.
+            extra_body={"temperature": 0.4},  # Moderate temperature for planning creativity
             system=self._get_system_prompt(),
             messages=[
                 {

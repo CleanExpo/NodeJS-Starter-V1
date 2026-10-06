@@ -323,8 +323,10 @@ class AnthropicClient(BaseLLMProvider):
             kwargs: dict[str, Any] = {
                 "model": self.model,
                 "max_tokens": max_tokens or self.max_tokens,
-                "temperature": temperature or self.temperature,
                 "messages": messages,
+                # anthropic>=1.0 removed temperature from messages.create(); a
+                # model that still honours it takes it through extra_body.
+                "extra_body": {"temperature": temperature or self.temperature},
             }
 
             # Add cached system prompt if provided
@@ -549,8 +551,9 @@ class AnthropicClient(BaseLLMProvider):
             kwargs: dict[str, Any] = {
                 "model": self.model,
                 "max_tokens": self.max_tokens,
-                "temperature": self.temperature,
                 "messages": messages,
+                # anthropic>=1.0 removed temperature from messages.create().
+                "extra_body": {"temperature": self.temperature},
             }
 
             if system:
@@ -591,9 +594,10 @@ class AnthropicClient(BaseLLMProvider):
             kwargs: dict[str, Any] = {
                 "model": self.model,
                 "max_tokens": self.max_tokens,
-                "temperature": self.temperature,
                 "messages": [{"role": "user", "content": prompt}],
                 "tools": self._add_cache_to_tools(tools),
+                # anthropic>=1.0 removed temperature from messages.create().
+                "extra_body": {"temperature": self.temperature},
             }
 
             if system:

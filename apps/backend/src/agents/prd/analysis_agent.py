@@ -141,7 +141,9 @@ class PRDAnalysisAgent(BaseAgent):
         response = await self.client.messages.create(
             model="claude-opus-4-5-20251101",
             max_tokens=4000,
-            temperature=0.3,  # Lower temperature for structured output
+            # anthropic>=1.0 dropped sampling params from the signature; the pinned
+            # Opus 4.5 model still honours temperature, so send it via extra_body.
+            extra_body={"temperature": 0.3},  # Lower temperature for structured output
             system=self._get_system_prompt(),
             messages=[
                 {
