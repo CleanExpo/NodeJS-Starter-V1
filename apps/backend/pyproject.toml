@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     # Web Framework
     "fastapi>=0.139.2",
-    "uvicorn[standard]>=0.51.0",
+    "uvicorn[standard]>=0.54.0",
 
     # Database (PostgreSQL + SQLAlchemy)
     "sqlalchemy>=2.0.51",
