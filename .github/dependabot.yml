@@ -10,6 +10,13 @@ updates:
     groups:
       npm-minor-patch:
         update-types: [minor, patch]
+    ignore:
+      # ESLint 10 crashes lint (scopeManager.addGlobals is not a function):
+      # eslint-config-next's bundled Babel parser, eslint-plugin-import,
+      # eslint-plugin-react and eslint-plugin-jsx-a11y do not support it yet.
+      # Remove once eslint-config-next ships ESLint 10 support.
+      - dependency-name: eslint
+        update-types: ['version-update:semver-major']
     open-pull-requests-limit: 5
     commit-message:
       prefix: 'chore(deps)'
